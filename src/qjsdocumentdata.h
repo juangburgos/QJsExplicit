@@ -6,7 +6,7 @@
 class QJsDocumentData : public QJsNodeData
 {
 public:
-    QJsDocumentData(const QJsonValue &jsonValue);
+    QJsDocumentData();
 
 };
 

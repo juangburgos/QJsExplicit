@@ -1,6 +1,6 @@
 #include "qjsarraydata.h"
 
-QJsArrayData::QJsArrayData(const QJsonValue &jsonValue) : QJsNodeData(jsonValue)
+QJsArrayData::QJsArrayData()
 {
-
+	m_jsonValue = QJsonValue(QJsonArray());
 }

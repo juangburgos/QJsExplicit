@@ -1,7 +1,7 @@
 #include "qjsnode.h"
 #include "qjsnodedata.h"
 
-QJsNode::QJsNode() : data(new QJsNodeData(QJsonValue())) // force QJsNodeData to receive a QJsonValue
+QJsNode::QJsNode() : data(new QJsNodeData()) // force QJsNodeData to receive a QJsonValue
 {
 
 }

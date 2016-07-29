@@ -6,7 +6,7 @@
 class QJsArrayData : public QJsNodeData
 {
 public:
-    QJsArrayData(const QJsonValue &jsonValue);
+    QJsArrayData();
 };
 
 #endif // QJSARRAYDATA_H

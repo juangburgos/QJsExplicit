@@ -3,7 +3,7 @@
 
 QJsDocument::QJsDocument()
 {
-    data = QExplicitlySharedDataPointer<QJsDocumentData>(new QJsDocumentData(QJsonValue()));
+    data = QExplicitlySharedDataPointer<QJsDocumentData>(new QJsDocumentData());
 }
 
 QJsDocument::QJsDocument(const QJsDocument &rhs)

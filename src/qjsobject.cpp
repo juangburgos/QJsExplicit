@@ -3,7 +3,7 @@
 
 QJsObject::QJsObject()
 {
-    data = QExplicitlySharedDataPointer<QJsObjectData>(new QJsObjectData(QJsonValue()));
+    data = QExplicitlySharedDataPointer<QJsObjectData>(new QJsObjectData());
 }
 
 QJsObject::QJsObject(const QJsObject &rhs)
