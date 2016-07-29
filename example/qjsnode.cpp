@@ -1,7 +1,7 @@
 #include "qjsnode.h"
 #include "qjsnodedata.h"
 
-QJsNode::QJsNode() : data(new QJsNodeData(QJsonValue())) // TODO : force QJsNodeData to receive a QJsonValue
+QJsNode::QJsNode() : data(new QJsNodeData(QJsonValue())) // force QJsNodeData to receive a QJsonValue
 {
 
 }
@@ -21,14 +21,4 @@ QJsNode &QJsNode::operator=(const QJsNode &rhs)
 QJsNode::~QJsNode()
 {
 
-}
-
-QJsNode QJsNode::parentNode()
-{
-    return *m_parent;
-}
-
-QList<QJsNode> QJsNode::childNodes()
-{
-    return m_listChildren;
 }
