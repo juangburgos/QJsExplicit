@@ -3,7 +3,7 @@
 
 #include "qjsnode.h"
 
-class QJsDocument
+class QJsDocument : public QJsNode
 {
 public:
     QJsDocument();

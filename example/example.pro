@@ -11,26 +11,13 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = example
 TEMPLATE = app
 
+CONFIG   -= flat
 
-SOURCES += main.cpp\
-        mainwindow.cpp \
-    qjsnode.cpp \
-    qjsobject.cpp \
-    qjsnodedata.cpp \
-    qjsobjectdata.cpp \
-    qjsarray.cpp \
-    qjsarraydata.cpp \
-    qjsdocument.cpp \
-    qjsdocumentdata.cpp
+include(./../src/qjsexplicit.pri)
 
-HEADERS  += mainwindow.h \
-    qjsnode.h \
-    qjsobject.h \
-    qjsnodedata.h \
-    qjsobjectdata.h \
-    qjsarray.h \
-    qjsarraydata.h \
-    qjsdocument.h \
-    qjsdocumentdata.h
+SOURCES  += main.cpp      \
+            mainwindow.cpp 
+
+HEADERS  += mainwindow.h 
 
 FORMS    += mainwindow.ui
