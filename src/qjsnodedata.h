@@ -9,9 +9,13 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 
-#include "qjsobjectdata.h"
-#include "qjsarraydata.h"
-#include "qjsdocumentdata.h"
+//#include "qjsobjectdata.h"
+//#include "qjsarraydata.h"
+//#include "qjsdocumentdata.h"
+
+class QJsObjectData;
+class QJsArrayData;
+class QJsDocumentData;
 
 class QJsNodeData : public QSharedData
 {
@@ -60,7 +64,7 @@ public:
 	virtual bool isArray();
 	virtual bool isDocument();
 
-	// create new instances of each class if applicable if not nullptr
+	// create new instances of each class if can be casted if not null
 	QExplicitlySharedDataPointer<QJsObjectData>    toObject();
 	QExplicitlySharedDataPointer<QJsArrayData>     toArray();
 	QExplicitlySharedDataPointer<QJsDocumentData>  toDocument();

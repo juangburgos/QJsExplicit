@@ -8,6 +8,7 @@ class QJsObjectData : public QJsNodeData
 public:
     QJsObjectData();
 
+	// TODO : implement and attributes API
 };
 
 
