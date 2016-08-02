@@ -1,5 +1,4 @@
 #include "qjsnodedata.h"
-
 #include "qjsobjectdata.h"
 #include "qjsarraydata.h"
 #include "qjsdocumentdata.h"
@@ -9,7 +8,16 @@ QJsNodeData::QJsNodeData()
 	m_strKeyName = QString();
 	m_jsonValue  = QJsonValue();
 	// null instance
-	m_parent     = nullptr;
+    m_parent     = nullptr;
+}
+
+QJsNodeData::QJsNodeData(const QJsNodeData &other) : QSharedData(other),
+m_strKeyName(other.m_strKeyName),
+m_jsonValue(other.m_jsonValue),
+m_parent(other.m_parent),
+m_mapChildren(other.m_mapChildren)
+{
+
 }
 
 void QJsNodeData::setKeyName(const QString &strKeyName)
@@ -20,37 +28,42 @@ void QJsNodeData::setKeyName(const QString &strKeyName)
 	}
 	// if old keyname is not empty and parent is not nullptr
 	// replace old key entry from parent with new key entry
+	// this has ot be done BEFORE the key is changed
 	if (!m_parent->isNull())
 	{
 		if (m_strKeyName.compare(strKeyName) != 0)
 		{
-			// remove old json from parent
+			// recursively remove old json from parent if key exists in parent
 			QJsonValue jsonValParent = m_parent->getJsonValue();
-			if (m_parent->isObject())
+			if (m_parent->isObject() || m_parent->isDocument())
 			{
 				QJsonObject jsonObjParent = jsonValParent.toObject();
-				jsonObjParent.remove(m_strKeyName);
-				m_parent->setJsonValue(QJsonValue(jsonObjParent));
+				if (jsonObjParent.contains(m_strKeyName))
+				{
+					jsonObjParent.remove(m_strKeyName);
+					m_parent->updateJsonValue(QJsonValue(jsonObjParent));
+				}
 			}
 			else if (m_parent->isArray())
 			{
 				QJsonArray jsonArrParent = jsonValParent.toArray();
-				jsonArrParent.removeAt(m_strKeyName.toInt()); // NOTE IMPORTANT, in case of parent being array, the key of an array child id the index in string mode
-				m_parent->setJsonValue(QJsonValue(jsonArrParent));
-			}
-			else if (m_parent->isDocument())
-			{
-				QJsonObject jsonObjParent = jsonValParent.toObject();
-				jsonObjParent.remove(m_strKeyName);
-				m_parent->setJsonValue(QJsonValue(jsonObjParent));
+				int intKey = m_strKeyName.toInt();
+				if (intKey >= 0 && intKey < jsonArrParent.size())
+				{
+					jsonArrParent.removeAt(intKey); // NOTE IMPORTANT, in case of parent being array, the key of an array child id the index in string mode
+					m_parent->updateJsonValue(QJsonValue(jsonArrParent));
+				}
 			}
 			else
 			{
 				// TODO : error
 			}
-			// add new json to parent
+			// remove old child list entry (manual tree-rearrange)
+			m_parent->m_mapChildren.remove(m_strKeyName);
+
+			// recursively append new json to parent and add new child list entry
 			m_strKeyName = strKeyName;
-			setJsonValue(m_jsonValue);
+			setParentNode(m_parent);
 		}
 	}
 	// update regardless
@@ -62,105 +75,19 @@ QString QJsNodeData::getKeyName()
 	return m_strKeyName;
 }
 
-void QJsNodeData::setJsonValue(const QJsonValue &jsonValue) // NOTE : recursive
+// Appended for the first time or reparented, tree re-arrange
+void QJsNodeData::setJsonValue(const QJsonValue &jsonValue)
 {
-	// just copy the value
-	m_jsonValue = jsonValue;
 	// early exit
 	if (m_strKeyName.isEmpty())
 	{
 		return;
 	}
-	// if old keyname is not empty and parent is not nullptr
-	// replace old json entry from parent with new json entry
-	// NOTE : need to recreate children list
-	// NOTE : upwards recursive chain is broken when m_parent is null (i.e. QJsDocumentData)
-	if (!m_parent->isNull())
-	{
-		// Use original QJson API
-		QJsonValue jsonValParent = m_parent->getJsonValue();
-		if (m_parent->isObject())
-		{
-			QJsonObject jsonObjParent = jsonValParent.toObject();
-			jsonObjParent.insert(m_strKeyName, m_jsonValue);
-			m_parent->setJsonValue(QJsonValue(jsonObjParent));
-		} 
-		else if (m_parent->isArray())
-		{
-			QJsonArray jsonArrParent = jsonValParent.toArray();
-			jsonArrParent.replace(m_strKeyName.toInt(), m_jsonValue); // NOTE IMPORTANT, in case of parent being array, the key of an array child id the index in string mode
-			m_parent->setJsonValue(QJsonValue(jsonArrParent));
-		}
-		else if (m_parent->isDocument())
-		{
-			QJsonObject jsonObjParent = jsonValParent.toObject();
-			jsonObjParent.insert(m_strKeyName, m_jsonValue);
-			m_parent->setJsonValue(QJsonValue(jsonObjParent));
-		}
-		else
-		{
-			// TODO : error
-		}
-	}
 
-	// recreate children map
-	m_mapChildren.clear();
-	// convert to object or array
-	// loop through json children values that are objects or arrays
-	if (m_jsonValue.isObject())
-	{
-		QJsonObject jsonTempObj = m_jsonValue.toObject();
-		QStringList listKeys = jsonTempObj.keys();
-		for (int i = 0; i < listKeys.count(); i++)
-		{
-			QJsonValue jsonNewChild = jsonTempObj.value(listKeys.at(i));
-			if (jsonNewChild.isObject())
-			{
-				auto newObjChild = QExplicitlySharedDataPointer<QJsObjectData>(new QJsObjectData());
-				newObjChild->setConfigure(listKeys.at(i), jsonNewChild);
-				newObjChild->setParentNode(QExplicitlySharedDataPointer<QJsNodeData>(this)); // NOTE : setParentNode appends to parent's children list 
-			} 
-			else if (jsonNewChild.isArray())
-			{
-				auto newArrChild = QExplicitlySharedDataPointer<QJsArrayData>(new QJsArrayData());
-				newArrChild->setConfigure(listKeys.at(i), jsonNewChild);
-				newArrChild->setParentNode(QExplicitlySharedDataPointer<QJsNodeData>(this));
-			}
-			else
-			{
-				// ignore
-			}
-		}
-	} 
-	else if (m_jsonValue.isArray())
-	{
-		QJsonArray jsonTempArr = m_jsonValue.toArray();
-		for (int i = 0; i < jsonTempArr.count(); i++)
-		{
-			QJsonValue jsonNewChild = jsonTempArr.at(i);
-			if (jsonNewChild.isObject())
-			{
-				auto newObjChild = QExplicitlySharedDataPointer<QJsObjectData>(new QJsObjectData());
-				newObjChild->setConfigure(QString::number(i), jsonNewChild);
-				newObjChild->setParentNode(QExplicitlySharedDataPointer<QJsNodeData>(this));
-			}
-			else if (jsonNewChild.isArray())
-			{
-				auto newArrChild = QExplicitlySharedDataPointer<QJsArrayData>(new QJsArrayData());
-				newArrChild->setConfigure(QString::number(i), jsonNewChild);
-				newArrChild->setParentNode(QExplicitlySharedDataPointer<QJsNodeData>(this));
-			}
-			else
-			{
-				// ignore
-			}
-		}
-	}
-	else
-	{
-		// TODO : error
-	}
-
+	// upwards RECURSIVE chain is broken when m_parent is null (i.e. QJsDocumentData)
+	updateJsonValue(jsonValue);
+	// downwards RECURSIVE recreate children map
+	recreateChildren();
 }
 
 QJsonValue QJsNodeData::getJsonValue()
@@ -168,12 +95,36 @@ QJsonValue QJsNodeData::getJsonValue()
 	return m_jsonValue;
 }
 
-void QJsNodeData::setConfigure(const QString &strKeyName, const QJsonValue &jsonValue)
+// Only update value upwards, no tree re-arrange
+void QJsNodeData::updateJsonValue(const QJsonValue &jsonValue)
 {
-	// update json value
-	setJsonValue(jsonValue);
-	// update key name (m_strKeyName)
-	setKeyName(strKeyName);
+	// update: just copy the value
+	m_jsonValue = jsonValue;
+	// if old keyname is not empty and parent is not nullptr
+	// replace old json entry from parent with new json entry
+	// NOTE : upwards recursive chain is broken when m_parent is null (i.e. QJsDocumentData)
+	if (!m_parent->isNull())
+	{
+		// Use original QJson API
+		QJsonValue jsonValParent = m_parent->getJsonValue();
+		if (m_parent->isObject() || m_parent->isDocument())
+		{
+			QJsonObject jsonObjParent = jsonValParent.toObject();
+			jsonObjParent.insert(m_strKeyName, m_jsonValue);
+			m_parent->updateJsonValue(jsonValParent);
+		}
+		else if (m_parent->isArray())
+		{
+			QJsonArray jsonArrParent = jsonValParent.toArray();
+			// NOTE : this replace, setParentNode append
+			jsonArrParent.replace(m_strKeyName.toInt(), m_jsonValue); // NOTE IMPORTANT, in case of parent being array, the key of an array child id the index in string mode
+			m_parent->updateJsonValue(jsonValParent);
+		}
+		else
+		{
+			// TODO : error
+		}
+	}
 }
 
 QExplicitlySharedDataPointer<QJsNodeData> QJsNodeData::parentNode()
@@ -181,36 +132,34 @@ QExplicitlySharedDataPointer<QJsNodeData> QJsNodeData::parentNode()
     return m_parent;
 }
 
+// 
 bool QJsNodeData::setParentNode(const QExplicitlySharedDataPointer<QJsNodeData> &newParent)
 {
 	// Use null parent to float free and remove form old only
 	//// append to json AND to children list (different if array or obj)
-	//if (newParent->isNull()) 
-	//{
-	//	return;
-	//}
 
-	// remove from old parent children list if key and parent not empty
-	if (!m_parent->isNull())
+	// recursively remove from old parent children list if key and parent not empty
+	if (!m_parent->isNull() && m_parent != newParent)
 	{
 		QJsonValue jsonValParent = m_parent->getJsonValue();
-		if (m_parent->isObject())
+		if (m_parent->isObject() || m_parent->isDocument())
 		{
 			QJsonObject jsonObjParent = jsonValParent.toObject();
-			jsonObjParent.remove(m_strKeyName);
-			m_parent->setJsonValue(QJsonValue(jsonObjParent));
+			if (jsonObjParent.contains(m_strKeyName))
+			{
+				jsonObjParent.remove(m_strKeyName);
+				m_parent->updateJsonValue(QJsonValue(jsonObjParent));
+			}
 		}
 		else if (m_parent->isArray())
 		{
 			QJsonArray jsonArrParent = jsonValParent.toArray();
-			jsonArrParent.removeAt(m_strKeyName.toInt()); // NOTE IMPORTANT, in case of parent being array, the key of an array child id the index in string mode
-			m_parent->setJsonValue(QJsonValue(jsonArrParent));
-		}
-		else if (m_parent->isDocument())
-		{
-			QJsonObject jsonObjParent = jsonValParent.toObject();
-			jsonObjParent.remove(m_strKeyName);
-			m_parent->setJsonValue(QJsonValue(jsonObjParent));
+			int intKey = m_strKeyName.toInt();
+			if (intKey >= 0 && intKey < jsonArrParent.size())
+			{
+				jsonArrParent.removeAt(intKey); // NOTE IMPORTANT, in case of parent being array, the key of an array child id the index in string mode
+				m_parent->updateJsonValue(QJsonValue(jsonArrParent));
+			}
 		}
 		else
 		{
@@ -221,10 +170,10 @@ bool QJsNodeData::setParentNode(const QExplicitlySharedDataPointer<QJsNodeData> 
 
 	}
 
-
 	// copy new parent
-    m_parent = newParent;
+	m_parent = newParent;
 
+	// recursively add to new parent
 	if (!m_parent->isNull())
 	{
 		// if parent is array get avilable key
@@ -239,7 +188,7 @@ bool QJsNodeData::setParentNode(const QExplicitlySharedDataPointer<QJsNodeData> 
 		}
 		// Use original QJson API
 		QJsonValue jsonValParent = m_parent->getJsonValue();
-		if (m_parent->isObject())
+		if (m_parent->isObject() || m_parent->isDocument())
 		{
 			QJsonObject jsonObjParent = jsonValParent.toObject();
 			jsonObjParent.insert(m_strKeyName, m_jsonValue);
@@ -247,15 +196,17 @@ bool QJsNodeData::setParentNode(const QExplicitlySharedDataPointer<QJsNodeData> 
 		}
 		else if (m_parent->isArray())
 		{
-			QJsonArray jsonArrParent = jsonValParent.toArray();
-			jsonArrParent.replace(m_strKeyName.toInt(), m_jsonValue); // NOTE IMPORTANT, in case of parent being array, the key of an array child id the index in string mode
-			m_parent->setJsonValue(QJsonValue(jsonArrParent));
-		}
-		else if (m_parent->isDocument())
-		{
-			QJsonObject jsonObjParent = jsonValParent.toObject();
-			jsonObjParent.insert(m_strKeyName, m_jsonValue);
-			m_parent->setJsonValue(QJsonValue(jsonObjParent));
+			QJsonArray jsonArrParent = jsonValParent.toArray(); // HERE APPEND (INSERT) NOT REPLACE
+			int intKey = m_strKeyName.toInt();
+			if (intKey >= 0 && intKey <= jsonArrParent.size())
+			{
+				jsonArrParent.insert(m_strKeyName.toInt(), m_jsonValue); // NOTE IMPORTANT, here we insert to parent
+				m_parent->setJsonValue(QJsonValue(jsonArrParent));
+			}
+			else
+			{
+				// TODO : error
+			}
 		}
 		else
 		{
@@ -270,14 +221,134 @@ bool QJsNodeData::setParentNode(const QExplicitlySharedDataPointer<QJsNodeData> 
 	return true;
 }
 
+QExplicitlySharedDataPointer<QJsDocumentData> QJsNodeData::ownerDocument()
+{
+	if (m_parent->isNull())
+	{
+		// TODO : error
+		return QExplicitlySharedDataPointer<QJsDocumentData>();
+	}
+	else if (m_parent->isDocument())
+	{
+		return m_parent->toDocument();
+	}
+	return m_parent->ownerDocument();
+}
+
 QList<QExplicitlySharedDataPointer<QJsNodeData> > QJsNodeData::childNodes()
 {
     return m_mapChildren.values();
 }
 
+QStringList QJsNodeData::childrenKeys()
+{
+	return m_mapChildren.keys();
+}
+
 QExplicitlySharedDataPointer<QJsNodeData> QJsNodeData::getChildByKey(const QString &strKeyName)
 {
 	return m_mapChildren.value(strKeyName);
+}
+
+QExplicitlySharedDataPointer<QJsObjectData> QJsNodeData::createObject(const QString &strKeyName /*= ""*/)
+{
+	if ((this->isObject() || this->isDocument()))
+	{
+		if (strKeyName.isEmpty())
+		{
+			return QExplicitlySharedDataPointer<QJsObjectData>();
+		}
+		auto newObjChild          = QExplicitlySharedDataPointer<QJsObjectData>(new QJsObjectData());
+		newObjChild->m_strKeyName = strKeyName;
+		newObjChild->m_jsonValue  = QJsonValue(QJsonObject());
+		newObjChild->setParentNode(QExplicitlySharedDataPointer<QJsNodeData>(this));
+		return newObjChild;
+	} 
+	else if (this->isArray())
+	{
+		if (!strKeyName.isEmpty())
+		{
+			return QExplicitlySharedDataPointer<QJsObjectData>();
+		}
+		auto newObjChild          = QExplicitlySharedDataPointer<QJsObjectData>(new QJsObjectData());
+		newObjChild->m_strKeyName = strKeyName;
+		newObjChild->m_jsonValue   = QJsonValue(QJsonObject());
+		QExplicitlySharedDataPointer<QJsArrayData>(static_cast<QJsArrayData*>(this))->appendObject(newObjChild);
+		return newObjChild;
+	}
+
+	return QExplicitlySharedDataPointer<QJsObjectData>();
+}
+
+QExplicitlySharedDataPointer<QJsArrayData> QJsNodeData::createArray(const QString &strKeyName /*= ""*/)
+{
+
+	return QExplicitlySharedDataPointer<QJsArrayData>();
+}
+
+void QJsNodeData::recreateChildren()
+{
+	// recreate children map
+	m_mapChildren.clear();
+	// convert to object or array
+	// loop through json children values that are objects or arrays
+	if (m_jsonValue.isObject())
+	{
+		QJsonObject jsonTempObj = m_jsonValue.toObject();
+		QStringList listKeys = jsonTempObj.keys();
+		for (int i = 0; i < listKeys.count(); i++)
+		{
+			QJsonValue jsonNewChild = jsonTempObj.value(listKeys.at(i));
+			if (jsonNewChild.isObject())
+			{
+				auto newObjChild = QExplicitlySharedDataPointer<QJsObjectData>(new QJsObjectData());
+				newObjChild->m_strKeyName = listKeys.at(i);
+				newObjChild->m_jsonValue  = jsonNewChild;
+				newObjChild->setParentNode(QExplicitlySharedDataPointer<QJsNodeData>(this)); // NOTE : setParentNode appends to parent's children list 
+			}
+			else if (jsonNewChild.isArray())
+			{
+				auto newArrChild = QExplicitlySharedDataPointer<QJsArrayData>(new QJsArrayData());
+				newArrChild->m_strKeyName = listKeys.at(i);
+				newArrChild->m_jsonValue = jsonNewChild;
+				newArrChild->setParentNode(QExplicitlySharedDataPointer<QJsNodeData>(this));
+			}
+			else
+			{
+				// ignore
+			}
+		}
+	}
+	else if (m_jsonValue.isArray())
+	{
+		QJsonArray jsonTempArr = m_jsonValue.toArray();
+		for (int i = 0; i < jsonTempArr.count(); i++)
+		{
+			QJsonValue jsonNewChild = jsonTempArr.at(i);
+			if (jsonNewChild.isObject())
+			{
+				auto newObjChild = QExplicitlySharedDataPointer<QJsObjectData>(new QJsObjectData());
+				newObjChild->m_strKeyName = QString::number(i);
+				newObjChild->m_jsonValue  = jsonNewChild;
+				newObjChild->setParentNode(QExplicitlySharedDataPointer<QJsNodeData>(this));
+			}
+			else if (jsonNewChild.isArray())
+			{
+				auto newArrChild = QExplicitlySharedDataPointer<QJsArrayData>(new QJsArrayData());
+				newArrChild->m_strKeyName = QString::number(i);
+				newArrChild->m_jsonValue  = jsonNewChild;
+				newArrChild->setParentNode(QExplicitlySharedDataPointer<QJsNodeData>(this));
+			}
+			else
+			{
+				// ignore
+			}
+		}
+	}
+	else
+	{
+		// TODO : error
+	}
 }
 
 QExplicitlySharedDataPointer<QJsNodeData> QJsNodeData::appendChild(const QExplicitlySharedDataPointer<QJsNodeData> &nodeData)
@@ -346,7 +417,7 @@ QExplicitlySharedDataPointer<QJsObjectData> QJsNodeData::toObject()
 QExplicitlySharedDataPointer<QJsArrayData> QJsNodeData::toArray()
 {
 	// if castable then return
-	if (this->isObject() && static_cast<QJsArrayData*>(this))
+	if (this->isArray() && static_cast<QJsArrayData*>(this))
 	{
 		return QExplicitlySharedDataPointer<QJsArrayData>(static_cast<QJsArrayData*>(this));
 	}
@@ -357,7 +428,7 @@ QExplicitlySharedDataPointer<QJsArrayData> QJsNodeData::toArray()
 QExplicitlySharedDataPointer<QJsDocumentData> QJsNodeData::toDocument()
 {
 	// if castable then return
-	if (this->isObject() && static_cast<QJsDocumentData*>(this))
+	if (this->isDocument() && static_cast<QJsDocumentData*>(this))
 	{
 		return QExplicitlySharedDataPointer<QJsDocumentData>(static_cast<QJsDocumentData*>(this));
 	}

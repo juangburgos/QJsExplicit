@@ -3,6 +3,7 @@
 
 #include <QMap>
 
+#include <QVariant>
 #include <QSharedData>
 #include <QJsonValue>
 #include <QJsonObject>
@@ -21,6 +22,7 @@ class QJsNodeData : public QSharedData
 {
 public:
     QJsNodeData();
+    QJsNodeData(const QJsNodeData &other);
 
     // NOTE : we put in and put out QExplicitlySharedDataPointer<QJsNodeData> instances
     //        because we can use those to create instances of the QJsNode wrappers
@@ -31,9 +33,7 @@ public:
 
 	void       setJsonValue(const QJsonValue &jsonValue);
 	QJsonValue getJsonValue();
-
-	// convenience
-	void    setConfigure(const QString &strKeyName, const QJsonValue &jsonValue);
+	void       updateJsonValue(const QJsonValue &jsonValue);
 
     // parents can only be QJsObjectData or QJsDocumentData
     // the parent of a QJsDocumentData must be nullptr
@@ -41,10 +41,17 @@ public:
     // necessary for reparenting (not valid for QJsDocumentData)
     virtual bool setParentNode(const QExplicitlySharedDataPointer<QJsNodeData> &newParent);
 
+	// get root
+	QExplicitlySharedDataPointer<QJsDocumentData>    ownerDocument();
+
     // children can only be QJsObjectData or QJsArrayData
     QList<QExplicitlySharedDataPointer<QJsNodeData>> childNodes();
+	QStringList                                      childrenKeys();
+	QExplicitlySharedDataPointer<QJsNodeData>        getChildByKey(const QString &strKeyName);
 
-	QExplicitlySharedDataPointer<QJsNodeData> getChildByKey(const QString &strKeyName);
+	QExplicitlySharedDataPointer<QJsObjectData>      createObject(const QString &strKeyName = "");
+	QExplicitlySharedDataPointer<QJsArrayData>       createArray (const QString &strKeyName = "");
+	void                                             recreateChildren();
 
     // Appends newChild as the node's last child.
     // If newChild is the child of another node, it is reparented to this node.
@@ -70,12 +77,11 @@ public:
 	QExplicitlySharedDataPointer<QJsDocumentData>  toDocument();
 
 protected:
-	QString    m_strKeyName;
-    QJsonValue m_jsonValue;
-
-    QExplicitlySharedDataPointer<QJsNodeData>          m_parent;
-
+    QString                                                  m_strKeyName;
+    QJsonValue                                               m_jsonValue;
+    QExplicitlySharedDataPointer<QJsNodeData>                m_parent;
 	QMap<QString, QExplicitlySharedDataPointer<QJsNodeData>> m_mapChildren;
+
 
 };
 
