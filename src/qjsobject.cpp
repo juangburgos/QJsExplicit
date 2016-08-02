@@ -1,5 +1,12 @@
+#include "qjsnode.h"
 #include "qjsobject.h"
+#include "qjsarray.h"
+#include "qjsdocument.h"
+
+#include "qjsnodedata.h"
 #include "qjsobjectdata.h"
+#include "qjsarraydata.h"
+#include "qjsdocumentdata.h"
 
 QJsObject::QJsObject()
 {
@@ -21,4 +28,59 @@ QJsObject &QJsObject::operator=(const QJsObject &rhs)
 QJsObject::~QJsObject()
 {
 
+}
+
+QStringList QJsObject::attributeNames()
+{
+	return data->toObject()->attributeNames();
+}
+
+QVariant QJsObject::attributeValue(QString strName)
+{
+	return data->toObject()->attributeValue(strName);
+}
+
+bool QJsObject::isBool(QString strName)
+{
+	return data->toObject()->isBool(strName);
+}
+
+bool QJsObject::isInteger(QString strName)
+{
+	return data->toObject()->isInteger(strName);
+}
+
+bool QJsObject::isDouble(QString strName)
+{
+	return data->toObject()->isDouble(strName);
+}
+
+bool QJsObject::isString(QString strName)
+{
+	return data->toObject()->isString(strName);
+}
+
+void QJsObject::setAttribute(const QString &strName, bool boolValue)
+{
+	data->toObject()->setAttribute(strName, boolValue);
+}
+
+void QJsObject::setAttribute(const QString &strName, int intValue)
+{
+	data->toObject()->setAttribute(strName, intValue);
+}
+
+void QJsObject::setAttribute(const QString &strName, double doubleValue)
+{
+	data->toObject()->setAttribute(strName, doubleValue);
+}
+
+void QJsObject::setAttribute(const QString &strName, QString strValue)
+{
+	data->toObject()->setAttribute(strName, strValue);
+}
+
+void QJsObject::removeAttribute(const QString &strName)
+{
+	data->toObject()->removeAttribute(strName);
 }

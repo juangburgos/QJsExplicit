@@ -3,8 +3,11 @@
 
 #include "qjsnodedata.h"
 
+class QJsDocumentData;
+
 class QJsObjectData : public QJsNodeData
 {
+	friend class QJsDocumentData;
 public:
     QJsObjectData();
 

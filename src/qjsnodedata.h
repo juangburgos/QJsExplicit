@@ -4,6 +4,7 @@
 #include <QMap>
 
 #include <QVariant>
+#include <QByteArray>
 #include <QSharedData>
 #include <QJsonValue>
 #include <QJsonObject>
@@ -76,6 +77,11 @@ public:
 	QExplicitlySharedDataPointer<QJsObjectData>    toObject();
 	QExplicitlySharedDataPointer<QJsArrayData>     toArray();
 	QExplicitlySharedDataPointer<QJsDocumentData>  toDocument();
+
+	QByteArray	toJson();
+	//QByteArray	toBinaryData();
+
+
 
 protected:
     QString                                                  m_strKeyName;
