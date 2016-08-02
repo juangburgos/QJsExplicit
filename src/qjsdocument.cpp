@@ -1,4 +1,11 @@
+#include "qjsnode.h"
+#include "qjsobject.h"
+#include "qjsarray.h"
 #include "qjsdocument.h"
+
+#include "qjsnodedata.h"
+#include "qjsobjectdata.h"
+#include "qjsarraydata.h"
 #include "qjsdocumentdata.h"
 
 QJsDocument::QJsDocument()
@@ -21,4 +28,17 @@ QJsDocument &QJsDocument::operator=(const QJsDocument &rhs)
 QJsDocument::~QJsDocument()
 {
 
+}
+
+QJsObject QJsDocument::cloneToObject(const QString &strKeyName /*= ""*/)
+{
+	auto res = data->toDocument()->cloneToObject(strKeyName);
+	QJsObject obj;
+	obj.data = res;
+	return obj;
+}
+
+QString QJsDocument::fromJson(const QByteArray &json)
+{
+	return data->toDocument()->fromJson(json);
 }

@@ -5,6 +5,7 @@
 
 class QJsObject : public QJsNode
 {
+	friend class QJsDocument;
 public:
     QJsObject();
     QJsObject(const QJsObject &);
@@ -30,6 +31,8 @@ public:
 	void	    setAttribute(const QString &strName, double  doubleValue);
 
 	void	    setAttribute(const QString &strName, QString strValue);
+
+	void	    setAttribute(const QString &strName, const char *str); // helper
 
 	void        removeAttribute(const QString &strName);
 };

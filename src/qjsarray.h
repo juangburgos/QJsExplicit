@@ -37,6 +37,8 @@ public:
 
 	void	 setValueAt(int idx, QString strValue);
 
+	void	 setValueAt(int idx, const char *str);
+
 	void     setNodeAt(int idx, QJsNode  nodeValue);
 
 	void	 setObjectAt(int idx, QJsObject objValue);

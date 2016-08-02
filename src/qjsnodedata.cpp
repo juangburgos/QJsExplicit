@@ -110,14 +110,14 @@ void QJsNodeData::updateJsonValue(const QJsonValue &jsonValue)
 		{
 			QJsonObject jsonObjParent = jsonValParent.toObject();
 			jsonObjParent.insert(m_strKeyName, m_jsonValue);
-			m_parent->updateJsonValue(jsonValParent);
+			m_parent->updateJsonValue(QJsonValue(jsonObjParent));
 		}
 		else if (m_parent->isArray())
 		{
 			QJsonArray jsonArrParent = jsonValParent.toArray();
 			// NOTE : this replace, setParentNode append
 			jsonArrParent.replace(m_strKeyName.toInt(), m_jsonValue); // NOTE IMPORTANT, in case of parent being array, the key of an array child id the index in string mode
-			m_parent->updateJsonValue(jsonValParent);
+			m_parent->updateJsonValue(QJsonValue(jsonArrParent));
 		}
 		else
 		{
@@ -495,14 +495,14 @@ QByteArray QJsNodeData::toJson()
 		QJsonObject   jsonTempObj = m_jsonValue.toObject();
 		QJsonDocument jsonTempDoc;
 		jsonTempDoc.setObject(jsonTempObj);
-		return jsonTempDoc.toJson(QJsonDocument::Compact);
+		return jsonTempDoc.toJson(QJsonDocument::Indented); // QJsonDocument::Compact
 	} 
 	else if (this->isArray())
 	{
 		QJsonArray    jsonTempArr = m_jsonValue.toArray();
 		QJsonDocument jsonTempDoc;
 		jsonTempDoc.setArray(jsonTempArr);
-		return jsonTempDoc.toJson(QJsonDocument::Compact);
+		return jsonTempDoc.toJson(QJsonDocument::Indented); // QJsonDocument::Compact
 	}
 	return QByteArray();
 }

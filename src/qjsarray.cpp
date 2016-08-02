@@ -97,6 +97,11 @@ void QJsArray::setValueAt(int idx, QString strValue)
 	data->toArray()->setValueAt(idx, strValue);
 }
 
+void QJsArray::setValueAt(int idx, const char *str)
+{
+	data->toArray()->setValueAt(idx, QString::fromUtf8(str));
+}
+
 void QJsArray::setNodeAt(int idx, QJsNode nodeValue)
 {
 	data->toArray()->setNodeAt(idx, nodeValue.data);

@@ -11,6 +11,12 @@ public:
     QJsDocument &operator=(const QJsDocument &);
     ~QJsDocument();
 
+	QJsObject cloneToObject(const QString &strKeyName = "");
+
+	QString   fromJson(const QByteArray &json);
+
+	//QString  	fromBinaryData(const QByteArray &data);
+
 };
 
 #endif // QJSDOCUMENT_H
