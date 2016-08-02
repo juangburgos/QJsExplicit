@@ -62,6 +62,7 @@ public:
 	// Will fail also if key name is empty and parent is not array
     QExplicitlySharedDataPointer<QJsNodeData> appendChild(const QExplicitlySharedDataPointer<QJsNodeData> &nodeData);
 	QExplicitlySharedDataPointer<QJsNodeData> removeChild(const QString &strKeyName);
+	QExplicitlySharedDataPointer<QJsNodeData> replaceChild(const QString &strKeyName, const QExplicitlySharedDataPointer<QJsNodeData> &nodeData);
 
     // isNull if m_jsonValue is NULL
     bool isNull();

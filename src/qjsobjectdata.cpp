@@ -5,7 +5,8 @@
 
 QJsObjectData::QJsObjectData()
 {
-	m_jsonValue = QJsonValue(QJsonObject());
+	m_strKeyName = QString();
+	m_jsonValue  = QJsonValue(QJsonObject());
 	// null instance
 	m_parent = nullptr;
 }
