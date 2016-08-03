@@ -14,9 +14,9 @@ public:
 	bool setParentNode(const QExplicitlySharedDataPointer<QJsNodeData> &newParent) Q_DECL_OVERRIDE;
 
 	QExplicitlySharedDataPointer<QJsObjectData>    cloneToObject(const QString &strKeyName = "");
-
+	// return error message
 	QString    	fromJson(const QByteArray &json);
-	//QString  	fromBinaryData(const QByteArray &data);
+	QString  	fromBinaryData(const QByteArray &data);
 
 
 };

@@ -188,6 +188,10 @@ bool QJsNodeData::setParentNode(const QExplicitlySharedDataPointer<QJsNodeData> 
 			{
 				m_strKeyName = QString::number(m_parent->getJsonValue().toArray().count());
 			}
+			else
+			{
+				// TODO : error
+			}
 		}
 		// Use original QJson API
 		QJsonValue jsonValParent = m_parent->getJsonValue();
@@ -274,7 +278,9 @@ QExplicitlySharedDataPointer<QJsObjectData> QJsNodeData::createObject(const QStr
 	{
 		if (!strKeyName.isEmpty())
 		{
-			return QExplicitlySharedDataPointer<QJsObjectData>();
+			//return QExplicitlySharedDataPointer<QJsObjectData>();
+			// ignore 
+			// TODO : error
 		}
 		auto newObjChild          = QExplicitlySharedDataPointer<QJsObjectData>(new QJsObjectData());
 		//newObjChild->m_strKeyName = "";
@@ -488,28 +494,29 @@ QExplicitlySharedDataPointer<QJsDocumentData> QJsNodeData::toDocument()
 	return QExplicitlySharedDataPointer<QJsDocumentData>();
 }
 
-QByteArray QJsNodeData::toJson()
+QByteArray QJsNodeData::toJson(QJsonDocument::JsonFormat format/* = QJsonDocument::Indented*/)
 {
 	if (this->isObject() || this->isDocument())
 	{
 		QJsonObject   jsonTempObj = m_jsonValue.toObject();
 		QJsonDocument jsonTempDoc;
 		jsonTempDoc.setObject(jsonTempObj);
-		return jsonTempDoc.toJson(QJsonDocument::Indented); // QJsonDocument::Compact
+		return jsonTempDoc.toJson(format); 
 	} 
 	else if (this->isArray())
 	{
 		QJsonArray    jsonTempArr = m_jsonValue.toArray();
 		QJsonDocument jsonTempDoc;
 		jsonTempDoc.setArray(jsonTempArr);
-		return jsonTempDoc.toJson(QJsonDocument::Indented); // QJsonDocument::Compact
+		return jsonTempDoc.toJson(format); 
 	}
 	return QByteArray();
 }
 
-
-//QByteArray QJsNodeData::toBinaryData()
-//{
-//
-//}
-//
+QByteArray QJsNodeData::toBinaryData()
+{
+	QJsonObject   jsonTempObj = m_jsonValue.toObject();
+	QJsonDocument jsonTempDoc;
+	jsonTempDoc.setObject(jsonTempObj);
+	return jsonTempDoc.toBinaryData();
+}

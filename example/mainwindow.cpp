@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	testarr.appendValue(8);
 
 	// create test array child object
-	QJsObject arrchildobj = testarr.createObject(); // TODO : crash if non-empty, maybe specialize createObject for QJsArray
+	QJsObject arrchildobj = testarr.createObject("whatever");
 	arrchildobj.setAttribute("xxx", true);
 	arrchildobj.setAttribute("yyy", 8);
 	arrchildobj.setAttribute("zzz", 7.8);
@@ -59,7 +59,15 @@ MainWindow::MainWindow(QWidget *parent) :
 	}
 	testarr.appendArray(orphanarr);
 
-	ui->plainTextEdit->setPlainText(doc.toJson());
+	QString strJSON = doc.toJson(QJsNode::Indented);
+	// print original
+	ui->plainTextEdit->setPlainText(strJSON);
+	// print copy
+	QJsDocument doccopy = QJsDocument::fromJson(strJSON.toUtf8());
+	ui->plainTextEdit->appendPlainText("\n\n" + doccopy.toJson(QJsNode::Compact));
+	// print copy in binary
+	ui->plainTextEdit->appendPlainText("\n\n" + QString::fromStdString(doccopy.toBinaryData().toStdString()));
+
 }
 
 MainWindow::~MainWindow()

@@ -23,6 +23,12 @@ public:
     QJsNode &operator=(const QJsNode &);
     ~QJsNode();
 
+	enum JsFormat
+	{
+		Indented,
+		Compact
+	};
+
 	void           setKeyName(const QString &strKeyName);
 
 	QString        getKeyName();
@@ -61,7 +67,9 @@ public:
 
 	QJsDocument    toDocument();
 
-	QByteArray	   toJson();
+	QByteArray     toJson(JsFormat format = Indented);
+
+	QByteArray	   toBinaryData();
 
 protected:
     QExplicitlySharedDataPointer<QJsNodeData> data;

@@ -78,8 +78,8 @@ public:
 	QExplicitlySharedDataPointer<QJsArrayData>     toArray();
 	QExplicitlySharedDataPointer<QJsDocumentData>  toDocument();
 
-	QByteArray	toJson();
-	//QByteArray	toBinaryData();
+	QByteArray	toJson(QJsonDocument::JsonFormat format = QJsonDocument::Indented);
+	QByteArray	toBinaryData();
 
 
 

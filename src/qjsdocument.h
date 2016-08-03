@@ -13,9 +13,9 @@ public:
 
 	QJsObject cloneToObject(const QString &strKeyName = "");
 
-	QString   fromJson(const QByteArray &json);
+	static QJsDocument fromJson(const QByteArray &json);
 
-	//QString  	fromBinaryData(const QByteArray &data);
+	static QJsDocument fromBinaryData(const QByteArray &bindata);
 
 };
 

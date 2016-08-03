@@ -39,7 +39,7 @@ QExplicitlySharedDataPointer<QJsObjectData> QJsDocumentData::cloneToObject(const
 QString QJsDocumentData::fromJson(const QByteArray &json)
 {
 	QJsonParseError error;
-	auto doc = QJsonDocument::fromJson(json, &error);
+	QJsonDocument doc = QJsonDocument::fromJson(json, &error);
 	if (error.error != QJsonParseError::NoError)
 	{
 		return error.errorString();
@@ -52,8 +52,20 @@ QString QJsDocumentData::fromJson(const QByteArray &json)
 	setJsonValue(QJsonValue(doc.object()));
 	return "";
 }
-//
-//QString QJsDocumentData::fromBinaryData(const QByteArray &data)
-//{
-//
-//}
+
+QString QJsDocumentData::fromBinaryData(const QByteArray &data)
+{
+	QJsonDocument doc = QJsonDocument::fromJson(data);
+	if (doc.isNull())
+	{
+		return "Invalid binary data";
+	}
+	if (!doc.isObject())
+	{
+		return "JSON binary data is not an object";
+	}
+	// set object and recreate children
+	setJsonValue(QJsonValue(doc.object()));
+	return "";
+}
+

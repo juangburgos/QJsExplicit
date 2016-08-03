@@ -8,6 +8,8 @@
 #include "qjsarraydata.h"
 #include "qjsdocumentdata.h"
 
+#include <QJsonDocument>
+
 QJsNode::QJsNode() : data(new QJsNodeData())
 {
 
@@ -173,7 +175,24 @@ QJsDocument QJsNode::toDocument()
 	return doc;
 }
 
-QByteArray QJsNode::toJson()
+QByteArray QJsNode::toJson(JsFormat format /*= Indented*/)
 {
-	return data->toJson();
+	switch (format)
+	{
+	case QJsNode::Indented:
+		return data->toJson(QJsonDocument::Indented);
+		break;
+	case QJsNode::Compact:
+		return data->toJson(QJsonDocument::Compact);
+		break;
+	default:
+		return QByteArray();
+		break;
+	}
+	return QByteArray();
+}
+
+QByteArray QJsNode::toBinaryData()
+{
+	return data->toBinaryData();
 }
