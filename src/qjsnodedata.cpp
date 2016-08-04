@@ -233,13 +233,18 @@ QExplicitlySharedDataPointer<QJsDocumentData> QJsNodeData::ownerDocument()
 	if (m_parent->isNull())
 	{
 		// TODO : error
-		return QExplicitlySharedDataPointer<QJsDocumentData>();
+		return QExplicitlySharedDataPointer<QJsDocumentData>(new QJsDocumentData);
 	}
 	else if (m_parent->isDocument())
 	{
 		return m_parent->toDocument();
 	}
 	return m_parent->ownerDocument();
+}
+
+bool QJsNodeData::hasChildByKey(const QString &strKeyName)
+{
+	return !getChildByKey(strKeyName)->isNull();
 }
 
 QList<QExplicitlySharedDataPointer<QJsNodeData> > QJsNodeData::childNodes()
@@ -254,7 +259,7 @@ QStringList QJsNodeData::childrenKeys()
 
 QExplicitlySharedDataPointer<QJsNodeData> QJsNodeData::getChildByKey(const QString &strKeyName)
 {
-	return m_mapChildren.value(strKeyName, QExplicitlySharedDataPointer<QJsNodeData>());
+	return m_mapChildren.value(strKeyName, QExplicitlySharedDataPointer<QJsNodeData>(new QJsNodeData));
 }
 
 QExplicitlySharedDataPointer<QJsObjectData> QJsNodeData::createObject(const QString &strKeyName /*= ""*/)
@@ -263,7 +268,7 @@ QExplicitlySharedDataPointer<QJsObjectData> QJsNodeData::createObject(const QStr
 	{
 		if (strKeyName.isEmpty())
 		{
-			return QExplicitlySharedDataPointer<QJsObjectData>();
+			return QExplicitlySharedDataPointer<QJsObjectData>(new QJsObjectData);
 		}
 		auto newObjChild          = QExplicitlySharedDataPointer<QJsObjectData>(new QJsObjectData());
 		newObjChild->m_strKeyName = strKeyName;
@@ -272,13 +277,13 @@ QExplicitlySharedDataPointer<QJsObjectData> QJsNodeData::createObject(const QStr
 		{
 			return newObjChild;
 		}
-		return QExplicitlySharedDataPointer<QJsObjectData>();
+		return QExplicitlySharedDataPointer<QJsObjectData>(new QJsObjectData);
 	} 
 	else if (this->isArray())
 	{
 		if (!strKeyName.isEmpty())
 		{
-			//return QExplicitlySharedDataPointer<QJsObjectData>();
+			//return QExplicitlySharedDataPointer<QJsObjectData>(new QJsObjectData);
 			// ignore 
 			// TODO : error
 		}
@@ -289,7 +294,7 @@ QExplicitlySharedDataPointer<QJsObjectData> QJsNodeData::createObject(const QStr
 		return newObjChild;
 	}
 
-	return QExplicitlySharedDataPointer<QJsObjectData>();
+	return QExplicitlySharedDataPointer<QJsObjectData>(new QJsObjectData);
 }
 
 QExplicitlySharedDataPointer<QJsArrayData> QJsNodeData::createArray(const QString &strKeyName /*= ""*/)
@@ -298,7 +303,7 @@ QExplicitlySharedDataPointer<QJsArrayData> QJsNodeData::createArray(const QStrin
 	{
 		if (strKeyName.isEmpty())
 		{
-			return QExplicitlySharedDataPointer<QJsArrayData>();
+			return QExplicitlySharedDataPointer<QJsArrayData>(new QJsArrayData);
 		}
 		auto newArrChild = QExplicitlySharedDataPointer<QJsArrayData>(new QJsArrayData());
 		newArrChild->m_strKeyName = strKeyName;
@@ -307,13 +312,13 @@ QExplicitlySharedDataPointer<QJsArrayData> QJsNodeData::createArray(const QStrin
 		{
 			return newArrChild;
 		}
-		return QExplicitlySharedDataPointer<QJsArrayData>();
+		return QExplicitlySharedDataPointer<QJsArrayData>(new QJsArrayData);
 	}
 	else if (this->isArray())
 	{
 		if (!strKeyName.isEmpty())
 		{
-			return QExplicitlySharedDataPointer<QJsArrayData>();
+			return QExplicitlySharedDataPointer<QJsArrayData>(new QJsArrayData);
 		}
 		auto newArrChild = QExplicitlySharedDataPointer<QJsArrayData>(new QJsArrayData());
 		//newArrChild->m_strKeyName = "";
@@ -322,7 +327,7 @@ QExplicitlySharedDataPointer<QJsArrayData> QJsNodeData::createArray(const QStrin
 		return newArrChild;
 	}
 
-	return QExplicitlySharedDataPointer<QJsArrayData>();
+	return QExplicitlySharedDataPointer<QJsArrayData>(new QJsArrayData);
 }
 
 void QJsNodeData::recreateChildren()
@@ -395,29 +400,29 @@ QExplicitlySharedDataPointer<QJsNodeData> QJsNodeData::appendChild(const QExplic
 	// cannot be null nor document, or if not child of array must have a key
 	if (nodeData->isNull() || (!this->isArray() && nodeData->getKeyName().isEmpty()) || nodeData->isDocument())
 	{
-		return QExplicitlySharedDataPointer<QJsNodeData>(); // null
+		return QExplicitlySharedDataPointer<QJsNodeData>(new QJsNodeData); // null
 	}
 	// append (setParentNode actually does the linking)
 	if (nodeData->setParentNode(QExplicitlySharedDataPointer<QJsNodeData>(this)))
 	{
 		return nodeData;
 	}
-	return QExplicitlySharedDataPointer<QJsNodeData>();
+	return QExplicitlySharedDataPointer<QJsNodeData>(new QJsNodeData);
 }
 
 QExplicitlySharedDataPointer<QJsNodeData> QJsNodeData::removeChild(const QString &strKeyName)
 {
 	if (strKeyName.isEmpty())
 	{
-		return QExplicitlySharedDataPointer<QJsNodeData>();; // null
+		return QExplicitlySharedDataPointer<QJsNodeData>(new QJsNodeData);; // null
 	}
 	// call set null parent to child
 	auto childToRemove = m_mapChildren.value(strKeyName);
-	if (!childToRemove->setParentNode(QExplicitlySharedDataPointer<QJsNodeData>()))
+	if (!childToRemove->setParentNode(QExplicitlySharedDataPointer<QJsNodeData>(new QJsNodeData)))
 	{
 		return childToRemove;
 	}
-	return QExplicitlySharedDataPointer<QJsNodeData>();
+	return QExplicitlySharedDataPointer<QJsNodeData>(new QJsNodeData);
 }
 
 QExplicitlySharedDataPointer<QJsNodeData> QJsNodeData::replaceChild(const QString &strKeyName, const QExplicitlySharedDataPointer<QJsNodeData> &nodeData)
@@ -428,7 +433,7 @@ QExplicitlySharedDataPointer<QJsNodeData> QJsNodeData::replaceChild(const QStrin
 	auto originalNode = getChildByKey(strKeyName);
 	if (!originalNode)
 	{
-		return QExplicitlySharedDataPointer<QJsNodeData>();
+		return QExplicitlySharedDataPointer<QJsNodeData>(new QJsNodeData);
 	}
 	originalNode      = nodeData;
 	// recreateChildren -> setParentNode -> updateJsonValue <-> updateJsonValue
@@ -469,7 +474,7 @@ QExplicitlySharedDataPointer<QJsObjectData> QJsNodeData::toObject()
 		return QExplicitlySharedDataPointer<QJsObjectData>(static_cast<QJsObjectData*>(this));
 	}
 	// else return null
-	return QExplicitlySharedDataPointer<QJsObjectData>();
+	return QExplicitlySharedDataPointer<QJsObjectData>(new QJsObjectData);
 }
 
 QExplicitlySharedDataPointer<QJsArrayData> QJsNodeData::toArray()
@@ -480,7 +485,7 @@ QExplicitlySharedDataPointer<QJsArrayData> QJsNodeData::toArray()
 		return QExplicitlySharedDataPointer<QJsArrayData>(static_cast<QJsArrayData*>(this));
 	}
 	// else return null
-	return QExplicitlySharedDataPointer<QJsArrayData>();
+	return QExplicitlySharedDataPointer<QJsArrayData>(new QJsArrayData);
 }
 
 QExplicitlySharedDataPointer<QJsDocumentData> QJsNodeData::toDocument()
@@ -491,7 +496,7 @@ QExplicitlySharedDataPointer<QJsDocumentData> QJsNodeData::toDocument()
 		return QExplicitlySharedDataPointer<QJsDocumentData>(static_cast<QJsDocumentData*>(this));
 	}
 	// else return null
-	return QExplicitlySharedDataPointer<QJsDocumentData>();
+	return QExplicitlySharedDataPointer<QJsDocumentData>(new QJsDocumentData);
 }
 
 QByteArray QJsNodeData::toJson(QJsonDocument::JsonFormat format/* = QJsonDocument::Indented*/)

@@ -37,6 +37,8 @@ public:
 
 	QJsDocument    ownerDocument();
 
+	bool           hasChildByKey(const QString &strKeyName);
+
 	QList<QJsNode> childNodes();
 
 	QStringList    childrenKeys();

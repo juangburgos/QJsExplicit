@@ -13,9 +13,13 @@ public:
 
 	QJsObject cloneToObject(const QString &strKeyName = "");
 
-	static QJsDocument fromJson(const QByteArray &json);
+	// TODO : Move document to inherit from object
 
-	static QJsDocument fromBinaryData(const QByteArray &bindata);
+	// TODO : QString &error
+
+	static QJsDocument fromJson(const QByteArray &json, QString &error);
+
+	static QJsDocument fromBinaryData(const QByteArray &bindata, QString &error);
 
 };
 

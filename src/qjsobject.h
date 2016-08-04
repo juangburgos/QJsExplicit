@@ -14,6 +14,8 @@ public:
 
 	QStringList attributeNames();
 
+	bool        hasAttribute(const QString &strName);
+
 	QVariant    attributeValue(QString strName);
 
 	bool        isBool(QString strName);

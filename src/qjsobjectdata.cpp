@@ -32,6 +32,11 @@ QStringList QJsObjectData::attributeNames()
 	return listAttrNames;
 }
 
+bool QJsObjectData::hasAttribute(const QString &strName)
+{
+	return m_jsonValue.toObject().keys().contains(strName);
+}
+
 QVariant QJsObjectData::attributeValue(QString strName)
 {
 	return m_jsonValue.toObject().value(strName).toVariant();

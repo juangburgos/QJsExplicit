@@ -18,7 +18,7 @@ bool QJsDocumentData::isDocument()
 
 QExplicitlySharedDataPointer<QJsNodeData> QJsDocumentData::parentNode()
 {
-	return QExplicitlySharedDataPointer<QJsNodeData>();
+	return QExplicitlySharedDataPointer<QJsNodeData>(new QJsNodeData);
 }
 
 bool QJsDocumentData::setParentNode(const QExplicitlySharedDataPointer<QJsNodeData> &newParent)

@@ -56,6 +56,11 @@ QJsDocument QJsNode::ownerDocument()
 	return doc;
 }
 
+bool QJsNode::hasChildByKey(const QString &strKeyName)
+{
+	return data->hasChildByKey(strKeyName);
+}
+
 QList<QJsNode> QJsNode::childNodes()
 {
 	QList<QJsNode> listChildNodes;

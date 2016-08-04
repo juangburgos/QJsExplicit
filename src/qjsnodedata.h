@@ -44,6 +44,7 @@ public:
 
 	// get root
 	QExplicitlySharedDataPointer<QJsDocumentData>    ownerDocument();
+	bool                                             hasChildByKey(const QString &strKeyName);
 
     // children can only be QJsObjectData or QJsArrayData
     QList<QExplicitlySharedDataPointer<QJsNodeData>> childNodes();

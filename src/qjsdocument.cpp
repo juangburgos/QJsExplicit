@@ -38,16 +38,16 @@ QJsObject QJsDocument::cloneToObject(const QString &strKeyName /*= ""*/)
 	return obj;
 }
 
-QJsDocument QJsDocument::fromJson(const QByteArray &json)
+QJsDocument QJsDocument::fromJson(const QByteArray &json, QString &error)
 {
 	QJsDocument doc;
-	doc.data->toDocument()->fromJson(json);
+	error = doc.data->toDocument()->fromJson(json);
 	return doc;
 }
 
-QJsDocument QJsDocument::fromBinaryData(const QByteArray &bindata)
+QJsDocument QJsDocument::fromBinaryData(const QByteArray &bindata, QString &error)
 {
 	QJsDocument doc;
-	doc.data->toDocument()->fromBinaryData(bindata);
+	error = doc.data->toDocument()->fromBinaryData(bindata);
 	return doc;
 }
