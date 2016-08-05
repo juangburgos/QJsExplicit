@@ -69,6 +69,8 @@ public:
 
 	QJsDocument    toDocument();
 
+	QJsNode        clone();
+
 	QByteArray     toJson(JsFormat format = Indented);
 
 	QByteArray	   toBinaryData();

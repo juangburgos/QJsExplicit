@@ -1,9 +1,9 @@
 #ifndef QJSDOCUMENTDATA_H
 #define QJSDOCUMENTDATA_H
 
-#include "qjsnodedata.h"
+#include "qjsobjectdata.h"
 
-class QJsDocumentData : public QJsNodeData
+class QJsDocumentData : public QJsObjectData
 {
 public:
     QJsDocumentData();
@@ -13,11 +13,9 @@ public:
 	QExplicitlySharedDataPointer<QJsNodeData> parentNode() Q_DECL_OVERRIDE;
 	bool setParentNode(const QExplicitlySharedDataPointer<QJsNodeData> &newParent) Q_DECL_OVERRIDE;
 
-	QExplicitlySharedDataPointer<QJsObjectData>    cloneToObject(const QString &strKeyName = "");
 	// return error message
 	QString    	fromJson(const QByteArray &json);
 	QString  	fromBinaryData(const QByteArray &data);
-
 
 };
 

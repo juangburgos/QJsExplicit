@@ -428,18 +428,22 @@ QExplicitlySharedDataPointer<QJsNodeData> QJsNodeData::removeChild(const QString
 QExplicitlySharedDataPointer<QJsNodeData> QJsNodeData::replaceChild(const QString &strKeyName, const QExplicitlySharedDataPointer<QJsNodeData> &nodeData)
 {
 	// copy key name
+	//nodeData->m_strKeyName = strKeyName;
+	//// copy backend data
+	//auto originalNode = getChildByKey(strKeyName);
+	//if (!originalNode)
+	//{
+	//	return QExplicitlySharedDataPointer<QJsNodeData>(new QJsNodeData);
+	//}
+	//originalNode           = nodeData;
+	//originalNode->m_parent = this;
+	//// recreateChildren -> setParentNode -> updateJsonValue <-> updateJsonValue
+	//originalNode->recreateChildren();
+	//return originalNode;
+	removeChild(strKeyName);
 	nodeData->m_strKeyName = strKeyName;
-	// copy backend data
-	auto originalNode = getChildByKey(strKeyName);
-	if (!originalNode)
-	{
-		return QExplicitlySharedDataPointer<QJsNodeData>(new QJsNodeData);
-	}
-	originalNode      = nodeData;
-	// recreateChildren -> setParentNode -> updateJsonValue <-> updateJsonValue
-	originalNode->recreateChildren();
-
-	return originalNode;
+	appendChild(nodeData);
+	return nodeData;
 }
 
 bool QJsNodeData::isNull()
@@ -469,7 +473,7 @@ bool QJsNodeData::isDocument()
 QExplicitlySharedDataPointer<QJsObjectData> QJsNodeData::toObject()
 {
 	// if castable then return
-	if (this->isObject() && static_cast<QJsObjectData*>(this))
+	if ( (this->isObject() || this->isDocument()) && static_cast<QJsObjectData*>(this))
 	{
 		return QExplicitlySharedDataPointer<QJsObjectData>(static_cast<QJsObjectData*>(this));
 	}
@@ -499,22 +503,48 @@ QExplicitlySharedDataPointer<QJsDocumentData> QJsNodeData::toDocument()
 	return QExplicitlySharedDataPointer<QJsDocumentData>(new QJsDocumentData);
 }
 
+QExplicitlySharedDataPointer<QJsNodeData> QJsNodeData::clone()
+{
+	QExplicitlySharedDataPointer<QJsNodeData> newNode;
+	if (this->isObject())
+	{
+		newNode = QExplicitlySharedDataPointer<QJsNodeData>(new QJsObjectData());
+	}
+	else if (this->isArray())
+	{
+		newNode = QExplicitlySharedDataPointer<QJsNodeData>(new QJsArrayData());
+	}
+	else if (this->isDocument())
+	{
+		newNode = QExplicitlySharedDataPointer<QJsNodeData>(new QJsDocumentData());
+	}
+	else
+	{
+		newNode = QExplicitlySharedDataPointer<QJsNodeData>(new QJsNodeData());
+	}
+	newNode->m_strKeyName = m_strKeyName;
+	newNode->m_jsonValue = m_jsonValue;
+	newNode->recreateChildren();
+	return newNode;
+}
+
 QByteArray QJsNodeData::toJson(QJsonDocument::JsonFormat format/* = QJsonDocument::Indented*/)
 {
-	if (this->isObject() || this->isDocument())
-	{
-		QJsonObject   jsonTempObj = m_jsonValue.toObject();
-		QJsonDocument jsonTempDoc;
-		jsonTempDoc.setObject(jsonTempObj);
-		return jsonTempDoc.toJson(format); 
-	} 
-	else if (this->isArray())
+
+	if (this->isArray())
 	{
 		QJsonArray    jsonTempArr = m_jsonValue.toArray();
 		QJsonDocument jsonTempDoc;
 		jsonTempDoc.setArray(jsonTempArr);
 		return jsonTempDoc.toJson(format); 
 	}
+	else if (!this->isNull())
+	{
+		QJsonObject   jsonTempObj = m_jsonValue.toObject();
+		QJsonDocument jsonTempDoc;
+		jsonTempDoc.setObject(jsonTempObj);
+		return jsonTempDoc.toJson(format); 
+	} 
 	return QByteArray();
 }
 

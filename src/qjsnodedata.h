@@ -29,7 +29,7 @@ public:
     //        because we can use those to create instances of the QJsNode wrappers
 
 	// In case of parent is array, key is index in array
-	void    setKeyName(const QString &strKeyName);
+	void    setKeyName(const QString &strKeyName); // TODO : return reference to this to allow chaining
 	QString getKeyName();
 
 	void       setJsonValue(const QJsonValue &jsonValue);
@@ -78,6 +78,8 @@ public:
 	QExplicitlySharedDataPointer<QJsObjectData>    toObject();
 	QExplicitlySharedDataPointer<QJsArrayData>     toArray();
 	QExplicitlySharedDataPointer<QJsDocumentData>  toDocument();
+
+	QExplicitlySharedDataPointer<QJsNodeData> clone();
 
 	QByteArray	toJson(QJsonDocument::JsonFormat format = QJsonDocument::Indented);
 	QByteArray	toBinaryData();

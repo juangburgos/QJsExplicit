@@ -27,15 +27,6 @@ bool QJsDocumentData::setParentNode(const QExplicitlySharedDataPointer<QJsNodeDa
 	return false;
 }
 
-QExplicitlySharedDataPointer<QJsObjectData> QJsDocumentData::cloneToObject(const QString &strKeyName /*= ""*/)
-{
-	auto newObj = QExplicitlySharedDataPointer<QJsObjectData>(new QJsObjectData());
-	newObj->m_strKeyName  = strKeyName;
-	newObj->m_jsonValue   = m_jsonValue;
-	newObj->recreateChildren();
-	return newObj;
-}
-
 QString QJsDocumentData::fromJson(const QByteArray &json)
 {
 	QJsonParseError error;

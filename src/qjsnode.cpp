@@ -180,6 +180,14 @@ QJsDocument QJsNode::toDocument()
 	return doc;
 }
 
+QJsNode QJsNode::clone()
+{
+	auto res = data->clone();
+	QJsNode obj;
+	obj.data = res;
+	return obj;
+}
+
 QByteArray QJsNode::toJson(JsFormat format /*= Indented*/)
 {
 	switch (format)

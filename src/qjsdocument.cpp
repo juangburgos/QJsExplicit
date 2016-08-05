@@ -30,14 +30,6 @@ QJsDocument::~QJsDocument()
 
 }
 
-QJsObject QJsDocument::cloneToObject(const QString &strKeyName /*= ""*/)
-{
-	auto res = data->toDocument()->cloneToObject(strKeyName);
-	QJsObject obj;
-	obj.data = res;
-	return obj;
-}
-
 QJsDocument QJsDocument::fromJson(const QByteArray &json, QString &error)
 {
 	QJsDocument doc;

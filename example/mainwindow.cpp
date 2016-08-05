@@ -63,7 +63,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	// print original
 	ui->plainTextEdit->setPlainText(strJSON);
 	// print copy
-	QJsDocument doccopy = QJsDocument::fromJson(strJSON.toUtf8());
+	QString strError;
+	QJsDocument doccopy = QJsDocument::fromJson(strJSON.toUtf8(), strError);
 	ui->plainTextEdit->appendPlainText("\n\n" + doccopy.toJson(QJsNode::Compact));
 	// print copy in binary
 	ui->plainTextEdit->appendPlainText("\n\n" + QString::fromStdString(doccopy.toBinaryData().toStdString()));
