@@ -153,6 +153,7 @@ void QJsArrayData::appendValue(QString strValue)
 
 void QJsArrayData::appendObject(QExplicitlySharedDataPointer<QJsObjectData> objValue)
 {
+	objValue->m_strKeyName.clear();
 	appendChild(objValue);
 }
 

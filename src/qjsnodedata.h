@@ -21,6 +21,7 @@ class QJsDocumentData;
 
 class QJsNodeData : public QSharedData
 {
+	friend class QJsArrayData;
 public:
     QJsNodeData();
     QJsNodeData(const QJsNodeData &other);

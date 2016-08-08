@@ -110,14 +110,14 @@ void QJsNodeData::updateJsonValue(const QJsonValue &jsonValue)
 		{
 			QJsonObject jsonObjParent = jsonValParent.toObject();
 			jsonObjParent.insert(m_strKeyName, m_jsonValue);
-			m_parent->updateJsonValue(QJsonValue(jsonObjParent));
+			m_parent->updateJsonValue(jsonObjParent);
 		}
 		else if (m_parent->isArray())
 		{
 			QJsonArray jsonArrParent = jsonValParent.toArray();
 			// NOTE : this replace, setParentNode append
 			jsonArrParent.replace(m_strKeyName.toInt(), m_jsonValue); // NOTE IMPORTANT, in case of parent being array, the key of an array child id the index in string mode
-			m_parent->updateJsonValue(QJsonValue(jsonArrParent));
+			m_parent->updateJsonValue(jsonArrParent);
 		}
 		else
 		{
@@ -147,7 +147,9 @@ bool QJsNodeData::setParentNode(const QExplicitlySharedDataPointer<QJsNodeData> 
 			if (jsonObjParent.contains(m_strKeyName))
 			{
 				jsonObjParent.remove(m_strKeyName);
-				m_parent->updateJsonValue(QJsonValue(jsonObjParent));
+				m_parent->updateJsonValue(jsonObjParent);
+				// remove from parent children list
+				m_parent->m_mapChildren.remove(m_strKeyName);
 			}
 		}
 		else if (m_parent->isArray())
@@ -157,16 +159,14 @@ bool QJsNodeData::setParentNode(const QExplicitlySharedDataPointer<QJsNodeData> 
 			if (intKey >= 0 && intKey < jsonArrParent.size())
 			{
 				jsonArrParent.removeAt(intKey); // NOTE IMPORTANT, in case of parent being array, the key of an array child id the index in string mode
-				m_parent->updateJsonValue(QJsonValue(jsonArrParent));
+				// all children change key in case of array, so need to recreate children
+				m_parent->setJsonValue(jsonArrParent);
 			}
 		}
 		else
 		{
 			return false; // error
 		}
-		// remove from parent children list
-		m_parent->m_mapChildren.remove(m_strKeyName);
-
 	}
 
 	// copy new parent
@@ -205,7 +205,13 @@ bool QJsNodeData::setParentNode(const QExplicitlySharedDataPointer<QJsNodeData> 
 		{
 			QJsonArray jsonArrParent = jsonValParent.toArray(); 
 			int intKey = m_strKeyName.toInt();
-			if (intKey >= 0 && intKey <= jsonArrParent.size())
+			// NOTE : bug, if exists should replace not overwrite
+			if (jsonArrParent.size() > 0 && intKey >= 0 && intKey < jsonArrParent.size())
+			{
+				jsonArrParent.replace(m_strKeyName.toInt(), m_jsonValue); // NOTE IMPORTANT, here we replace in parent
+				m_parent->updateJsonValue(QJsonValue(jsonArrParent));
+			}
+			else if (intKey >= 0 && intKey <= jsonArrParent.size())
 			{
 				jsonArrParent.insert(m_strKeyName.toInt(), m_jsonValue); // NOTE IMPORTANT, here we insert to parent
 				m_parent->updateJsonValue(QJsonValue(jsonArrParent));
@@ -418,7 +424,7 @@ QExplicitlySharedDataPointer<QJsNodeData> QJsNodeData::removeChild(const QString
 	}
 	// call set null parent to child
 	auto childToRemove = m_mapChildren.value(strKeyName);
-	if (!childToRemove->setParentNode(QExplicitlySharedDataPointer<QJsNodeData>(new QJsNodeData)))
+	if (childToRemove->setParentNode(QExplicitlySharedDataPointer<QJsNodeData>(new QJsNodeData)))
 	{
 		return childToRemove;
 	}
