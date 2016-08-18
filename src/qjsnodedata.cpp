@@ -353,14 +353,16 @@ void QJsNodeData::recreateChildren()
 			{
 				auto newObjChild = QExplicitlySharedDataPointer<QJsObjectData>(new QJsObjectData());
 				newObjChild->m_strKeyName = listKeys.at(i);
-				newObjChild->m_jsonValue  = jsonNewChild;
+				//newObjChild->m_jsonValue  = jsonNewChild; // [BUG] was not creating children of this child
+				newObjChild->setJsonValue(jsonNewChild);
 				newObjChild->setParentNode(QExplicitlySharedDataPointer<QJsNodeData>(this)); // NOTE : setParentNode appends to parent's children list 
 			}
 			else if (jsonNewChild.isArray())
 			{
 				auto newArrChild = QExplicitlySharedDataPointer<QJsArrayData>(new QJsArrayData());
 				newArrChild->m_strKeyName = listKeys.at(i);
-				newArrChild->m_jsonValue = jsonNewChild;
+				//newArrChild->m_jsonValue = jsonNewChild; // [BUG] was not creating children of this child
+				newArrChild->setJsonValue(jsonNewChild);
 				newArrChild->setParentNode(QExplicitlySharedDataPointer<QJsNodeData>(this));
 			}
 			else
