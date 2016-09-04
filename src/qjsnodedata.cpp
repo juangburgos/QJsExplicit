@@ -426,6 +426,10 @@ QExplicitlySharedDataPointer<QJsNodeData> QJsNodeData::removeChild(const QString
 	}
 	// call set null parent to child
 	auto childToRemove = m_mapChildren.value(strKeyName);
+	if (!childToRemove)
+	{
+		return QExplicitlySharedDataPointer<QJsNodeData>(new QJsNodeData);; // null
+	}
 	if (childToRemove->setParentNode(QExplicitlySharedDataPointer<QJsNodeData>(new QJsNodeData)))
 	{
 		return childToRemove;
