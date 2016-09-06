@@ -57,6 +57,8 @@ public:
 
 	bool           isNull();
 
+	bool           isValid();
+
 	bool           isObject();
 
 	bool           isArray();

@@ -467,6 +467,25 @@ bool QJsNodeData::isNull()
     return false;
 }
 
+bool QJsNodeData::isValid()
+{
+	if (isNull())
+	{
+		return false;
+	}
+	// FIX to match QJsObject() or QJsArray()
+	if (m_strKeyName.isEmpty() && m_jsonValue.type() == QJsonValue::Object && m_jsonValue.toObject().isEmpty())
+	{
+		return false;
+	}
+	if (m_strKeyName.isEmpty() && m_jsonValue.type() == QJsonValue::Array && m_jsonValue.toArray().isEmpty())
+	{
+		return false;
+	}
+
+	return true;
+}
+
 bool QJsNodeData::isObject()
 {
 	return false;

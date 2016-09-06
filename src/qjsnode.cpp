@@ -144,6 +144,15 @@ bool QJsNode::isNull()
 	return false;
 }
 
+bool QJsNode::isValid()
+{
+	if (data->isValid())
+	{
+		return true;
+	}
+	return false;
+}
+
 bool QJsNode::isObject()
 {
 	return data->isObject();

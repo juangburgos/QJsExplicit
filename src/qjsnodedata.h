@@ -69,6 +69,8 @@ public:
 
     // isNull if m_jsonValue is NULL
     bool isNull();
+	// isValid if key is non empty and m_jsonValue is not NULL
+	bool isValid();
 
 	// Each class reimplementation must return true accordingly
 	virtual bool isObject();
