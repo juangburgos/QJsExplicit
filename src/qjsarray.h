@@ -57,6 +57,12 @@ public:
 
 	void	 appendArray(QJsArray arrValue);
 
+	QVariant removeValueAt(int   idx);
+
+	int      removeValue(int     intValue);
+
+	QString  removeValue(QString strValue);
+
 	// TODO : insert (shift others) require recreateChildren
 
 };

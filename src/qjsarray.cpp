@@ -146,3 +146,18 @@ void QJsArray::appendArray(QJsArray arrValue)
 {
 	data->toArray()->appendArray(arrValue.data->toArray());
 }
+
+QVariant QJsArray::removeValueAt(int idx)
+{
+	return data->toArray()->removeValueAt(idx);
+}
+
+int QJsArray::removeValue(int intValue)
+{
+	return data->toArray()->removeValue(intValue);
+}
+
+QString QJsArray::removeValue(QString strValue)
+{
+	return data->toArray()->removeValue(strValue);
+}

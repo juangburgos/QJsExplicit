@@ -44,6 +44,11 @@ public:
 	void	    appendObject(QExplicitlySharedDataPointer<QJsObjectData> objValue);
 	void	    appendArray (QExplicitlySharedDataPointer<QJsArrayData>  arrValue);
 
+	QVariant    removeValueAt(int     idx     );
+	int         removeValue  (int     intValue);
+	QString     removeValue  (QString strValue);
+
+
 	// TODO : insert (shift others) require recreateChildren
 
 

@@ -161,3 +161,47 @@ void QJsArrayData::appendArray(QExplicitlySharedDataPointer<QJsArrayData> arrVal
 {
 	appendChild(arrValue);
 }
+
+QVariant QJsArrayData::removeValueAt(int idx)
+{
+	QJsonArray jsonTempArr = m_jsonValue.toArray();
+	if (idx < 0 || idx >= jsonTempArr.size())
+	{
+		return QVariant();
+	}
+	QJsonValue varVal = jsonTempArr.takeAt(idx);
+	updateJsonValue(QJsonValue(jsonTempArr));
+	return varVal.toVariant();
+}
+
+int QJsArrayData::removeValue(int intValue)
+{
+	QJsonArray jsonTempArr = m_jsonValue.toArray();
+	for (int i = 0; i < jsonTempArr.count(); i++)
+	{
+		if (jsonTempArr.at(i).isDouble() && ((int)jsonTempArr.at(i).isDouble() == intValue))
+		{
+			QJsonValue intVal = jsonTempArr.takeAt(i);
+			updateJsonValue(QJsonValue(jsonTempArr));
+			return (int)intVal.toDouble();
+		}
+	}
+	return 0;
+}
+
+QString QJsArrayData::removeValue(QString strValue)
+{
+	QJsonArray jsonTempArr = m_jsonValue.toArray();
+	for (int i = 0; i < jsonTempArr.count(); i++)
+	{
+		if (jsonTempArr.at(i).isString() && jsonTempArr.at(i).toString().compare(strValue, Qt::CaseInsensitive) == 0)
+		{
+			QJsonValue strVal = jsonTempArr.takeAt(i);
+			updateJsonValue(QJsonValue(jsonTempArr));
+			return strVal.toString();
+		}
+	}
+	return QString();
+}
+
+
