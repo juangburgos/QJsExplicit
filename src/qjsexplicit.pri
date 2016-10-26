@@ -1,5 +1,5 @@
 
-
+INCLUDEPATH += $$PWD/
 
 SOURCES  += $$PWD/qjsnode.cpp         \
             $$PWD/qjsobject.cpp       \
