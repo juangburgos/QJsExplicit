@@ -92,6 +92,13 @@ void QJsObjectData::setAttribute(const QString &strName, QString strValue)
 	updateJsonValue(QJsonValue(jsonTempObj));
 }
 
+void QJsObjectData::setAttribute(const QString &strName, qint64 int64Value)
+{
+	QJsonObject jsonTempObj = m_jsonValue.toObject();
+	jsonTempObj.insert(strName, QJsonValue(int64Value));
+	updateJsonValue(QJsonValue(jsonTempObj));
+}
+
 void QJsObjectData::removeAttribute(const QString &strName)
 {
 	QJsonObject jsonTempObj = m_jsonValue.toObject();

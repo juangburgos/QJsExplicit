@@ -90,6 +90,11 @@ void QJsObject::setAttribute(const QString &strName, const char *str)
 	data->toObject()->setAttribute(strName, QString::fromUtf8(str));
 }
 
+void QJsObject::setAttribute(const QString &strName, qint64 int64Value)
+{
+	data->toObject()->setAttribute(strName, int64Value);
+}
+
 void QJsObject::removeAttribute(const QString &strName)
 {
 	data->toObject()->removeAttribute(strName);
