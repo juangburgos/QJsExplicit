@@ -197,7 +197,7 @@ QJsNode QJsNode::clone()
 	return obj;
 }
 
-QByteArray QJsNode::toJson(JsFormat format /*= Indented*/)
+QByteArray QJsNode::toJson(JsFormat format /*= Indented*/) const
 {
 	switch (format)
 	{

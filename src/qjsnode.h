@@ -73,7 +73,7 @@ public:
 
 	QJsNode        clone();
 
-	QByteArray     toJson(JsFormat format = Indented);
+	QByteArray     toJson(JsFormat format = Indented) const;
 
 	QByteArray	   toBinaryData();
 
