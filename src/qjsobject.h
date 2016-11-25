@@ -12,19 +12,19 @@ public:
     QJsObject &operator=(const QJsObject &);
     ~QJsObject();
 
-	QStringList attributeNames();
+	QStringList attributeNames() const;
 
-	bool        hasAttribute(const QString &strName);
+	bool        hasAttribute(const QString &strName) const;
 
-	QVariant    attributeValue(QString strName);
+	QVariant    attributeValue(QString strName) const;
 
-	bool        isBool(QString strName);
+	bool        isBool(QString strName) const;
 
-	bool        isInteger(QString strName);
+	bool        isInteger(QString strName) const;
 
-	bool        isDouble(QString strName);
+	bool        isDouble(QString strName) const;
 
-	bool        isString(QString strName);
+	bool        isString(QString strName) const;
 
 	void	    setAttribute(const QString &strName, bool    boolValue);
 

@@ -30,49 +30,49 @@ QJsArray::~QJsArray()
 
 }
 
-int QJsArray::count()
+int QJsArray::count() const
 {
 	return data->toArray()->count();
 }
 
-QVariant QJsArray::getValueAt(int idx)
+QVariant QJsArray::getValueAt(int idx) const
 {
 	return data->toArray()->getValueAt(idx);
 }
 
-QJsNode QJsArray::getNodeAt(int idx)
+QJsNode QJsArray::getNodeAt(int idx) const
 {
 	QJsNode node;
 	node.data = data->toArray()->getNodeAt(idx);
 	return node;
 }
 
-bool QJsArray::isBool(int idx)
+bool QJsArray::isBool(int idx) const
 {
 	return data->toArray()->isBool(idx);
 }
 
-bool QJsArray::isInteger(int idx)
+bool QJsArray::isInteger(int idx) const
 {
 	return data->toArray()->isInteger(idx);
 }
 
-bool QJsArray::isDouble(int idx)
+bool QJsArray::isDouble(int idx) const
 {
 	return data->toArray()->isDouble(idx);
 }
 
-bool QJsArray::isString(int idx)
+bool QJsArray::isString(int idx) const
 {
 	return data->toArray()->isString(idx);
 }
 
-bool QJsArray::isObject(int idx)
+bool QJsArray::isObject(int idx) const
 {
 	return data->toArray()->isObject(idx);
 }
 
-bool QJsArray::isArray(int idx)
+bool QJsArray::isArray(int idx) const
 {
 	return data->toArray()->isArray(idx);
 }

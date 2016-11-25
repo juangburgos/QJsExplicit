@@ -31,23 +31,23 @@ public:
 
 	void           setKeyName(const QString &strKeyName);
 
-	QString        getKeyName();
+	QString        getKeyName() const;
 
-	QJsNode        parentNode();
+	QJsNode        parentNode() const;
 
-	QJsDocument    ownerDocument();
+	QJsDocument    ownerDocument() const;
 
-	bool           hasChildByKey(const QString &strKeyName);
+	bool           hasChildByKey(const QString &strKeyName) const;
 
-	QList<QJsNode> childNodes();
+	QList<QJsNode> childNodes() const;
 
-	QStringList    childrenKeys();
+	QStringList    childrenKeys() const;
 
-	QJsNode        getChildByKey(const QString &strKeyName);
+	QJsNode        getChildByKey(const QString &strKeyName) const;
 
-	QJsObject      createObject(const QString &strKeyName = "");
+	QJsObject      createObject(const QString &strKeyName = "") const;
 
-	QJsArray       createArray(const QString &strKeyName = "");
+	QJsArray       createArray(const QString &strKeyName = "") const;
 
 	QJsNode        appendChild (const QJsNode &nodeData);
 
@@ -55,27 +55,27 @@ public:
 
 	QJsNode        replaceChild(const QString &strKeyName, QJsNode &nodeData);
 
-	bool           isNull();
+	bool           isNull() const;
 
-	bool           isValid();
+	bool           isValid() const;
 
-	bool           isObject();
+	bool           isObject() const;
 
-	bool           isArray();
+	bool           isArray() const;
 
-	bool           isDocument();
+	bool           isDocument() const;
 
-	QJsObject      toObject();
+	QJsObject      toObject() const;
 
-	QJsArray       toArray();
+	QJsArray       toArray() const;
 
-	QJsDocument    toDocument();
+	QJsDocument    toDocument() const;
 
-	QJsNode        clone();
+	QJsNode        clone() const;
 
 	QByteArray     toJson(JsFormat format = Indented) const;
 
-	QByteArray	   toBinaryData();
+	QByteArray	   toBinaryData() const;
 
 protected:
     QExplicitlySharedDataPointer<QJsNodeData> data;

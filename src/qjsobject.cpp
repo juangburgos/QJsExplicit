@@ -30,37 +30,37 @@ QJsObject::~QJsObject()
 
 }
 
-QStringList QJsObject::attributeNames()
+QStringList QJsObject::attributeNames() const
 {
 	return data->toObject()->attributeNames();
 }
 
-bool QJsObject::hasAttribute(const QString &strName)
+bool QJsObject::hasAttribute(const QString &strName) const
 {
 	return data->toObject()->hasAttribute(strName);
 }
 
-QVariant QJsObject::attributeValue(QString strName)
+QVariant QJsObject::attributeValue(QString strName) const
 {
 	return data->toObject()->attributeValue(strName);
 }
 
-bool QJsObject::isBool(QString strName)
+bool QJsObject::isBool(QString strName) const
 {
 	return data->toObject()->isBool(strName);
 }
 
-bool QJsObject::isInteger(QString strName)
+bool QJsObject::isInteger(QString strName) const
 {
 	return data->toObject()->isInteger(strName);
 }
 
-bool QJsObject::isDouble(QString strName)
+bool QJsObject::isDouble(QString strName) const
 {
 	return data->toObject()->isDouble(strName);
 }
 
-bool QJsObject::isString(QString strName)
+bool QJsObject::isString(QString strName) const
 {
 	return data->toObject()->isString(strName);
 }

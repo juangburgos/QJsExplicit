@@ -11,23 +11,23 @@ public:
     QJsArray &operator=(const QJsArray &);
     ~QJsArray();
 
-	int      count();
+	int      count() const;
 
-	QVariant getValueAt(int idx);
+	QVariant getValueAt(int idx) const;
 
-	QJsNode  getNodeAt(int idx);
+	QJsNode  getNodeAt(int idx) const;
 
-	bool     isBool(int idx);
+	bool     isBool(int idx) const;
 
-	bool     isInteger(int idx);
+	bool     isInteger(int idx) const;
 
-	bool     isDouble(int idx);
+	bool     isDouble(int idx) const;
 
-	bool     isString(int idx);
+	bool     isString(int idx) const;
 
-	bool     isObject(int idx);
+	bool     isObject(int idx) const;
 
-	bool     isArray(int idx);
+	bool     isArray(int idx) const;
 
 	void	 setValueAt(int idx, bool    boolValue);
 

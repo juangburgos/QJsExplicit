@@ -37,31 +37,31 @@ void QJsNode::setKeyName(const QString &strKeyName)
 	data->setKeyName(strKeyName);
 }
 
-QString QJsNode::getKeyName()
+QString QJsNode::getKeyName() const
 {
 	return data->getKeyName();
 }
 
-QJsNode QJsNode::parentNode()
+QJsNode QJsNode::parentNode() const
 {
 	QJsNode node;
 	node.data = data->parentNode();
 	return node;
 }
 
-QJsDocument QJsNode::ownerDocument()
+QJsDocument QJsNode::ownerDocument() const
 {
 	QJsDocument doc;
 	doc.data = data->ownerDocument();
 	return doc;
 }
 
-bool QJsNode::hasChildByKey(const QString &strKeyName)
+bool QJsNode::hasChildByKey(const QString &strKeyName) const
 {
 	return data->hasChildByKey(strKeyName);
 }
 
-QList<QJsNode> QJsNode::childNodes()
+QList<QJsNode> QJsNode::childNodes() const
 {
 	QList<QJsNode> listChildNodes;
 	for (int i = 0; i < data->childNodes().count(); i++)
@@ -73,26 +73,26 @@ QList<QJsNode> QJsNode::childNodes()
 	return listChildNodes;
 }
 
-QStringList QJsNode::childrenKeys()
+QStringList QJsNode::childrenKeys() const
 {
 	return data->childrenKeys();
 }
 
-QJsNode QJsNode::getChildByKey(const QString &strKeyName)
+QJsNode QJsNode::getChildByKey(const QString &strKeyName) const
 {
 	QJsNode node;
 	node.data = data->getChildByKey(strKeyName);
 	return node;
 }
 
-QJsObject QJsNode::createObject(const QString &strKeyName /*= ""*/)
+QJsObject QJsNode::createObject(const QString &strKeyName /*= ""*/) const
 {
 	QJsObject obj;
 	obj.data = data->createObject(strKeyName);
 	return obj;
 }
 
-QJsArray QJsNode::createArray(const QString &strKeyName /*= ""*/)
+QJsArray QJsNode::createArray(const QString &strKeyName /*= ""*/) const
 {
 	QJsArray arr;
 	arr.data = data->createArray(strKeyName);
@@ -135,7 +135,7 @@ QJsNode QJsNode::replaceChild(const QString &strKeyName, QJsNode &nodeData)
 	return node;
 }
 
-bool QJsNode::isNull()
+bool QJsNode::isNull() const
 {
 	if (!data || data->isNull())
 	{
@@ -144,7 +144,7 @@ bool QJsNode::isNull()
 	return false;
 }
 
-bool QJsNode::isValid()
+bool QJsNode::isValid() const
 {
 	if (data->isValid())
 	{
@@ -153,43 +153,43 @@ bool QJsNode::isValid()
 	return false;
 }
 
-bool QJsNode::isObject()
+bool QJsNode::isObject() const
 {
 	return data->isObject();
 }
 
-bool QJsNode::isArray()
+bool QJsNode::isArray() const
 {
 	return data->isArray();
 }
 
-bool QJsNode::isDocument()
+bool QJsNode::isDocument() const
 {
 	return data->isDocument();
 }
 
-QJsObject QJsNode::toObject()
+QJsObject QJsNode::toObject() const
 {
 	QJsObject obj;
 	obj.data = data->toObject();
 	return obj;
 }
 
-QJsArray QJsNode::toArray()
+QJsArray QJsNode::toArray() const
 {
 	QJsArray arr;
 	arr.data = data->toArray();
 	return arr;
 }
 
-QJsDocument QJsNode::toDocument()
+QJsDocument QJsNode::toDocument() const
 {
 	QJsDocument doc;
 	doc.data = data->toDocument();
 	return doc;
 }
 
-QJsNode QJsNode::clone()
+QJsNode QJsNode::clone() const
 {
 	auto res = data->clone();
 	QJsNode obj;
@@ -214,7 +214,7 @@ QByteArray QJsNode::toJson(JsFormat format /*= Indented*/) const
 	return QByteArray();
 }
 
-QByteArray QJsNode::toBinaryData()
+QByteArray QJsNode::toBinaryData() const
 {
 	return data->toBinaryData();
 }
