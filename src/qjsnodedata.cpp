@@ -236,7 +236,11 @@ bool QJsNodeData::setParentNode(const QExplicitlySharedDataPointer<QJsNodeData> 
 
 QExplicitlySharedDataPointer<QJsDocumentData> QJsNodeData::ownerDocument()
 {
-	if (m_parent->isNull())
+	if (this->isDocument())
+	{
+		return this->toDocument();
+	}
+	else if (!m_parent || m_parent->isNull())
 	{
 		// TODO : error
 		return QExplicitlySharedDataPointer<QJsDocumentData>(new QJsDocumentData);
