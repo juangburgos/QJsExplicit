@@ -11,6 +11,11 @@ QJsObjectData::QJsObjectData()
 	m_parent = nullptr;
 }
 
+QJsObjectData::~QJsObjectData()
+{
+	this->removeChildren();
+}
+
 bool QJsObjectData::isObject()
 {
 	return true;

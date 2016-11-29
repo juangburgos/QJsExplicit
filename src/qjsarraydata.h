@@ -7,6 +7,7 @@ class QJsArrayData : public QJsNodeData
 {
 public:
     QJsArrayData();
+	~QJsArrayData();
 
 	// override necessary base class methods
 	bool isArray() Q_DECL_OVERRIDE;

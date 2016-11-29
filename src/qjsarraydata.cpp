@@ -11,6 +11,11 @@ QJsArrayData::QJsArrayData()
 	m_parent = nullptr;
 }
 
+QJsArrayData::~QJsArrayData()
+{
+	this->removeChildren();
+}
+
 bool QJsArrayData::isArray()
 {
 	return true;

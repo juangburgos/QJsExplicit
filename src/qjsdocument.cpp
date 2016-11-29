@@ -15,19 +15,22 @@ QJsDocument::QJsDocument()
 
 QJsDocument::QJsDocument(const QJsDocument &rhs)
 {
+	data.reset();
     data = rhs.data;
 }
 
 QJsDocument &QJsDocument::operator=(const QJsDocument &rhs)
 {
-    if (this != &rhs)
-        data.operator=(rhs.data);
-    return *this;
+	if (this != &rhs) {
+		data.reset();
+		data.operator=(rhs.data);
+	}
+	return *this;
 }
 
 QJsDocument::~QJsDocument()
 {
-
+	data.reset();
 }
 
 QJsDocument QJsDocument::fromJson(const QByteArray &json, QString &error)

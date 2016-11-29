@@ -7,6 +7,7 @@ class QJsDocumentData : public QJsObjectData
 {
 public:
     QJsDocumentData();
+	~QJsDocumentData();
 
 	// override necessary base class methods
 	bool isDocument() Q_DECL_OVERRIDE;

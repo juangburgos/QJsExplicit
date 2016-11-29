@@ -11,6 +11,11 @@ QJsDocumentData::QJsDocumentData()
 	m_parent = nullptr;
 }
 
+QJsDocumentData::~QJsDocumentData()
+{
+	this->removeChildren();
+}
+
 bool QJsDocumentData::isDocument()
 {
 	return true;

@@ -10,24 +10,27 @@
 
 QJsArray::QJsArray()
 {
-    data = QExplicitlySharedDataPointer<QJsArrayData>(new QJsArrayData());
+	data = QExplicitlySharedDataPointer<QJsArrayData>(new QJsArrayData());
 }
 
 QJsArray::QJsArray(const QJsArray &rhs)
 {
+	data.reset();
     data = rhs.data;
 }
 
 QJsArray &QJsArray::operator=(const QJsArray &rhs)
 {
-    if (this != &rhs)
-        data.operator=(rhs.data);
-    return *this;
+	if (this != &rhs) {
+		data.reset();
+		data.operator=(rhs.data);
+	}
+	return *this;
 }
 
 QJsArray::~QJsArray()
 {
-
+	data.reset();
 }
 
 int QJsArray::count() const

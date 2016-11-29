@@ -51,7 +51,7 @@ public:
 
 	QJsNode        appendChild (const QJsNode &nodeData);
 
-	QJsNode        removeChild (const QString &strKeyName);
+	void           removeChild (const QString &strKeyName);
 
 	QJsNode        replaceChild(const QString &strKeyName, QJsNode &nodeData);
 

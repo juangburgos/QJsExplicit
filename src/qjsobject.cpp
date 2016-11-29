@@ -10,24 +10,27 @@
 
 QJsObject::QJsObject()
 {
-    data = QExplicitlySharedDataPointer<QJsObjectData>(new QJsObjectData());
+	data = QExplicitlySharedDataPointer<QJsObjectData>(new QJsObjectData());
 }
 
 QJsObject::QJsObject(const QJsObject &rhs)
 {
+	data.reset();
     data = rhs.data;
 }
 
 QJsObject &QJsObject::operator=(const QJsObject &rhs)
 {
-    if (this != &rhs)
-        data.operator=(rhs.data);
-    return *this;
+	if (this != &rhs) {
+		data.reset();
+		data.operator=(rhs.data);
+	}
+	return *this;
 }
 
 QJsObject::~QJsObject()
 {
-
+	data.reset();
 }
 
 QStringList QJsObject::attributeNames() const

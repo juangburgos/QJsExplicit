@@ -10,6 +10,7 @@ class QJsObjectData : public QJsNodeData
 	friend class QJsDocumentData;
 public:
     QJsObjectData();
+	~QJsObjectData();
 
 	// override necessary base class methods
 	bool isObject() Q_DECL_OVERRIDE;

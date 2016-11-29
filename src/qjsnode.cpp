@@ -10,26 +10,29 @@
 
 #include <QJsonDocument>
 
-QJsNode::QJsNode() : data(new QJsNodeData())
+QJsNode::QJsNode() : data(nullptr)
 {
-
+	data = QExplicitlySharedDataPointer<QJsNodeData>(new QJsNodeData());
 }
 
 QJsNode::QJsNode(const QJsNode &rhs) : data(rhs.data)
 {
-
+	data.reset();
+	data = rhs.data;
 }
 
 QJsNode &QJsNode::operator=(const QJsNode &rhs)
 {
-    if (this != &rhs)
-        data.operator=(rhs.data);
+	if (this != &rhs) {
+		data.reset();
+		data.operator=(rhs.data);
+	}
     return *this;
 }
 
 QJsNode::~QJsNode()
 {
-
+	data.reset();
 }
 
 void QJsNode::setKeyName(const QString &strKeyName)
@@ -111,16 +114,16 @@ QJsNode QJsNode::appendChild(const QJsNode &nodeData)
 	return node;
 }
 
-QJsNode QJsNode::removeChild(const QString &strKeyName)
+void QJsNode::removeChild(const QString &strKeyName)
 {
-	auto res = data->removeChild(strKeyName);
-	if (!res)
-	{
-		return QJsNode();
-	}
-	QJsNode node;
-	node.data = res;
-	return node;
+	/*auto res = */data->removeChild(strKeyName);
+	//if (!res)
+	//{
+	//	return QJsNode();
+	//}
+	//QJsNode node;
+	//node.data = res;
+	//return node;
 }
 
 QJsNode QJsNode::replaceChild(const QString &strKeyName, QJsNode &nodeData)
