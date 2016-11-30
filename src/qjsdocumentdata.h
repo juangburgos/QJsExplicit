@@ -10,7 +10,11 @@ public:
 	~QJsDocumentData();
 
 	// override necessary base class methods
+	bool isObject()   Q_DECL_OVERRIDE;
+	bool isArray()    Q_DECL_OVERRIDE;
 	bool isDocument() Q_DECL_OVERRIDE;
+
+
 	QExplicitlySharedDataPointer<QJsNodeData> parentNode() Q_DECL_OVERRIDE;
 	bool setParentNode(const QExplicitlySharedDataPointer<QJsNodeData> &newParent) Q_DECL_OVERRIDE;
 

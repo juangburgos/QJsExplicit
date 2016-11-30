@@ -248,8 +248,7 @@ QExplicitlySharedDataPointer<QJsDocumentData> QJsNodeData::ownerDocument()
 	}
 	else if (!m_parent || m_parent->isNull())
 	{
-		// TODO : error
-		return QExplicitlySharedDataPointer<QJsDocumentData>(new QJsDocumentData);
+		return QExplicitlySharedDataPointer<QJsDocumentData>(nullptr); // TODO : error
 	}
 	else if (m_parent->isDocument())
 	{
@@ -349,14 +348,13 @@ QExplicitlySharedDataPointer<QJsArrayData> QJsNodeData::createArray(const QStrin
 void QJsNodeData::recreateChildren()
 {
 	// recreate children map
-	//m_mapChildren.clear();
-	this->removeChildren();
+	this->removeChildren(); // [NOTE] here we perform a deep clone
 	// convert to object or array
 	// loop through json children values that are objects or arrays
 	if (m_jsonValue.isObject())
 	{
 		QJsonObject jsonTempObj = m_jsonValue.toObject();
-		QStringList listKeys = jsonTempObj.keys();
+		QStringList listKeys    = jsonTempObj.keys();
 		for (int i = 0; i < listKeys.count(); i++)
 		{
 			QJsonValue jsonNewChild = jsonTempObj.value(listKeys.at(i));
@@ -434,10 +432,10 @@ QExplicitlySharedDataPointer<QJsNodeData> QJsNodeData::appendChild(const QExplic
 	{
 		return QExplicitlySharedDataPointer<QJsNodeData>(nullptr); // null
 	}
-	// append (setParentNode actually does the linking)
+	// append 
 	if (this->hasChildByKey(nodeData->getKeyName()))
 	{
-		return replaceChild(nodeData->getKeyName(), nodeData);
+		return replaceChild(nodeData->getKeyName(), nodeData); // NOTE: setParentNode actually does the linking
 	}
 	else if (nodeData->setParentNode(QExplicitlySharedDataPointer<QJsNodeData>(this)))
 	{
@@ -486,7 +484,7 @@ bool QJsNodeData::isNull()
 
 bool QJsNodeData::isValid()
 {
-	if (isNull())
+	if (this->isNull())
 	{
 		return false;
 	}
@@ -583,7 +581,7 @@ QExplicitlySharedDataPointer<QJsNodeData> QJsNodeData::clone()
 		newNode = QExplicitlySharedDataPointer<QJsNodeData>(new QJsNodeData());
 	}
 	newNode->m_strKeyName = m_strKeyName;
-	newNode->m_jsonValue = m_jsonValue;
+	newNode->m_jsonValue  = m_jsonValue;
 	newNode->recreateChildren();
 	return newNode;
 }

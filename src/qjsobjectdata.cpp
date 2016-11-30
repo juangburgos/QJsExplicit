@@ -21,6 +21,16 @@ bool QJsObjectData::isObject()
 	return true;
 }
 
+bool QJsObjectData::isArray()
+{
+	return false;
+}
+
+bool QJsObjectData::isDocument()
+{
+	return false;
+}
+
 QStringList QJsObjectData::attributeNames()
 {
 	QStringList listAttrNames;

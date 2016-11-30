@@ -13,7 +13,9 @@ public:
 	~QJsObjectData();
 
 	// override necessary base class methods
-	bool isObject() Q_DECL_OVERRIDE;
+	bool isObject()   Q_DECL_OVERRIDE;
+	bool isArray()    Q_DECL_OVERRIDE;
+	bool isDocument() Q_DECL_OVERRIDE;
 
 	// implement attributes API
 	QStringList attributeNames();

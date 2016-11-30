@@ -21,6 +21,16 @@ bool QJsDocumentData::isDocument()
 	return true;
 }
 
+bool QJsDocumentData::isObject()
+{
+	return false;
+}
+
+bool QJsDocumentData::isArray()
+{
+	return false;
+}
+
 QExplicitlySharedDataPointer<QJsNodeData> QJsDocumentData::parentNode()
 {
 	return QExplicitlySharedDataPointer<QJsNodeData>(new QJsNodeData);

@@ -21,6 +21,16 @@ bool QJsArrayData::isArray()
 	return true;
 }
 
+bool QJsArrayData::isDocument()
+{
+	return false;
+}
+
+bool QJsArrayData::isObject()
+{
+	return false;
+}
+
 int QJsArrayData::count()
 {
 	return m_jsonValue.toArray().count();
