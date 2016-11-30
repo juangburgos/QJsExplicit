@@ -132,13 +132,13 @@ void QJsNodeData::updateJsonValue(const QJsonValue &jsonValue)
 	}
 }
 
-QExplicitlySharedDataPointer<QJsNodeData> QJsNodeData::parentNode()
+QJsNodeData * QJsNodeData::parentNode()
 {
     return m_parent;
 }
 
 // 
-bool QJsNodeData::setParentNode(const QExplicitlySharedDataPointer<QJsNodeData> &newParent)
+bool QJsNodeData::setParentNode(QJsNodeData * newParent)
 {
 	// Use null parent to float free and remove form old only
 	//// append to json AND to children list (different if array or obj)
@@ -288,7 +288,7 @@ QExplicitlySharedDataPointer<QJsObjectData> QJsNodeData::createObject(const QStr
 		auto newObjChild          = QExplicitlySharedDataPointer<QJsObjectData>(new QJsObjectData());
 		newObjChild->m_strKeyName = strKeyName;
 		//newObjChild->m_jsonValue  = QJsonValue(QJsonObject());
-		if (newObjChild->setParentNode(QExplicitlySharedDataPointer<QJsNodeData>(this)))
+		if (newObjChild->setParentNode(this))
 		{
 			return newObjChild;
 		}
@@ -323,7 +323,7 @@ QExplicitlySharedDataPointer<QJsArrayData> QJsNodeData::createArray(const QStrin
 		auto newArrChild = QExplicitlySharedDataPointer<QJsArrayData>(new QJsArrayData());
 		newArrChild->m_strKeyName = strKeyName;
 		//newArrChild->m_jsonValue  = QJsonValue(QJsonArray());
-		if (newArrChild->setParentNode(QExplicitlySharedDataPointer<QJsNodeData>(this)))
+		if (newArrChild->setParentNode(this))
 		{
 			return newArrChild;
 		}
@@ -363,8 +363,8 @@ void QJsNodeData::recreateChildren()
 				auto newObjChild = QExplicitlySharedDataPointer<QJsObjectData>(new QJsObjectData());
 				newObjChild->m_strKeyName = listKeys.at(i);
 				//newObjChild->m_jsonValue  = jsonNewChild; // [BUG] was not creating children of this child
-				newObjChild->setJsonValue(jsonNewChild);
-				newObjChild->setParentNode(QExplicitlySharedDataPointer<QJsNodeData>(this)); // NOTE : setParentNode appends to parent's children list 
+				newObjChild->setJsonValue(jsonNewChild);    // calls recreateChildren() on newObjChild
+				newObjChild->setParentNode(this); // NOTE : setParentNode appends to parent's children list 
 			}
 			else if (jsonNewChild.isArray())
 			{
@@ -372,7 +372,7 @@ void QJsNodeData::recreateChildren()
 				newArrChild->m_strKeyName = listKeys.at(i);
 				//newArrChild->m_jsonValue = jsonNewChild; // [BUG] was not creating children of this child
 				newArrChild->setJsonValue(jsonNewChild);
-				newArrChild->setParentNode(QExplicitlySharedDataPointer<QJsNodeData>(this));
+				newArrChild->setParentNode(this);
 			}
 			else
 			{
@@ -391,14 +391,14 @@ void QJsNodeData::recreateChildren()
 				auto newObjChild = QExplicitlySharedDataPointer<QJsObjectData>(new QJsObjectData());
 				newObjChild->m_strKeyName = QString::number(i);
 				newObjChild->m_jsonValue  = jsonNewChild;
-				newObjChild->setParentNode(QExplicitlySharedDataPointer<QJsNodeData>(this));
+				newObjChild->setParentNode(this);
 			}
 			else if (jsonNewChild.isArray())
 			{
 				auto newArrChild = QExplicitlySharedDataPointer<QJsArrayData>(new QJsArrayData());
 				newArrChild->m_strKeyName = QString::number(i);
 				newArrChild->m_jsonValue  = jsonNewChild;
-				newArrChild->setParentNode(QExplicitlySharedDataPointer<QJsNodeData>(this));
+				newArrChild->setParentNode(this);
 			}
 			else
 			{
@@ -420,7 +420,7 @@ void QJsNodeData::removeChildren()
 	}
 	QMap<QString, QExplicitlySharedDataPointer<QJsNodeData>>::const_iterator i = m_mapChildren.constBegin();
 	while (i != m_mapChildren.constEnd()) {
-		this->removeChild(i.key());
+		this->removeChild(i.key()); // calls QJsNodeData::removeChild on this
 		i = m_mapChildren.constBegin();
 	}
 }
@@ -437,7 +437,7 @@ QExplicitlySharedDataPointer<QJsNodeData> QJsNodeData::appendChild(const QExplic
 	{
 		return replaceChild(nodeData->getKeyName(), nodeData); // NOTE: setParentNode actually does the linking
 	}
-	else if (nodeData->setParentNode(QExplicitlySharedDataPointer<QJsNodeData>(this)))
+	else if (nodeData->setParentNode(this))
 	{
 		return nodeData;
 	}
@@ -452,12 +452,12 @@ QExplicitlySharedDataPointer<QJsNodeData> QJsNodeData::appendChild(const QExplic
 	}
 	// call set null parent to child
 	auto childToRemove = m_mapChildren.take(strKeyName);
-	if (!childToRemove)
+	if (!childToRemove) // when child with strKeyName does not exist
 	{
 		return;
 	}
 	childToRemove->removeChildren();
-	childToRemove->setParentNode(QExplicitlySharedDataPointer<QJsNodeData>(nullptr));
+	childToRemove->setParentNode(nullptr);
 	childToRemove.reset();
 }
 

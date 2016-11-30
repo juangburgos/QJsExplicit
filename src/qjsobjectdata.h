@@ -28,11 +28,12 @@ public:
 	bool        isString(QString strName);
 
 	// set or insert or append is the same
-	void	    setAttribute(const QString &strName, bool    boolValue);
-	void	    setAttribute(const QString &strName, int     intValue );
-	void	    setAttribute(const QString &strName, qint64  int64Value);
-	void	    setAttribute(const QString &strName, double  doubleValue);
-	void	    setAttribute(const QString &strName, QString strValue);
+	void	    setAttribute(const QString &strName, bool     boolValue);
+	void	    setAttribute(const QString &strName, int      intValue );
+	void	    setAttribute(const QString &strName, qint64   int64Value);
+	void	    setAttribute(const QString &strName, double   doubleValue);
+	void	    setAttribute(const QString &strName, QString  strValue);
+	void	    setAttribute(const QString &strName, QVariant varValue);
 
 	void        removeAttribute(const QString &strName);
 };

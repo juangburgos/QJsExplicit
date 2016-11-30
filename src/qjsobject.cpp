@@ -98,6 +98,11 @@ void QJsObject::setAttribute(const QString &strName, qint64 int64Value)
 	data->toObject()->setAttribute(strName, int64Value);
 }
 
+void QJsObject::setAttribute(const QString &strName, QVariant varValue)
+{
+	data->toObject()->setAttribute(strName, varValue);
+}
+
 void QJsObject::removeAttribute(const QString &strName)
 {
 	data->toObject()->removeAttribute(strName);

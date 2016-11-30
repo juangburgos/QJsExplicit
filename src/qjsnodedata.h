@@ -40,9 +40,9 @@ public:
 
     // parents can only be QJsObjectData or QJsDocumentData
     // the parent of a QJsDocumentData must be nullptr
-    virtual QExplicitlySharedDataPointer<QJsNodeData>        parentNode();
+    virtual QJsNodeData * parentNode();
     // necessary for reparenting (not valid for QJsDocumentData)
-    virtual bool setParentNode(const QExplicitlySharedDataPointer<QJsNodeData> &newParent);
+    virtual bool setParentNode(QJsNodeData * newParent);
 
 	// get root
 	QExplicitlySharedDataPointer<QJsDocumentData>    ownerDocument();
@@ -94,7 +94,8 @@ public:
 protected:
     QString                                                  m_strKeyName;
     QJsonValue                                               m_jsonValue;
-    QExplicitlySharedDataPointer<QJsNodeData>                m_parent;
+    //QExplicitlySharedDataPointer<QJsNodeData>                m_parent;
+	QJsNodeData *  m_parent;
 	QMap<QString, QExplicitlySharedDataPointer<QJsNodeData>> m_mapChildren;
 
 

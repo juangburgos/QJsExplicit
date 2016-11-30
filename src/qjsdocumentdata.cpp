@@ -31,12 +31,12 @@ bool QJsDocumentData::isArray()
 	return false;
 }
 
-QExplicitlySharedDataPointer<QJsNodeData> QJsDocumentData::parentNode()
+QJsNodeData * QJsDocumentData::parentNode()
 {
-	return QExplicitlySharedDataPointer<QJsNodeData>(new QJsNodeData);
+	return nullptr;
 }
 
-bool QJsDocumentData::setParentNode(const QExplicitlySharedDataPointer<QJsNodeData> &newParent)
+bool QJsDocumentData::setParentNode(QJsNodeData * newParent)
 {
 	Q_UNUSED(newParent)
 	return false;

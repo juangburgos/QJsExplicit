@@ -38,6 +38,8 @@ public:
 
 	void	    setAttribute(const QString &strName, const char *str); // helper
 
+	void	    setAttribute(const QString &strName, QVariant varValue);
+
 	void        removeAttribute(const QString &strName);
 };
 

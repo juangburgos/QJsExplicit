@@ -15,8 +15,8 @@ public:
 	bool isDocument() Q_DECL_OVERRIDE;
 
 
-	QExplicitlySharedDataPointer<QJsNodeData> parentNode() Q_DECL_OVERRIDE;
-	bool setParentNode(const QExplicitlySharedDataPointer<QJsNodeData> &newParent) Q_DECL_OVERRIDE;
+	QJsNodeData * parentNode() Q_DECL_OVERRIDE;
+	bool setParentNode(QJsNodeData * newParent) Q_DECL_OVERRIDE;
 
 	// return error message
 	QString    	fromJson(const QByteArray &json);

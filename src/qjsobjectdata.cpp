@@ -114,6 +114,31 @@ void QJsObjectData::setAttribute(const QString &strName, qint64 int64Value)
 	updateJsonValue(QJsonValue(jsonTempObj));
 }
 
+void QJsObjectData::setAttribute(const QString &strName, QVariant varValue)
+{
+	switch (varValue.type())
+	{
+	case QMetaType::Bool:
+		setAttribute(strName, varValue.toBool());
+		break;
+	case QMetaType::Int:
+		setAttribute(strName, varValue.toInt());
+		break;
+	case QMetaType::Double:
+		setAttribute(strName, varValue.toDouble());
+		break;
+	case QMetaType::QString:
+		setAttribute(strName, varValue.toString());
+		break;
+	case QMetaType::ULongLong:
+		setAttribute(strName, varValue.toLongLong());
+		break;
+	default:
+		//qDebug() << "[ERROR] QJsObjectData::setAttribute, Unknown variant type.";
+		break;
+	}
+}
+
 void QJsObjectData::removeAttribute(const QString &strName)
 {
 	QJsonObject jsonTempObj = m_jsonValue.toObject();
