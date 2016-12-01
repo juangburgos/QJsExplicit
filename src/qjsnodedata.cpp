@@ -141,7 +141,7 @@ QJsNodeData * QJsNodeData::parentNode()
 bool QJsNodeData::setParentNode(QJsNodeData * newParent)
 {
 	// Use null parent to float free and remove form old only
-	//// append to json AND to children list (different if array or obj)
+	// append to json AND to children list (different if array or obj)
 
 	// recursively remove from old parent children list if key and parent not empty
 	if (m_parent && !m_parent->isNull() && m_parent != newParent)
@@ -287,7 +287,6 @@ QExplicitlySharedDataPointer<QJsObjectData> QJsNodeData::createObject(const QStr
 		}
 		auto newObjChild          = QExplicitlySharedDataPointer<QJsObjectData>(new QJsObjectData());
 		newObjChild->m_strKeyName = strKeyName;
-		//newObjChild->m_jsonValue  = QJsonValue(QJsonObject());
 		if (newObjChild->setParentNode(this))
 		{
 			return newObjChild;
@@ -296,15 +295,11 @@ QExplicitlySharedDataPointer<QJsObjectData> QJsNodeData::createObject(const QStr
 	} 
 	else if (this->isArray())
 	{
-		if (!strKeyName.isEmpty())
-		{
-			//return QExplicitlySharedDataPointer<QJsObjectData>(new QJsObjectData);
-			// ignore 
-			// TODO : error
-		}
-		auto newObjChild          = QExplicitlySharedDataPointer<QJsObjectData>(new QJsObjectData());
-		//newObjChild->m_strKeyName = "";
-		//newObjChild->m_jsonValue  = QJsonValue(QJsonObject());
+		//if (!strKeyName.isEmpty())
+		//{
+		//	// ignore 
+		//}
+		auto newObjChild = QExplicitlySharedDataPointer<QJsObjectData>(new QJsObjectData());
 		QExplicitlySharedDataPointer<QJsArrayData>(static_cast<QJsArrayData*>(this))->appendObject(newObjChild);
 		return newObjChild;
 	}
@@ -444,7 +439,7 @@ QExplicitlySharedDataPointer<QJsNodeData> QJsNodeData::appendChild(const QExplic
 	return QExplicitlySharedDataPointer<QJsNodeData>(nullptr);
 }
 
-/*QExplicitlySharedDataPointer<QJsNodeData>*/void QJsNodeData::removeChild(const QString &strKeyName)
+void QJsNodeData::removeChild(const QString &strKeyName)
 {
 	if (strKeyName.isEmpty())
 	{

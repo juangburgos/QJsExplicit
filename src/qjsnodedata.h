@@ -66,7 +66,7 @@ public:
     // does nothing and returns a null node.
 	// Will fail also if key name is empty and parent is not array
     QExplicitlySharedDataPointer<QJsNodeData> appendChild(const QExplicitlySharedDataPointer<QJsNodeData> &nodeData);
-	/*QExplicitlySharedDataPointer<QJsNodeData>*/void removeChild(const QString &strKeyName);
+	void                                      removeChild(const QString &strKeyName);
 	QExplicitlySharedDataPointer<QJsNodeData> replaceChild(const QString &strKeyName, const QExplicitlySharedDataPointer<QJsNodeData> &nodeData);
 
     // isNull if m_jsonValue is NULL
@@ -94,10 +94,16 @@ public:
 protected:
     QString                                                  m_strKeyName;
     QJsonValue                                               m_jsonValue;
-    //QExplicitlySharedDataPointer<QJsNodeData>                m_parent;
-	QJsNodeData *  m_parent;
+	QJsNodeData                                            * m_parent;
 	QMap<QString, QExplicitlySharedDataPointer<QJsNodeData>> m_mapChildren;
 
+	// [WARNING] : This approach was causing memory leaks because when a parent obj
+	//             was out of scope of use the the top level application, the reference
+	//             count was decreased by 1 but its children still had references to it, 
+	//             so its instance was kept floating, never released.
+	//             This was clearly visible when an application would call the QJsNode::clone()
+	//             method multiple times to perform temporary operations.
+    //QExplicitlySharedDataPointer<QJsNodeData>                m_parent; 
 
 };
 
