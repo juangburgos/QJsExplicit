@@ -120,10 +120,27 @@ void QJsNodeData::updateJsonValue(const QJsonValue &jsonValue)
 		}
 		else if (m_parent->isArray())
 		{
+			//QJsonArray jsonArrParent = jsonValParent.toArray();
+			//jsonArrParent.replace(m_strKeyName.toInt(), m_jsonValue);
+			//m_parent->updateJsonValue(jsonArrParent);
+			// NOTE : BUG, if exists should replace not overwrite
 			QJsonArray jsonArrParent = jsonValParent.toArray();
-			// NOTE : this replace, setParentNode append
-			jsonArrParent.replace(m_strKeyName.toInt(), m_jsonValue); // NOTE IMPORTANT, in case of parent being array, the key of an array child id the index in string mode
-			m_parent->updateJsonValue(jsonArrParent);
+			int intKey = m_strKeyName.toInt();
+			if (jsonArrParent.size() > 0 && intKey >= 0 && intKey < jsonArrParent.size())
+			{
+				jsonArrParent.replace(m_strKeyName.toInt(), m_jsonValue); // NOTE IMPORTANT, here we replace in parent
+				m_parent->updateJsonValue(QJsonValue(jsonArrParent));
+			}
+			else if (intKey >= 0 && intKey <= jsonArrParent.size())
+			{
+				jsonArrParent.insert(m_strKeyName.toInt(), m_jsonValue); // NOTE IMPORTANT, here we insert to parent
+				m_parent->updateJsonValue(QJsonValue(jsonArrParent));
+			}
+			else
+			{
+				return; // error
+			}
+
 		}
 		else
 		{
@@ -154,8 +171,6 @@ bool QJsNodeData::setParentNode(QJsNodeData * newParent)
 			{
 				jsonObjParent.remove(m_strKeyName);
 				m_parent->updateJsonValue(jsonObjParent);
-				// remove from parent children list
-				m_parent->m_mapChildren.remove(m_strKeyName);
 			}
 		}
 		else if (m_parent->isArray())
@@ -165,14 +180,18 @@ bool QJsNodeData::setParentNode(QJsNodeData * newParent)
 			if (intKey >= 0 && intKey < jsonArrParent.size())
 			{
 				jsonArrParent.removeAt(intKey); // NOTE IMPORTANT, in case of parent being array, the key of an array child id the index in string mode
-				// all children change key in case of array, so need to recreate children
-				m_parent->setJsonValue(jsonArrParent);
+				//// all children change key in case of array, so need to recreate children
+				//m_parent->setJsonValue(jsonArrParent);
+				// TODO : why not also remove from parent children list ???
+				m_parent->updateJsonValue(jsonArrParent);
 			}
 		}
 		else
 		{
 			return false; // error
 		}
+		// remove from parent children list
+		m_parent->m_mapChildren.remove(m_strKeyName);
 	}
 
 	// copy new parent
@@ -209,9 +228,9 @@ bool QJsNodeData::setParentNode(QJsNodeData * newParent)
 		}
 		else if (m_parent->isArray())
 		{
-			QJsonArray jsonArrParent = jsonValParent.toArray(); 
-			int intKey = m_strKeyName.toInt();
 			// NOTE : bug, if exists should replace not overwrite
+			QJsonArray jsonArrParent = jsonValParent.toArray();
+			int intKey = m_strKeyName.toInt();
 			if (jsonArrParent.size() > 0 && intKey >= 0 && intKey < jsonArrParent.size())
 			{
 				jsonArrParent.replace(m_strKeyName.toInt(), m_jsonValue); // NOTE IMPORTANT, here we replace in parent
@@ -366,7 +385,7 @@ void QJsNodeData::recreateChildren()
 				auto newArrChild = QExplicitlySharedDataPointer<QJsArrayData>(new QJsArrayData());
 				newArrChild->m_strKeyName = listKeys.at(i);
 				//newArrChild->m_jsonValue = jsonNewChild; // [BUG] was not creating children of this child
-				newArrChild->setJsonValue(jsonNewChild);
+				newArrChild->setJsonValue(jsonNewChild);   // calls recreateChildren() on newObjChild
 				newArrChild->setParentNode(this);
 			}
 			else
@@ -385,14 +404,16 @@ void QJsNodeData::recreateChildren()
 			{
 				auto newObjChild = QExplicitlySharedDataPointer<QJsObjectData>(new QJsObjectData());
 				newObjChild->m_strKeyName = QString::number(i);
-				newObjChild->m_jsonValue  = jsonNewChild;
+				//newObjChild->m_jsonValue  = jsonNewChild; // [BUG] was not creating children of this child
+				newObjChild->setJsonValue(jsonNewChild);    // calls recreateChildren() on newObjChild
 				newObjChild->setParentNode(this);
 			}
 			else if (jsonNewChild.isArray())
 			{
 				auto newArrChild = QExplicitlySharedDataPointer<QJsArrayData>(new QJsArrayData());
 				newArrChild->m_strKeyName = QString::number(i);
-				newArrChild->m_jsonValue  = jsonNewChild;
+				//newArrChild->m_jsonValue  = jsonNewChild; // [BUG] was not creating children of this child
+				newArrChild->setJsonValue(jsonNewChild);    // calls recreateChildren() on newObjChild
 				newArrChild->setParentNode(this);
 			}
 			else
