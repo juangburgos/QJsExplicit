@@ -81,37 +81,27 @@ bool QJsObjectData::isString(QString strName)
 
 void QJsObjectData::setAttribute(const QString &strName, bool boolValue)
 {
-	QJsonObject jsonTempObj = m_jsonValue.toObject();
-	jsonTempObj.insert(strName, QJsonValue(boolValue));
-	updateJsonValue(QJsonValue(jsonTempObj));
+	// TODO : update m_jsonValue directly
 }
 
 void QJsObjectData::setAttribute(const QString &strName, int intValue)
 {
-	QJsonObject jsonTempObj = m_jsonValue.toObject();
-	jsonTempObj.insert(strName, QJsonValue(intValue));
-	updateJsonValue(QJsonValue(jsonTempObj));
+	// TODO : update m_jsonValue directly
 }
 
 void QJsObjectData::setAttribute(const QString &strName, double doubleValue)
 {
-	QJsonObject jsonTempObj = m_jsonValue.toObject();
-	jsonTempObj.insert(strName, QJsonValue(doubleValue));
-	updateJsonValue(QJsonValue(jsonTempObj));
+	// TODO : update m_jsonValue directly
 }
 
 void QJsObjectData::setAttribute(const QString &strName, QString strValue)
 {
-	QJsonObject jsonTempObj = m_jsonValue.toObject();
-	jsonTempObj.insert(strName, QJsonValue(strValue));
-	updateJsonValue(QJsonValue(jsonTempObj));
+	// TODO : update m_jsonValue directly
 }
 
 void QJsObjectData::setAttribute(const QString &strName, qint64 int64Value)
 {
-	QJsonObject jsonTempObj = m_jsonValue.toObject();
-	jsonTempObj.insert(strName, QJsonValue(int64Value));
-	updateJsonValue(QJsonValue(jsonTempObj));
+	// TODO : update m_jsonValue directly
 }
 
 void QJsObjectData::setAttribute(const QString &strName, QVariant varValue)
@@ -141,7 +131,5 @@ void QJsObjectData::setAttribute(const QString &strName, QVariant varValue)
 
 void QJsObjectData::removeAttribute(const QString &strName)
 {
-	QJsonObject jsonTempObj = m_jsonValue.toObject();
-	jsonTempObj.remove(strName);
-	updateJsonValue(QJsonValue(jsonTempObj));
+	// TODO : update m_jsonValue directly
 }

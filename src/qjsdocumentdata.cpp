@@ -54,8 +54,8 @@ QString QJsDocumentData::fromJson(const QByteArray &json)
 	{
 		return "JSON data is not an object";
 	}
-	// set object and recreate children
-	setJsonValue(QJsonValue(doc.object()));
+	// TODO : create internal tree recursivelly
+
 	return "";
 }
 
@@ -70,8 +70,8 @@ QString QJsDocumentData::fromBinaryData(const QByteArray &data)
 	{
 		return "JSON binary data is not an object";
 	}
-	// set object and recreate children
-	setJsonValue(QJsonValue(doc.object()));
+	// TODO create internal tree recursivelly
+
 	return "";
 }
 

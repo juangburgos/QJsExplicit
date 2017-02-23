@@ -31,32 +31,30 @@ public:
     //        because we can use those to create instances of the QJsNode wrappers
 
 	// In case of parent is array, key is index in array
-	void    setKeyName(const QString &strKeyName); // TODO : return reference to this to allow chaining
-	QString getKeyName();
-
-	void       setJsonValue(const QJsonValue &jsonValue);
-	QJsonValue getJsonValue();
-	void       updateJsonValue(const QJsonValue &jsonValue);
+	/* [API] */ void    setKeyName(const QString &strKeyName); // TODO : return reference to this to allow chaining
+	/* [API] */ QString getKeyName();
 
     // parents can only be QJsObjectData or QJsDocumentData
     // the parent of a QJsDocumentData must be nullptr
-    virtual QJsNodeData * parentNode();
+	/* [API] */ virtual QJsNodeData * parentNode();
+
     // necessary for reparenting (not valid for QJsDocumentData)
     virtual bool setParentNode(QJsNodeData * newParent);
 
 	// get root
-	QExplicitlySharedDataPointer<QJsDocumentData>    ownerDocument();
-	bool                                             hasChildByKey(const QString &strKeyName);
+	/* [API] */ QExplicitlySharedDataPointer<QJsDocumentData>    ownerDocument();
+	/* [API] */ bool                                             hasChildByKey(const QString &strKeyName);
 
     // children can only be QJsObjectData or QJsArrayData
-    QList<QExplicitlySharedDataPointer<QJsNodeData>> childNodes();
-	QStringList                                      childrenKeys();
-	QExplicitlySharedDataPointer<QJsNodeData>        getChildByKey(const QString &strKeyName);
+	/* [API] */ QList<QExplicitlySharedDataPointer<QJsNodeData>> childNodes();
+	/* [API] */ QStringList                                      childrenKeys();
+	/* [API] */ QExplicitlySharedDataPointer<QJsNodeData>        getChildByKey(const QString &strKeyName);
 
-	QExplicitlySharedDataPointer<QJsObjectData>      createObject(const QString &strKeyName = "");
-	QExplicitlySharedDataPointer<QJsArrayData>       createArray (const QString &strKeyName = "");
-	void                                             recreateChildren();
-	void                                             removeChildren();
+	/* [API] */ QExplicitlySharedDataPointer<QJsObjectData>      createObject(const QString &strKeyName = "");
+	/* [API] */ QExplicitlySharedDataPointer<QJsArrayData>       createArray (const QString &strKeyName = "");
+
+	// used for cleanup when this deleted (destructor)
+	void removeChildren();
 
     // Appends newChild as the node's last child.
     // If newChild is the child of another node, it is reparented to this node.
@@ -65,29 +63,29 @@ public:
     // Calling this function on a null node(created, for example, with the default constructor)
     // does nothing and returns a null node.
 	// Will fail also if key name is empty and parent is not array
-    QExplicitlySharedDataPointer<QJsNodeData> appendChild(const QExplicitlySharedDataPointer<QJsNodeData> &nodeData);
-	void                                      removeChild(const QString &strKeyName);
-	QExplicitlySharedDataPointer<QJsNodeData> replaceChild(const QString &strKeyName, const QExplicitlySharedDataPointer<QJsNodeData> &nodeData);
+	/* [API] */ QExplicitlySharedDataPointer<QJsNodeData> appendChild(const QExplicitlySharedDataPointer<QJsNodeData> &nodeData);
+	/* [API] */ void                                      removeChild(const QString &strKeyName);
+	/* [API] */ QExplicitlySharedDataPointer<QJsNodeData> replaceChild(const QString &strKeyName, const QExplicitlySharedDataPointer<QJsNodeData> &nodeData);
 
     // isNull if m_jsonValue is NULL
-    bool isNull();
+	/* [API] */ bool isNull();
 	// isValid if key is non empty and m_jsonValue is not NULL
-	bool isValid();
+	/* [API] */ bool isValid();
 
 	// Each class reimplementation must return true accordingly
-	virtual bool isObject();
-	virtual bool isArray();
-	virtual bool isDocument();
+	/* [API] */ virtual bool isObject();
+	/* [API] */ virtual bool isArray();
+	/* [API] */ virtual bool isDocument();
 
 	// create new instances of each class if can be casted if not null
-	QExplicitlySharedDataPointer<QJsObjectData>    toObject();
-	QExplicitlySharedDataPointer<QJsArrayData>     toArray();
-	QExplicitlySharedDataPointer<QJsDocumentData>  toDocument();
+	/* [API] */ QExplicitlySharedDataPointer<QJsObjectData>    toObject();
+	/* [API] */ QExplicitlySharedDataPointer<QJsArrayData>     toArray();
+	/* [API] */ QExplicitlySharedDataPointer<QJsDocumentData>  toDocument();
 
-	QExplicitlySharedDataPointer<QJsNodeData> clone();
+	/* [API] */ QExplicitlySharedDataPointer<QJsNodeData> clone();
 
-	QByteArray	toJson(QJsonDocument::JsonFormat format = QJsonDocument::Indented);
-	QByteArray	toBinaryData();
+	/* [API] */ QByteArray	toJson(QJsonDocument::JsonFormat format = QJsonDocument::Indented);
+	/* [API] */ QByteArray	toBinaryData();
 
 
 

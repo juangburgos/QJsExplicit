@@ -49,46 +49,22 @@ QExplicitlySharedDataPointer<QJsNodeData> QJsArrayData::getNodeAt(int idx)
 
 void QJsArrayData::setValueAt(int idx, bool boolValue)
 {
-	QJsonArray jsonTempArr = m_jsonValue.toArray();
-	if (idx < 0 || idx >= jsonTempArr.size())
-	{
-		return;
-	}
-	jsonTempArr.replace(idx, QJsonValue(boolValue));
-	updateJsonValue(QJsonValue(jsonTempArr));
+	// TODO : use QVector
 }
 
 void QJsArrayData::setValueAt(int idx, int intValue)
 {
-	QJsonArray jsonTempArr = m_jsonValue.toArray();
-	if (idx < 0 || idx >= jsonTempArr.size())
-	{
-		return;
-	}
-	jsonTempArr.replace(idx, QJsonValue(intValue));
-	updateJsonValue(QJsonValue(jsonTempArr));
+	// TODO : use QVector
 }
 
 void QJsArrayData::setValueAt(int idx, double doubleValue)
 {
-	QJsonArray jsonTempArr = m_jsonValue.toArray();
-	if (idx < 0 || idx >= jsonTempArr.size())
-	{
-		return;
-	}
-	jsonTempArr.replace(idx, QJsonValue(doubleValue));
-	updateJsonValue(QJsonValue(jsonTempArr));
+	// TODO : use QVector
 }
 
 void QJsArrayData::setValueAt(int idx, QString strValue)
 {
-	QJsonArray jsonTempArr = m_jsonValue.toArray();
-	if (idx < 0 || idx >= jsonTempArr.size())
-	{
-		return;
-	}
-	jsonTempArr.replace(idx, QJsonValue(strValue));
-	updateJsonValue(QJsonValue(jsonTempArr));
+	// TODO : use QVector
 }
 
 void QJsArrayData::setNodeAt(int idx, QExplicitlySharedDataPointer<QJsNodeData> nodeValue)
@@ -140,30 +116,22 @@ bool QJsArrayData::isArray(int idx)
 
 void QJsArrayData::appendValue(bool boolValue)
 {
-	QJsonArray jsonTempArr = m_jsonValue.toArray();
-	jsonTempArr.append(QJsonValue(boolValue));
-	updateJsonValue(QJsonValue(jsonTempArr));
+	// TODO : use QVector
 }
 
 void QJsArrayData::appendValue(int intValue)
 {
-	QJsonArray jsonTempArr = m_jsonValue.toArray();
-	jsonTempArr.append(QJsonValue(intValue));
-	updateJsonValue(QJsonValue(jsonTempArr));
+	// TODO : use QVector
 }
 
 void QJsArrayData::appendValue(double doubleValue)
 {
-	QJsonArray jsonTempArr = m_jsonValue.toArray();
-	jsonTempArr.append(QJsonValue(doubleValue));
-	updateJsonValue(QJsonValue(jsonTempArr));
+	// TODO : use QVector
 }
 
 void QJsArrayData::appendValue(QString strValue)
 {
-	QJsonArray jsonTempArr = m_jsonValue.toArray();
-	jsonTempArr.append(QJsonValue(strValue));
-	updateJsonValue(QJsonValue(jsonTempArr));
+	// TODO : use QVector
 }
 
 void QJsArrayData::appendObject(QExplicitlySharedDataPointer<QJsObjectData> objValue)
@@ -179,43 +147,19 @@ void QJsArrayData::appendArray(QExplicitlySharedDataPointer<QJsArrayData> arrVal
 
 QVariant QJsArrayData::removeValueAt(int idx)
 {
-	QJsonArray jsonTempArr = m_jsonValue.toArray();
-	if (idx < 0 || idx >= jsonTempArr.size())
-	{
-		return QVariant();
-	}
-	QJsonValue varVal = jsonTempArr.takeAt(idx);
-	updateJsonValue(QJsonValue(jsonTempArr));
-	return varVal.toVariant();
+	// TODO : remove from QVector by index, return removed value
+	return QVariant();
 }
 
 int QJsArrayData::removeValue(int intValue)
 {
-	QJsonArray jsonTempArr = m_jsonValue.toArray();
-	for (int i = 0; i < jsonTempArr.count(); i++)
-	{
-		if (jsonTempArr.at(i).isDouble() && ((int)jsonTempArr.at(i).isDouble() == intValue))
-		{
-			QJsonValue intVal = jsonTempArr.takeAt(i);
-			updateJsonValue(QJsonValue(jsonTempArr));
-			return (int)intVal.toDouble();
-		}
-	}
+	// TODO : remove from QVector by value, where the value matched the integer argument, return removed integer value
 	return 0;
 }
 
 QString QJsArrayData::removeValue(QString strValue)
 {
-	QJsonArray jsonTempArr = m_jsonValue.toArray();
-	for (int i = 0; i < jsonTempArr.count(); i++)
-	{
-		if (jsonTempArr.at(i).isString() && jsonTempArr.at(i).toString().compare(strValue, Qt::CaseInsensitive) == 0)
-		{
-			QJsonValue strVal = jsonTempArr.takeAt(i);
-			updateJsonValue(QJsonValue(jsonTempArr));
-			return strVal.toString();
-		}
-	}
+	// TODO : remove from QVector by value, where the value matched the string argument, return removed string value
 	return QString();
 }
 
