@@ -55,8 +55,6 @@ public:
 
 	QJsNode        replaceChild(const QString &strKeyName, QJsNode &nodeData);
 
-	bool           isNull() const;
-
 	bool           isValid() const;
 
 	bool           isObject() const;

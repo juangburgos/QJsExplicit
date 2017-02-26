@@ -138,15 +138,6 @@ QJsNode QJsNode::replaceChild(const QString &strKeyName, QJsNode &nodeData)
 	return node;
 }
 
-bool QJsNode::isNull() const
-{
-	if (!data || data->isNull())
-	{
-		return true;
-	}
-	return false;
-}
-
 bool QJsNode::isValid() const
 {
 	if (data->isValid())

@@ -3,6 +3,8 @@
 #include "qjsarraydata.h"
 #include "qjsdocumentdata.h"
 
+#include <QDebug>
+
 QJsObjectData::QJsObjectData()
 {
 	m_strKeyName = QString();
@@ -81,27 +83,42 @@ bool QJsObjectData::isString(QString strName)
 
 void QJsObjectData::setAttribute(const QString &strName, bool boolValue)
 {
-	// TODO : update m_jsonValue directly
+	// implicit shared object upodating
+	QJsonObject tmpObject = m_jsonValue.toObject();
+	tmpObject[strName] = boolValue;
+	m_jsonValue = tmpObject;
 }
 
 void QJsObjectData::setAttribute(const QString &strName, int intValue)
 {
-	// TODO : update m_jsonValue directly
+	// implicit shared object upodating
+	QJsonObject tmpObject = m_jsonValue.toObject();
+	tmpObject[strName] = intValue;
+	m_jsonValue = tmpObject;
 }
 
 void QJsObjectData::setAttribute(const QString &strName, double doubleValue)
 {
-	// TODO : update m_jsonValue directly
+	// implicit shared object upodating
+	QJsonObject tmpObject = m_jsonValue.toObject();
+	tmpObject[strName] = doubleValue;
+	m_jsonValue = tmpObject;
 }
 
 void QJsObjectData::setAttribute(const QString &strName, QString strValue)
 {
-	// TODO : update m_jsonValue directly
+	// implicit shared object upodating
+	QJsonObject tmpObject = m_jsonValue.toObject();
+	tmpObject[strName] = strValue;
+	m_jsonValue = tmpObject;
 }
 
 void QJsObjectData::setAttribute(const QString &strName, qint64 int64Value)
 {
-	// TODO : update m_jsonValue directly
+	// implicit shared object upodating
+	QJsonObject tmpObject = m_jsonValue.toObject();
+	tmpObject[strName] = int64Value;
+	m_jsonValue = tmpObject;
 }
 
 void QJsObjectData::setAttribute(const QString &strName, QVariant varValue)
@@ -124,12 +141,15 @@ void QJsObjectData::setAttribute(const QString &strName, QVariant varValue)
 		setAttribute(strName, varValue.toLongLong());
 		break;
 	default:
-		//qDebug() << "[ERROR] QJsObjectData::setAttribute, Unknown variant type.";
+		qDebug() << "[ERROR] QJsObjectData::setAttribute, Unknown variant type.";
 		break;
 	}
 }
 
 void QJsObjectData::removeAttribute(const QString &strName)
 {
-	// TODO : update m_jsonValue directly
+	// implicit shared object upodating
+	QJsonObject tmpObject = m_jsonValue.toObject();
+	tmpObject.remove(strName);
+	m_jsonValue = tmpObject;
 }

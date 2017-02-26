@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
         qDebug() << i;
     });
 
-    fuckingTimer.start(1000);
+    fuckingTimer.start(100);
 
     return a.exec();
 }
