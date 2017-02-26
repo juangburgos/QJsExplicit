@@ -114,7 +114,8 @@ bool QJsNodeData::setParentNode(QJsNodeData * newParent)
 	// check if not null and if valid
 	if (!newParent || !newParent->isValid())
 	{
-		qDebug() << "[ERROR] new parent cannot be invalid in QJsNodeData::setParentNode";
+		//qDebug() << "[ERROR] new parent cannot be invalid in QJsNodeData::setParentNode";
+		//m_parent = newParent;
 		return false;
 	}
 	// remove this from old parent children list if it had one
@@ -171,7 +172,7 @@ bool QJsNodeData::setParentNode(QJsNodeData * newParent)
 		int newIdx = newParent->m_vectorChildren.count() - 1;
 		// change this keyname but give warning in case it does not match
 		QString strNewKey = QString::number(newIdx);
-		if (m_strKeyName.compare(strNewKey) != 0)
+		if (!m_strKeyName.isEmpty() && m_strKeyName.compare(strNewKey) != 0)
 		{
 			qDebug() << "[ERROR] key name (index) mismatch while setting array as parent in QJsNodeData::setParentNode";
 		}
@@ -264,13 +265,15 @@ QExplicitlySharedDataPointer<QJsNodeData> QJsNodeData::getChildByKey(const QStri
 		int  newIdx = strKeyName.toInt(&isInt);
 		if (!isInt)
 		{
-			qDebug() << "[ERROR] node key name belonging to array is not number in QJsNodeData::getChildByKey";
+			// comented out because it is used often as a condition for QJsNodeData::hasChildByKey
+			//qDebug() << "[ERROR] node key name belonging to array is not number in QJsNodeData::getChildByKey";
 			return QExplicitlySharedDataPointer<QJsNodeData>(nullptr);
 		}
 		// check if requested key name is within range
 		if (newIdx >= this->m_vectorChildren.count())
 		{
-			qDebug() << "[ERROR] node key name belonging to array out of range in QJsNodeData::getChildByKey";
+			// comented out because it is used often as a condition for QJsNodeData::hasChildByKey
+			//qDebug() << "[ERROR] node key name belonging to array out of range in QJsNodeData::getChildByKey";
 			return QExplicitlySharedDataPointer<QJsNodeData>(nullptr);
 		}
 		// return requested
@@ -452,25 +455,26 @@ bool QJsNodeData::isValid()
 	{
 		return false;
 	}
+
 	return true;
 }
 
 bool QJsNodeData::isEmpty()
 {
 	// first test if child nodes
-	if (this->isArray() && !this->m_vectorChildren.isEmpty())
+	if (!this || !this->isValid())
 	{
-		return false;
+		return true;
 	}
-	if (this->isObject() && !this->m_mapChildren.isEmpty())
+	if (m_jsonValue.type() == QJsonValue::Object && m_strKeyName.isEmpty() && m_jsonValue.toObject().isEmpty())
 	{
-		return false;
+		return true;
 	}
-	if (!m_jsonValue.isNull() && !m_jsonValue.isUndefined())
+	if (m_jsonValue.type() == QJsonValue::Array && m_strKeyName.isEmpty() && m_jsonValue.toArray().isEmpty())
 	{
-		return false;
+		return true;
 	}
-	return true;
+	return false;
 }
 
 bool QJsNodeData::isObject()
@@ -538,7 +542,7 @@ QExplicitlySharedDataPointer<QJsNodeData> QJsNodeData::clone()
 	QExplicitlySharedDataPointer<QJsNodeData> newNode;
 	if (this->isObject())
 	{
-		newNode = QExplicitlySharedDataPointer<QJsNodeData>(new QJsObjectData());
+		newNode = QExplicitlySharedDataPointer<QJsNodeData>(new QJsObjectData());		
 	}
 	else if (this->isArray())
 	{
@@ -555,7 +559,36 @@ QExplicitlySharedDataPointer<QJsNodeData> QJsNodeData::clone()
 	newNode->m_strKeyName = m_strKeyName;
 	newNode->m_jsonValue  = m_jsonValue;
 
+	cloneDeep(newNode);
+
 	return newNode;
+}
+
+void QJsNodeData::cloneDeep(QExplicitlySharedDataPointer<QJsNodeData> parent)
+{
+	if (this->isArray())
+	{
+		for (int i = 0; i < this->m_vectorChildren.count(); i++)
+		{
+			parent->appendChild(this->m_vectorChildren.at(i)->clone());
+		}
+	}
+	else if (this->isObject() || this->isDocument())
+	{
+		QMapIterator<QString, QExplicitlySharedDataPointer<QJsNodeData>> i(this->m_mapChildren);
+		while (i.hasNext()) {
+			i.next();
+			auto currNode = i.value();
+			parent->appendChild(currNode->clone());
+		}
+	}
+	else
+	{
+		if (this->m_vectorChildren.count() > 0 || this->m_mapChildren.count() > 0)
+		{
+			qDebug() << "[ERROR] pure QJsNode instance is not supposed to has children";
+		}
+	}
 }
 
 QByteArray QJsNodeData::toJson(QJsonDocument::JsonFormat format/* = QJsonDocument::Indented*/)
@@ -612,7 +645,7 @@ QByteArray QJsNodeData::toBinaryData()
 
 void QJsNodeData::toJsonObject(QJsonObject &jsonObject)
 {
-	QMapIterator<QString, QExplicitlySharedDataPointer<QJsNodeData>> i(m_mapChildren);
+	QMapIterator<QString, QExplicitlySharedDataPointer<QJsNodeData>> i(this->m_mapChildren);
 	while (i.hasNext()) {
 		i.next();
 		auto currNodeKey = i.key();
@@ -656,18 +689,21 @@ void QJsNodeData::toJsonArray(QJsonArray &jsonArray)
 		{
 			QJsonArray tmpArray;
 			currNode->toJsonArray(tmpArray);
-			jsonArray.insert(i, tmpArray);
+			//jsonArray.insert(i, tmpArray);
+			jsonArray.append(tmpArray);
 		}
 		else if (currNode->isObject() || currNode->isDocument())
 		{
 			QJsonObject tmpObject = currNode->m_jsonValue.toObject();
 			currNode->toJsonObject(tmpObject);
-			jsonArray.insert(i, tmpObject);
+			//jsonArray.insert(i, tmpObject);
+			jsonArray.append(tmpObject);
 		}
 		else
 		{
 			// copy raw value
-			jsonArray.insert(i, currNode->m_jsonValue);
+			//jsonArray.insert(i, currNode->m_jsonValue);
+			jsonArray.append(currNode->m_jsonValue);
 		}
 	}
 }

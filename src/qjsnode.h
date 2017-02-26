@@ -57,6 +57,8 @@ public:
 
 	bool           isValid() const;
 
+	bool           isEmpty() const;
+
 	bool           isObject() const;
 
 	bool           isArray() const;

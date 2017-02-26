@@ -79,6 +79,7 @@ public:
 	/* [API] */ QExplicitlySharedDataPointer<QJsDocumentData>  toDocument();
 
 	/* [API] */ QExplicitlySharedDataPointer<QJsNodeData> clone();
+	void cloneDeep(QExplicitlySharedDataPointer<QJsNodeData> parent);
 
 	/* [API] */ QByteArray	toJson(QJsonDocument::JsonFormat format = QJsonDocument::Indented);
 	/* [API] */ QByteArray	toBinaryData();
