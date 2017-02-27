@@ -28,7 +28,7 @@ public:
 	bool        isString(QString strName);
 
 	// set or insert or append is the same
-	void	    setAttribute(const QString &strName, bool     boolValue);
+	void	    setAttribute(const QString &strName, bool     boolValue); // TODO : return reference to this to allow chaining
 	void	    setAttribute(const QString &strName, int      intValue );
 	void	    setAttribute(const QString &strName, qint64   int64Value);
 	void	    setAttribute(const QString &strName, double   doubleValue);

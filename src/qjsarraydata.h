@@ -29,20 +29,22 @@ public:
 	bool        isArray  (int idx);
 
 	// set or replace is the same
-	void	    setValueAt(int idx, bool    boolValue);
-	void	    setValueAt(int idx, int     intValue);
-	void	    setValueAt(int idx, double  doubleValue);
-	void	    setValueAt(int idx, QString strValue);
+	void	    setValueAt(int idx, bool     boolValue);
+	void	    setValueAt(int idx, int      intValue);
+	void	    setValueAt(int idx, double   doubleValue);
+	void	    setValueAt(int idx, QString  strValue);
+	void	    setValueAt(int idx, QVariant varValue);
 
 	void        setNodeAt  (int idx, QExplicitlySharedDataPointer<QJsNodeData>   nodeValue);
 	void	    setObjectAt(int idx, QExplicitlySharedDataPointer<QJsObjectData> objValue);
 	void	    setArrayAt (int idx, QExplicitlySharedDataPointer<QJsArrayData>  arrValue);
 
 	// append adds a new at the end
-	void	    appendValue(bool    boolValue);
-	void	    appendValue(int     intValue);
-	void	    appendValue(double  doubleValue);
-	void	    appendValue(QString strValue);
+	void	    appendValue(bool     boolValue);
+	void	    appendValue(int      intValue);
+	void	    appendValue(double   doubleValue);
+	void	    appendValue(QString  strValue);
+	void	    appendValue(QVariant varValue);
 
 	void	    appendObject(QExplicitlySharedDataPointer<QJsObjectData> objValue);
 	void	    appendArray (QExplicitlySharedDataPointer<QJsArrayData>  arrValue);
@@ -50,9 +52,6 @@ public:
 	QVariant    removeValueAt(int     idx     );
 	int         removeValue  (int     intValue);
 	QString     removeValue  (QString strValue);
-
-
-	// TODO : insert (shift others) require recreateChildren
 
 
 };

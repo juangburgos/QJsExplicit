@@ -3,6 +3,8 @@
 #include "qjsarraydata.h"
 #include "qjsdocumentdata.h"
 
+#include <QDebug>
+
 QJsObjectData::QJsObjectData()
 {
 	m_strKeyName = QString();
@@ -81,37 +83,42 @@ bool QJsObjectData::isString(QString strName)
 
 void QJsObjectData::setAttribute(const QString &strName, bool boolValue)
 {
-	QJsonObject jsonTempObj = m_jsonValue.toObject();
-	jsonTempObj.insert(strName, QJsonValue(boolValue));
-	updateJsonValue(QJsonValue(jsonTempObj));
+	// implicit shared object upodating
+	QJsonObject tmpObject = m_jsonValue.toObject();
+	tmpObject[strName] = boolValue;
+	m_jsonValue = tmpObject;
 }
 
 void QJsObjectData::setAttribute(const QString &strName, int intValue)
 {
-	QJsonObject jsonTempObj = m_jsonValue.toObject();
-	jsonTempObj.insert(strName, QJsonValue(intValue));
-	updateJsonValue(QJsonValue(jsonTempObj));
+	// implicit shared object upodating
+	QJsonObject tmpObject = m_jsonValue.toObject();
+	tmpObject[strName] = intValue;
+	m_jsonValue = tmpObject;
 }
 
 void QJsObjectData::setAttribute(const QString &strName, double doubleValue)
 {
-	QJsonObject jsonTempObj = m_jsonValue.toObject();
-	jsonTempObj.insert(strName, QJsonValue(doubleValue));
-	updateJsonValue(QJsonValue(jsonTempObj));
+	// implicit shared object upodating
+	QJsonObject tmpObject = m_jsonValue.toObject();
+	tmpObject[strName] = doubleValue;
+	m_jsonValue = tmpObject;
 }
 
 void QJsObjectData::setAttribute(const QString &strName, QString strValue)
 {
-	QJsonObject jsonTempObj = m_jsonValue.toObject();
-	jsonTempObj.insert(strName, QJsonValue(strValue));
-	updateJsonValue(QJsonValue(jsonTempObj));
+	// implicit shared object upodating
+	QJsonObject tmpObject = m_jsonValue.toObject();
+	tmpObject[strName] = strValue;
+	m_jsonValue = tmpObject;
 }
 
 void QJsObjectData::setAttribute(const QString &strName, qint64 int64Value)
 {
-	QJsonObject jsonTempObj = m_jsonValue.toObject();
-	jsonTempObj.insert(strName, QJsonValue(int64Value));
-	updateJsonValue(QJsonValue(jsonTempObj));
+	// implicit shared object upodating
+	QJsonObject tmpObject = m_jsonValue.toObject();
+	tmpObject[strName] = int64Value;
+	m_jsonValue = tmpObject;
 }
 
 void QJsObjectData::setAttribute(const QString &strName, QVariant varValue)
@@ -134,14 +141,15 @@ void QJsObjectData::setAttribute(const QString &strName, QVariant varValue)
 		setAttribute(strName, varValue.toLongLong());
 		break;
 	default:
-		//qDebug() << "[ERROR] QJsObjectData::setAttribute, Unknown variant type.";
+		qDebug() << "[ERROR] QJsObjectData::setAttribute, Unknown variant type.";
 		break;
 	}
 }
 
 void QJsObjectData::removeAttribute(const QString &strName)
 {
-	QJsonObject jsonTempObj = m_jsonValue.toObject();
-	jsonTempObj.remove(strName);
-	updateJsonValue(QJsonValue(jsonTempObj));
+	// implicit shared object upodating
+	QJsonObject tmpObject = m_jsonValue.toObject();
+	tmpObject.remove(strName);
+	m_jsonValue = tmpObject;
 }

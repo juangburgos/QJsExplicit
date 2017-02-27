@@ -52,26 +52,44 @@ QString QJsDocumentData::fromJson(const QByteArray &json)
 	}
 	if (!doc.isObject())
 	{
-		return "JSON data is not an object";
+		return "[ERROR] JSON data is not an object";
 	}
-	// set object and recreate children
-	setJsonValue(QJsonValue(doc.object()));
+
+	// create internal tree recursivelly
+	if (doc.isArray()) // TODO : not supported because QJsDocumentData inherits from QJsObjectData
+	{
+		fromJsonArray(doc.array());
+	}
+	else if (doc.isObject())
+	{
+		fromJsonObject(doc.object());
+	}
+
 	return "";
 }
 
 QString QJsDocumentData::fromBinaryData(const QByteArray &data)
 {
-	QJsonDocument doc = QJsonDocument::fromJson(data);
+	QJsonDocument doc = QJsonDocument::fromBinaryData(data);
 	if (doc.isNull())
 	{
-		return "Invalid binary data";
+		return "[ERROR] Invalid binary data";
 	}
 	if (!doc.isObject())
 	{
-		return "JSON binary data is not an object";
+		return "[ERROR] JSON binary data is not an object";
 	}
-	// set object and recreate children
-	setJsonValue(QJsonValue(doc.object()));
+
+	// create internal tree recursivelly
+	if (doc.isArray()) // TODO : not supported because QJsDocumentData inherits from QJsObjectData
+	{
+		fromJsonArray(doc.array());
+	}
+	else if (doc.isObject())
+	{
+		fromJsonObject(doc.object());
+	}
+
 	return "";
 }
 

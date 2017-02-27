@@ -116,14 +116,10 @@ QJsNode QJsNode::appendChild(const QJsNode &nodeData)
 
 void QJsNode::removeChild(const QString &strKeyName)
 {
-	/*auto res = */data->removeChild(strKeyName);
-	//if (!res)
-	//{
-	//	return QJsNode();
-	//}
-	//QJsNode node;
-	//node.data = res;
-	//return node;
+	if (data->hasChildByKey(strKeyName))
+	{
+		data->removeChild(strKeyName);
+	}
 }
 
 QJsNode QJsNode::replaceChild(const QString &strKeyName, QJsNode &nodeData)
@@ -138,18 +134,18 @@ QJsNode QJsNode::replaceChild(const QString &strKeyName, QJsNode &nodeData)
 	return node;
 }
 
-bool QJsNode::isNull() const
+bool QJsNode::isValid() const
 {
-	if (!data || data->isNull())
+	if (data->isValid())
 	{
 		return true;
 	}
 	return false;
 }
 
-bool QJsNode::isValid() const
+bool QJsNode::isEmpty() const
 {
-	if (data->isValid())
+	if (data->isEmpty())
 	{
 		return true;
 	}

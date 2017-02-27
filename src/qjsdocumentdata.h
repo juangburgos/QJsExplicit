@@ -22,6 +22,8 @@ public:
 	QString    	fromJson(const QByteArray &json);
 	QString  	fromBinaryData(const QByteArray &data);
 
+
+
 };
 
 #endif // QJSDOCUMENTDATA_H
