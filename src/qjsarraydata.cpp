@@ -369,7 +369,7 @@ QString QJsArrayData::removeValue(QString strValue)
 		{
 			continue;
 		}
-		QString value = m_vectorChildren[i]->m_jsonValue.isString();
+        QString value = m_vectorChildren[i]->m_jsonValue.toString();
 		if (value.compare(strValue, Qt::CaseSensitive) == 0)
 		{
 			QString strIdx = QString::number(i);

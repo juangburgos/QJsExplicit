@@ -58,11 +58,13 @@ QString QJsDocumentData::fromJson(const QByteArray &json)
 	// create internal tree recursivelly
 	if (doc.isArray()) // TODO : not supported because QJsDocumentData inherits from QJsObjectData
 	{
-		fromJsonArray(doc.array());
+        auto tmpLinux = doc.array();
+        fromJsonArray(tmpLinux);
 	}
 	else if (doc.isObject())
 	{
-		fromJsonObject(doc.object());
+        auto tmpLinux = doc.object();
+        fromJsonObject(tmpLinux);
 	}
 
 	return "";
@@ -83,11 +85,13 @@ QString QJsDocumentData::fromBinaryData(const QByteArray &data)
 	// create internal tree recursivelly
 	if (doc.isArray()) // TODO : not supported because QJsDocumentData inherits from QJsObjectData
 	{
-		fromJsonArray(doc.array());
+        auto tmpLinux = doc.array();
+        fromJsonArray(tmpLinux);
 	}
 	else if (doc.isObject())
 	{
-		fromJsonObject(doc.object());
+        auto tmpLinux = doc.object();
+        fromJsonObject(tmpLinux);
 	}
 
 	return "";
