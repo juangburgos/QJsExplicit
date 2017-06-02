@@ -34,23 +34,22 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	// orphan object append to test
 	QJsObject orphanobj;
-	orphanobj.setKeyName("orphanobj"); // not working if no keyname, but that is desired
+	orphanobj.setKeyName("orphanobj");
 	orphanobj.setAttribute("A", 1);
 	orphanobj.setAttribute("B", 2);
 	orphanobj.setAttribute("C", 3);
 	testobj.appendChild(orphanobj);
 
-	// edit through copy of the document
+	// edit through shallow copy of the document
 	QJsDocument doc2 = orphanobj.ownerDocument();
 	if (doc2.getChildByKey("testarr").isArray())
 	{
-		QJsArray testarr2 = doc2.getChildByKey("testarr").toArray(); //testarr.referended=3
-		testarr2.setValueAt(3, "ocho");                              //testarr.referended=4
-	}                                                                //testarr.referended=3
+		QJsArray testarr2 = doc2.getChildByKey("testarr").toArray(); 
+		testarr2.setValueAt(3, "ocho");                              
+	}                                                                
 
-	// orphan array
+	// orphan array append to test array
 	QJsArray orphanarr;
-	//orphanarr.setKeyName("orphanarr"); works fine without keyname
 	for (int i = 0; i < 3; i++)
 	{
 		QJsObject tempObj;
