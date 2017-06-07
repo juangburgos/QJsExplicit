@@ -7,10 +7,13 @@
 
 QJsObjectData::QJsObjectData()
 {
-	m_strKeyName = QString();
+	m_strKeyName = "";
 	m_jsonValue  = QJsonValue(QJsonObject());
 	// null instance
 	m_parent = nullptr;
+#ifdef QT_DEBUG
+	this->recalcDebugVars();
+#endif
 }
 
 QJsObjectData::~QJsObjectData()
@@ -87,6 +90,9 @@ void QJsObjectData::setAttribute(const QString &strName, bool boolValue)
 	QJsonObject tmpObject = m_jsonValue.toObject();
 	tmpObject[strName] = boolValue;
 	m_jsonValue = tmpObject;
+#ifdef QT_DEBUG
+	this->recalcDebugVars();
+#endif
 }
 
 void QJsObjectData::setAttribute(const QString &strName, int intValue)
@@ -95,6 +101,9 @@ void QJsObjectData::setAttribute(const QString &strName, int intValue)
 	QJsonObject tmpObject = m_jsonValue.toObject();
 	tmpObject[strName] = intValue;
 	m_jsonValue = tmpObject;
+#ifdef QT_DEBUG
+	this->recalcDebugVars();
+#endif
 }
 
 void QJsObjectData::setAttribute(const QString &strName, double doubleValue)
@@ -103,6 +112,9 @@ void QJsObjectData::setAttribute(const QString &strName, double doubleValue)
 	QJsonObject tmpObject = m_jsonValue.toObject();
 	tmpObject[strName] = doubleValue;
 	m_jsonValue = tmpObject;
+#ifdef QT_DEBUG
+	this->recalcDebugVars();
+#endif
 }
 
 void QJsObjectData::setAttribute(const QString &strName, QString strValue)
@@ -111,6 +123,9 @@ void QJsObjectData::setAttribute(const QString &strName, QString strValue)
 	QJsonObject tmpObject = m_jsonValue.toObject();
 	tmpObject[strName] = strValue;
 	m_jsonValue = tmpObject;
+#ifdef QT_DEBUG
+	this->recalcDebugVars();
+#endif
 }
 
 void QJsObjectData::setAttribute(const QString &strName, qint64 int64Value)
@@ -119,6 +134,9 @@ void QJsObjectData::setAttribute(const QString &strName, qint64 int64Value)
 	QJsonObject tmpObject = m_jsonValue.toObject();
 	tmpObject[strName] = int64Value;
 	m_jsonValue = tmpObject;
+#ifdef QT_DEBUG
+	this->recalcDebugVars();
+#endif
 }
 
 void QJsObjectData::setAttribute(const QString &strName, QVariant varValue)
@@ -144,6 +162,9 @@ void QJsObjectData::setAttribute(const QString &strName, QVariant varValue)
 		qDebug() << "[ERROR] QJsObjectData::setAttribute, Unknown variant type.";
 		break;
 	}
+#ifdef QT_DEBUG
+	this->recalcDebugVars();
+#endif
 }
 
 void QJsObjectData::removeAttribute(const QString &strName)
@@ -152,4 +173,21 @@ void QJsObjectData::removeAttribute(const QString &strName)
 	QJsonObject tmpObject = m_jsonValue.toObject();
 	tmpObject.remove(strName);
 	m_jsonValue = tmpObject;
+#ifdef QT_DEBUG
+	this->recalcDebugVars();
+#endif
+}
+
+void QJsObjectData::recalcDebugVars()
+{
+	// create attributes string
+	QString strAttributes;
+	auto listAttrs = this->attributeNames();
+	for (int i = 0; i < listAttrs.count(); i++)
+	{
+		strAttributes += listAttrs.at(i) + " : " + this->attributeValue(listAttrs.at(i)).toString() + "\n";
+	}
+	d_strAttributes = strAttributes.toStdString();
+	// call base class method
+	QJsNodeData::recalcDebugVars();
 }

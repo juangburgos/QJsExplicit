@@ -5,7 +5,7 @@
 
 QJsDocumentData::QJsDocumentData()
 {
-	m_strKeyName = QString();
+	m_strKeyName = "";
 	m_jsonValue  = QJsonValue(QJsonObject()); // NODE, has to be an object, the QJsonDocument Object
 	// null instance
 	m_parent = nullptr;

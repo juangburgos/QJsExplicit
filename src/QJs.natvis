@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+  <Type Name="QJsNode">
+    <AlternativeType Name="QJsNode"/>
+    <DisplayString>Key = {data.d-&gt;d_strKeyName}</DisplayString>
+    <Expand>
+      <Synthetic Name="Node JSON">
+        <DisplayString>{data.d-&gt;d_strJsonFull}</DisplayString>
+        <StringView>data.d-&gt;d_strJsonFull</StringView>
+      </Synthetic>
+      <Synthetic Name="Parent Key">
+        <DisplayString>{data.d-&gt;d_strParentKeyName}</DisplayString>
+      </Synthetic>
+      <Synthetic Name="Parent JSON">
+        <DisplayString>{data.d-&gt;m_parent-&gt;d_strJsonFull}</DisplayString>
+        <StringView>data.d-&gt;m_parent-&gt;d_strJsonFull</StringView>
+      </Synthetic>
+    </Expand> 
+  </Type>
+
+  <Type Name="QJsObject">
+    <AlternativeType Name="QJsObject"/>
+    <DisplayString>Key = {data.d-&gt;d_strKeyName}</DisplayString>
+    <Expand>
+      <Synthetic Name="Object JSON">
+        <DisplayString>{data.d-&gt;d_strJsonFull}</DisplayString>
+        <StringView>data.d-&gt;d_strJsonFull</StringView>
+      </Synthetic>
+      <Synthetic Name="Object Attributes">
+        <DisplayString>{data.d-&gt;d_strAttributes}</DisplayString>
+        <StringView>data.d-&gt;d_strAttributes</StringView>
+      </Synthetic>
+      <Synthetic Name="Parent Key">
+        <DisplayString>{data.d-&gt;d_strParentKeyName}</DisplayString>
+      </Synthetic>
+      <Synthetic Name="Parent JSON">
+        <DisplayString>{data.d-&gt;m_parent-&gt;d_strJsonFull}</DisplayString>
+        <StringView>data.d-&gt;m_parent-&gt;d_strJsonFull</StringView>
+      </Synthetic>
+    </Expand>
+  </Type>
+
+  <Type Name="QJsDocument">
+    <AlternativeType Name="QJsDocument"/>
+    <DisplayString>Key = {data.d-&gt;d_strKeyName}</DisplayString>
+    <Expand>
+      <Synthetic Name="Document JSON">
+        <DisplayString>{data.d-&gt;d_strJsonFull}</DisplayString>
+        <StringView>data.d-&gt;d_strJsonFull</StringView>
+      </Synthetic>
+      <Synthetic Name="Document Attributes">
+        <DisplayString>{data.d-&gt;d_strAttributes}</DisplayString>
+        <StringView>data.d-&gt;d_strAttributes</StringView>
+      </Synthetic>
+    </Expand>
+  </Type>
+
+  <Type Name="QJsArray">
+    <AlternativeType Name="QJsArray"/>
+    <DisplayString>Key = {data.d-&gt;d_strKeyName}</DisplayString>
+    <Expand>
+      <Synthetic Name="Array JSON">
+        <DisplayString>{data.d-&gt;d_strJsonFull}</DisplayString>
+        <StringView>data.d-&gt;d_strJsonFull</StringView>
+      </Synthetic>
+      <Synthetic Name="Array Length">
+        <DisplayString>{data.d-&gt;d_strCount}</DisplayString>
+      </Synthetic>
+      <Synthetic Name="Parent Key">
+        <DisplayString>{data.d-&gt;d_strParentKeyName}</DisplayString>
+      </Synthetic>
+      <Synthetic Name="Parent JSON">
+        <DisplayString>{data.d-&gt;m_parent-&gt;d_strJsonFull}</DisplayString>
+        <StringView>data.d-&gt;m_parent-&gt;d_strJsonFull</StringView>
+      </Synthetic>
+    </Expand>
+  </Type>
+
+</AutoVisualizer>

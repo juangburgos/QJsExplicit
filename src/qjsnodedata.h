@@ -106,6 +106,20 @@ protected:
 	//             method multiple times to perform temporary operations.
     //QExplicitlySharedDataPointer<QJsNodeData>                m_parent; 
 
+#ifdef QT_DEBUG
+	// call on every edition
+	virtual void recalcDebugVars();
+	// debug variables (QJsNodeData)
+	std::string d_strKeyName;
+	std::string d_strJsonFull;
+	std::string d_strParentKeyName;
+	// debug variables (QJsObjectData)
+	std::string d_strAttributes;
+	// debug variables (QJsArrayData)
+	std::string d_strCount;
+
+#endif
+
 };
 
 #endif // QJSNODEDATA_H

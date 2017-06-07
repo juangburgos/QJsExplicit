@@ -14,7 +14,7 @@ public:
 	bool isArray()    Q_DECL_OVERRIDE;
 	bool isDocument() Q_DECL_OVERRIDE;
 
-	// implement attributes API
+	// implement array API
 	int count();
 
 	QVariant                                  getValueAt(int idx);
@@ -53,7 +53,11 @@ public:
 	int         removeValue  (int     intValue);
 	QString     removeValue  (QString strValue);
 
-
+#ifdef QT_DEBUG
+protected:
+	// call on every edition
+	void recalcDebugVars() Q_DECL_OVERRIDE;
+#endif
 };
 
 #endif // QJSARRAYDATA_H

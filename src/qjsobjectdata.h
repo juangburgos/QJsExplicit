@@ -36,6 +36,12 @@ public:
 	void	    setAttribute(const QString &strName, QVariant varValue);
 
 	void        removeAttribute(const QString &strName);
+
+#ifdef QT_DEBUG
+protected:
+	// call on every edition
+	void recalcDebugVars() Q_DECL_OVERRIDE;
+#endif
 };
 
 
