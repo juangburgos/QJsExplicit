@@ -37,7 +37,7 @@ public:
 
 	void        removeAttribute(const QString &strName);
 
-#ifdef QT_DEBUG
+#if defined(QT_DEBUG) && defined(Q_OS_WIN)
 protected:
 	// call on every edition
 	void recalcDebugVars() Q_DECL_OVERRIDE;

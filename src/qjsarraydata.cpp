@@ -11,7 +11,7 @@ QJsArrayData::QJsArrayData()
 	m_jsonValue  = QJsonValue(QJsonArray());
 	// null instance
 	m_parent = nullptr;
-#ifdef QT_DEBUG
+#if defined(QT_DEBUG) && defined(Q_OS_WIN)
 	this->recalcDebugVars();
 #endif
 }
@@ -71,7 +71,7 @@ void QJsArrayData::setValueAt(int idx, bool boolValue)
 	}
 	m_vectorChildren[idx]->removeChildren();
 	m_vectorChildren[idx]->m_jsonValue = QJsonValue(boolValue);
-#ifdef QT_DEBUG
+#if defined(QT_DEBUG) && defined(Q_OS_WIN)
 	this->recalcDebugVars();
 #endif
 }
@@ -86,7 +86,7 @@ void QJsArrayData::setValueAt(int idx, int intValue)
 	}
 	m_vectorChildren[idx]->removeChildren();
 	m_vectorChildren[idx]->m_jsonValue = QJsonValue(intValue);
-#ifdef QT_DEBUG
+#if defined(QT_DEBUG) && defined(Q_OS_WIN)
 	this->recalcDebugVars();
 #endif
 }
@@ -101,7 +101,7 @@ void QJsArrayData::setValueAt(int idx, double doubleValue)
 	}
 	m_vectorChildren[idx]->removeChildren();
 	m_vectorChildren[idx]->m_jsonValue = QJsonValue(doubleValue);
-#ifdef QT_DEBUG
+#if defined(QT_DEBUG) && defined(Q_OS_WIN)
 	this->recalcDebugVars();
 #endif
 }
@@ -116,7 +116,7 @@ void QJsArrayData::setValueAt(int idx, QString strValue)
 	}
 	m_vectorChildren[idx]->removeChildren();
 	m_vectorChildren[idx]->m_jsonValue = QJsonValue(strValue);
-#ifdef QT_DEBUG
+#if defined(QT_DEBUG) && defined(Q_OS_WIN)
 	this->recalcDebugVars();
 #endif
 }
@@ -149,7 +149,7 @@ void QJsArrayData::setValueAt(int idx, QVariant varValue)
 		qDebug() << "[ERROR] unsupported type in QJsArrayData::setValueAt";
 		break;
 	}
-#ifdef QT_DEBUG
+#if defined(QT_DEBUG) && defined(Q_OS_WIN)
 	this->recalcDebugVars();
 #endif
 }
@@ -164,7 +164,7 @@ void QJsArrayData::setNodeAt(int idx, QExplicitlySharedDataPointer<QJsNodeData> 
 	}
 	QString strIdx = QString::number(idx);
 	replaceChild(strIdx, nodeValue);
-#ifdef QT_DEBUG
+#if defined(QT_DEBUG) && defined(Q_OS_WIN)
 	this->recalcDebugVars();
 #endif
 }
@@ -179,7 +179,7 @@ void QJsArrayData::setObjectAt(int idx, QExplicitlySharedDataPointer<QJsObjectDa
 	}
 	QString strIdx = QString::number(idx);
 	replaceChild(strIdx, objValue);
-#ifdef QT_DEBUG
+#if defined(QT_DEBUG) && defined(Q_OS_WIN)
 	this->recalcDebugVars();
 #endif
 }
@@ -194,7 +194,7 @@ void QJsArrayData::setArrayAt(int idx, QExplicitlySharedDataPointer<QJsArrayData
 	}
 	QString strIdx = QString::number(idx);
 	replaceChild(strIdx, arrValue);
-#ifdef QT_DEBUG
+#if defined(QT_DEBUG) && defined(Q_OS_WIN)
 	this->recalcDebugVars();
 #endif
 }
@@ -282,7 +282,7 @@ void QJsArrayData::appendValue(bool boolValue)
 	newNode->m_parent     = this;
 	newNode->m_strKeyName = QString::number(m_vectorChildren.count());
 	m_vectorChildren.append(newNode);
-#ifdef QT_DEBUG
+#if defined(QT_DEBUG) && defined(Q_OS_WIN)
 	this->recalcDebugVars();
 #endif
 }
@@ -294,7 +294,7 @@ void QJsArrayData::appendValue(int intValue)
 	newNode->m_parent     = this;
 	newNode->m_strKeyName = QString::number(m_vectorChildren.count());
 	m_vectorChildren.append(newNode);
-#ifdef QT_DEBUG
+#if defined(QT_DEBUG) && defined(Q_OS_WIN)
 	this->recalcDebugVars();
 #endif
 }
@@ -306,7 +306,7 @@ void QJsArrayData::appendValue(double doubleValue)
 	newNode->m_parent     = this;
 	newNode->m_strKeyName = QString::number(m_vectorChildren.count());
 	m_vectorChildren.append(newNode);
-#ifdef QT_DEBUG
+#if defined(QT_DEBUG) && defined(Q_OS_WIN)
 	this->recalcDebugVars();
 #endif
 }
@@ -318,7 +318,7 @@ void QJsArrayData::appendValue(QString strValue)
 	newNode->m_parent     = this;
 	newNode->m_strKeyName = QString::number(m_vectorChildren.count());
 	m_vectorChildren.append(newNode);
-#ifdef QT_DEBUG
+#if defined(QT_DEBUG) && defined(Q_OS_WIN)
 	this->recalcDebugVars();
 #endif
 }
@@ -343,7 +343,7 @@ void QJsArrayData::appendValue(QVariant varValue)
 		qDebug() << "[ERROR] unsupported type in QJsArrayData::appendValue";
 		break;
 	}
-#ifdef QT_DEBUG
+#if defined(QT_DEBUG) && defined(Q_OS_WIN)
 	this->recalcDebugVars();
 #endif
 }
@@ -354,7 +354,7 @@ void QJsArrayData::appendObject(QExplicitlySharedDataPointer<QJsObjectData> objV
 	objValue->m_strKeyName.clear();
 	// append, performs reparenting as well
 	appendChild(objValue);
-#ifdef QT_DEBUG
+#if defined(QT_DEBUG) && defined(Q_OS_WIN)
 	this->recalcDebugVars();
 #endif
 }
@@ -363,7 +363,7 @@ void QJsArrayData::appendArray(QExplicitlySharedDataPointer<QJsArrayData> arrVal
 {
 	// append, performs reparenting as well
 	appendChild(arrValue);
-#ifdef QT_DEBUG
+#if defined(QT_DEBUG) && defined(Q_OS_WIN)
 	this->recalcDebugVars();
 #endif
 }
@@ -381,7 +381,7 @@ QVariant QJsArrayData::removeValueAt(int idx)
 	// remove
 	QString strIdx = QString::number(idx);
 	removeChild(strIdx);
-#ifdef QT_DEBUG
+#if defined(QT_DEBUG) && defined(Q_OS_WIN)
 	this->recalcDebugVars();
 #endif
 	return retVar;
@@ -405,7 +405,7 @@ int QJsArrayData::removeValue(int intValue)
 			{
 				QString strIdx = QString::number(i);
 				removeChild(strIdx);
-#ifdef QT_DEBUG
+#if defined(QT_DEBUG) && defined(Q_OS_WIN)
 				this->recalcDebugVars();
 #endif
 				return int_intpart;
@@ -428,7 +428,7 @@ QString QJsArrayData::removeValue(QString strValue)
 		{
 			QString strIdx = QString::number(i);
 			removeChild(strIdx);
-#ifdef QT_DEBUG
+#if defined(QT_DEBUG) && defined(Q_OS_WIN)
 			this->recalcDebugVars();
 #endif
 			return value;
@@ -437,7 +437,7 @@ QString QJsArrayData::removeValue(QString strValue)
 	return QString();
 }
 
-#ifdef QT_DEBUG
+#if defined(QT_DEBUG) && defined(Q_OS_WIN)
 void QJsArrayData::recalcDebugVars()
 {
 	d_strCount = QString::number(this->count()).toStdString();

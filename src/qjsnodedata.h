@@ -106,7 +106,7 @@ protected:
 	//             method multiple times to perform temporary operations.
     //QExplicitlySharedDataPointer<QJsNodeData>                m_parent; 
 
-#ifdef QT_DEBUG
+#if defined(QT_DEBUG) && defined(Q_OS_WIN)
 	// call on every edition
 	virtual void recalcDebugVars();
 	// debug variables (QJsNodeData)
