@@ -119,13 +119,17 @@ A possible output would be:
 
 ## Natvis File
 
-When developing in Windows with Visual Studio, it is possible to see the JSON contents of an QJs class while debugging. This can be achieved by adding the file:
+When developing in Windows with Visual Studio (2015 or more recent), it is possible to see the JSON contents of an QJs class while debugging, as shown in the figure below:
+
+> ![02natvis_ex01](./img/natvis_ex01.PNG)
+
+This can be achieved by adding the file:
 
 ```
 ./src/QJs.natvis
 ```
 
-into the Visual Studio project by right clicking the project,  and selecting ```Add -Z Existing Item...```.
+into the Visual Studio project by right clicking the project,  and selecting ```Add -> Existing Item...```.
 
 For more information about Visual Studio Navis files visit [this link](https://msdn.microsoft.com/en-us/library/jj620914.aspx).
 
