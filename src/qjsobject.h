@@ -41,6 +41,8 @@ public:
 	void	    setAttribute(const QString &strName, QVariant varValue);
 
 	void        removeAttribute(const QString &strName);
+
+	QJsObject   clone() const;
 };
 
 #endif // QJSOBJECT_H

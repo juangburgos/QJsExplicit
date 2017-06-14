@@ -164,3 +164,8 @@ QString QJsArray::removeValue(QString strValue)
 {
 	return data->toArray()->removeValue(strValue);
 }
+
+QJsArray QJsArray::clone() const
+{
+	return QJsNode::clone().toArray();
+}

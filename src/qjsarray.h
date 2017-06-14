@@ -63,6 +63,8 @@ public:
 
 	QString  removeValue(QString strValue);
 
+	QJsArray clone() const;
+
 	// TODO : insert (shift others) require recreateChildren
 
 };

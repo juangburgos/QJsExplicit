@@ -107,3 +107,8 @@ void QJsObject::removeAttribute(const QString &strName)
 {
 	data->toObject()->removeAttribute(strName);
 }
+
+QJsObject QJsObject::clone() const
+{
+	return QJsNode::clone().toObject();
+}

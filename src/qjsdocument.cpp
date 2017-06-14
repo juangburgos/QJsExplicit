@@ -46,3 +46,8 @@ QJsDocument QJsDocument::fromBinaryData(const QByteArray &bindata, QString &erro
 	error = doc.data->toDocument()->fromBinaryData(bindata);
 	return doc;
 }
+
+QJsDocument QJsDocument::clone() const
+{
+	return QJsNode::clone().toDocument();
+}

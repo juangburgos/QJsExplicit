@@ -15,6 +15,7 @@ public:
 
 	static QJsDocument fromBinaryData(const QByteArray &bindata, QString &error);
 
+	QJsDocument clone() const;
 };
 
 #endif // QJSDOCUMENT_H
