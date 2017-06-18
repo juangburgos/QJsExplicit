@@ -18,6 +18,9 @@ public:
 
 	QVariant    attributeValue(QString strName) const;
 
+	template<typename T>
+	T           attributeValue(QString strName) const;
+
 	bool        isBool(QString strName) const;
 
 	bool        isInteger(QString strName) const;

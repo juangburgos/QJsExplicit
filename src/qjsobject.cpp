@@ -48,6 +48,42 @@ QVariant QJsObject::attributeValue(QString strName) const
 	return data->toObject()->attributeValue(strName);
 }
 
+template<typename T>
+T QJsObject::attributeValue(QString strName) const
+{
+	return attributeValue(strName);
+}
+// bool specialization
+template<>
+bool QJsObject::attributeValue(QString strName) const
+{
+	return attributeValue(strName).toBool();
+}
+// int specialization
+template<>
+int QJsObject::attributeValue(QString strName) const
+{
+	return attributeValue(strName).toInt();
+}
+// qlonglong specialization
+template<>
+qlonglong QJsObject::attributeValue(QString strName) const
+{
+	return attributeValue(strName).toLongLong();
+}
+// double specialization
+template<>
+double QJsObject::attributeValue(QString strName) const
+{
+	return attributeValue(strName).toDouble();
+}
+// QString specialization
+template<>
+QString QJsObject::attributeValue(QString strName) const
+{
+	return attributeValue(strName).toString();
+}
+
 bool QJsObject::isBool(QString strName) const
 {
 	return data->toObject()->isBool(strName);
