@@ -614,6 +614,10 @@ QExplicitlySharedDataPointer<QJsNodeData> QJsNodeData::clone()
 
 	cloneDeep(newNode);
 
+#if defined(QT_DEBUG) && defined(Q_OS_WIN)
+	newNode->recalcDebugVars();
+#endif
+
 	return newNode;
 }
 
