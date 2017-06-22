@@ -15,10 +15,10 @@ QJsNode::QJsNode() : data(nullptr)
 	data = QExplicitlySharedDataPointer<QJsNodeData>(new QJsNodeData());
 }
 
-QJsNode::QJsNode(const QJsNode &rhs) : data(rhs.data)
+QJsNode::QJsNode(const QJsNode &other) : data(other.data)
 {
 	data.reset();
-	data = rhs.data;
+	data = other.data;
 }
 
 QJsNode &QJsNode::operator=(const QJsNode &rhs)
@@ -33,6 +33,16 @@ QJsNode &QJsNode::operator=(const QJsNode &rhs)
 QJsNode::~QJsNode()
 {
 	data.reset();
+}
+
+bool QJsNode::operator==(const QJsNode& other)
+{
+	return data->toBinaryData() == other.data->toBinaryData();
+}
+
+bool QJsNode::operator!=(const QJsNode& other)
+{
+	return !(data->toBinaryData() == other.data->toBinaryData());
 }
 
 void QJsNode::setKeyName(const QString &strKeyName)

@@ -18,10 +18,18 @@ class QJsNode
 {
 	friend class QJsArray;
 public:
+	// constructor
     QJsNode();
-    QJsNode(const QJsNode &);
-    QJsNode &operator=(const QJsNode &);
+	// copy
+    QJsNode(const QJsNode &other);
+	// assignment
+    QJsNode &operator=(const QJsNode &rhs);
+	// destructor
     ~QJsNode();
+	// comparison ==
+	bool operator==(const QJsNode& other);
+	// comparison !=
+	bool operator!=(const QJsNode& other);
 
 	enum JsFormat
 	{
