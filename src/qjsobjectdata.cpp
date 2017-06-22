@@ -86,57 +86,32 @@ bool QJsObjectData::isString(QString strName)
 
 void QJsObjectData::setAttribute(const QString &strName, bool boolValue)
 {
-	// implicit shared object upodating
-	QJsonObject tmpObject = m_jsonValue.toObject();
-	tmpObject[strName] = boolValue;
-	m_jsonValue = tmpObject;
-#if defined(QT_DEBUG) && defined(Q_OS_WIN)
-	this->recalcDebugVars();
-#endif
+	setAttributeInternal(strName, boolValue);
 }
 
 void QJsObjectData::setAttribute(const QString &strName, int intValue)
 {
-	// implicit shared object upodating
-	QJsonObject tmpObject = m_jsonValue.toObject();
-	tmpObject[strName] = intValue;
-	m_jsonValue = tmpObject;
-#if defined(QT_DEBUG) && defined(Q_OS_WIN)
-	this->recalcDebugVars();
-#endif
+	setAttributeInternal(strName, intValue);
+}
+
+void QJsObjectData::setAttribute(const QString &strName, qulonglong intULLValue)
+{
+	setAttributeInternal(strName, (qint64)intULLValue);
 }
 
 void QJsObjectData::setAttribute(const QString &strName, double doubleValue)
 {
-	// implicit shared object upodating
-	QJsonObject tmpObject = m_jsonValue.toObject();
-	tmpObject[strName] = doubleValue;
-	m_jsonValue = tmpObject;
-#if defined(QT_DEBUG) && defined(Q_OS_WIN)
-	this->recalcDebugVars();
-#endif
+	setAttributeInternal(strName, doubleValue);
 }
 
 void QJsObjectData::setAttribute(const QString &strName, QString strValue)
 {
-	// implicit shared object upodating
-	QJsonObject tmpObject = m_jsonValue.toObject();
-	tmpObject[strName] = strValue;
-	m_jsonValue = tmpObject;
-#if defined(QT_DEBUG) && defined(Q_OS_WIN)
-	this->recalcDebugVars();
-#endif
+	setAttributeInternal(strName, strValue);
 }
 
 void QJsObjectData::setAttribute(const QString &strName, qint64 int64Value)
 {
-	// implicit shared object upodating
-	QJsonObject tmpObject = m_jsonValue.toObject();
-	tmpObject[strName] = int64Value;
-	m_jsonValue = tmpObject;
-#if defined(QT_DEBUG) && defined(Q_OS_WIN)
-	this->recalcDebugVars();
-#endif
+	setAttributeInternal(strName, int64Value);
 }
 
 void QJsObjectData::setAttribute(const QString &strName, QVariant varValue)
@@ -156,10 +131,13 @@ void QJsObjectData::setAttribute(const QString &strName, QVariant varValue)
 		setAttribute(strName, varValue.toString());
 		break;
 	case QMetaType::ULongLong:
+		setAttribute(strName, varValue.toULongLong());
+		break;
+	case QMetaType::LongLong:
 		setAttribute(strName, varValue.toLongLong());
 		break;
 	default:
-		qDebug() << "[ERROR] QJsObjectData::setAttribute, Unknown variant type.";
+		qDebug() << "[ERROR] QJsObjectData::setAttribute, Unknown variant type : " << varValue.type();
 		break;
 	}
 #if defined(QT_DEBUG) && defined(Q_OS_WIN)

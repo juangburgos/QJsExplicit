@@ -28,12 +28,13 @@ public:
 	bool        isString(QString strName);
 
 	// set or insert or append is the same
-	void	    setAttribute(const QString &strName, bool     boolValue); // TODO : return reference to this to allow chaining
-	void	    setAttribute(const QString &strName, int      intValue );
-	void	    setAttribute(const QString &strName, qint64   int64Value);
-	void	    setAttribute(const QString &strName, double   doubleValue);
-	void	    setAttribute(const QString &strName, QString  strValue);
-	void	    setAttribute(const QString &strName, QVariant varValue);
+	void	    setAttribute(const QString &strName, bool       boolValue); // TODO : return reference to this to allow chaining
+	void	    setAttribute(const QString &strName, int        intValue );
+	void	    setAttribute(const QString &strName, qint64     int64Value);
+	void	    setAttribute(const QString &strName, qulonglong intULLValue);
+	void	    setAttribute(const QString &strName, double     doubleValue);
+	void	    setAttribute(const QString &strName, QString    strValue);
+	void	    setAttribute(const QString &strName, QVariant   varValue);
 
 	void        removeAttribute(const QString &strName);
 
@@ -42,7 +43,22 @@ protected:
 	// call on every edition
 	void recalcDebugVars() Q_DECL_OVERRIDE;
 #endif
+
+private:
+	template<typename T>
+	void	    setAttributeInternal(const QString &strName, T tValue);
 };
 
+template<typename T>
+void QJsObjectData::setAttributeInternal(const QString &strName, T tValue)
+{
+	// implicit shared object upodating
+	QJsonObject tmpObject = m_jsonValue.toObject();
+	tmpObject[strName]    = tValue;
+	m_jsonValue           = tmpObject;
+#if defined(QT_DEBUG) && defined(Q_OS_WIN)
+	this->recalcDebugVars();
+#endif
+}
 
 #endif // QJSOBJECTDATA_H
