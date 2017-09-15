@@ -134,6 +134,11 @@ void QJsObject::setAttribute(const QString &strName, qint64 int64Value)
 	data->toObject()->setAttribute(strName, int64Value);
 }
 
+void QJsObject::setAttribute(const QString &strName, quint32 uint32Value)
+{
+	data->toObject()->setAttribute(strName, uint32Value);
+}
+
 void QJsObject::setAttribute(const QString &strName, QVariant varValue)
 {
 	data->toObject()->setAttribute(strName, varValue);

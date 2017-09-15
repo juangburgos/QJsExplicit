@@ -114,6 +114,11 @@ void QJsObjectData::setAttribute(const QString &strName, qint64 int64Value)
 	setAttributeInternal(strName, int64Value);
 }
 
+void QJsObjectData::setAttribute(const QString &strName, quint32 uint32Value)
+{
+	setAttributeInternal(strName, (qint32)uint32Value);
+}
+
 void QJsObjectData::setAttribute(const QString &strName, QVariant varValue)
 {
 	switch (varValue.type())
@@ -123,6 +128,9 @@ void QJsObjectData::setAttribute(const QString &strName, QVariant varValue)
 		break;
 	case QMetaType::Int:
 		setAttribute(strName, varValue.toInt());
+		break;
+	case QMetaType::UInt:
+		setAttribute(strName, varValue.toUInt());
 		break;
 	case QMetaType::Double:
 		setAttribute(strName, varValue.toDouble());
@@ -137,6 +145,7 @@ void QJsObjectData::setAttribute(const QString &strName, QVariant varValue)
 		setAttribute(strName, varValue.toLongLong());
 		break;
 	default:
+		Q_ASSERT_X(false, "QJsObjectData::setAttribute", "Unknown variant type for QJsObject");
 		qDebug() << "[ERROR] QJsObjectData::setAttribute, Unknown variant type : " << varValue.type();
 		break;
 	}

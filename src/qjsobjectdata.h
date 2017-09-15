@@ -30,6 +30,7 @@ public:
 	// set or insert or append is the same
 	void	    setAttribute(const QString &strName, bool       boolValue); // TODO : return reference to this to allow chaining
 	void	    setAttribute(const QString &strName, int        intValue );
+	void	    setAttribute(const QString &strName, quint32    uint32Value);
 	void	    setAttribute(const QString &strName, qint64     int64Value);
 	void	    setAttribute(const QString &strName, qulonglong intULLValue);
 	void	    setAttribute(const QString &strName, double     doubleValue);
