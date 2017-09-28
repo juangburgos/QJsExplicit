@@ -98,6 +98,9 @@ protected:
 	QMap<QString, QExplicitlySharedDataPointer<QJsNodeData>> m_mapChildren;
 	QVector<QExplicitlySharedDataPointer<QJsNodeData>>       m_vectorChildren;
 
+	void recursivellyLoadChildArray(QJsonValue &currValue, QString &strCurrKey);
+	void recursivellyLoadChildObject(QJsonValue &currValue, QString &strCurrKey);
+
 	// [WARNING] : This approach was causing memory leaks because when a parent obj
 	//             was out of scope of use the the top level application, the reference
 	//             count was decreased by 1 but its children still had references to it, 

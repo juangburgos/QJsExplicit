@@ -787,31 +787,49 @@ void QJsNodeData::fromJsonObject(QJsonObject &jsonObject)
 		else if (currValue.isArray())
 		{
 			// recursivelly load child array
-			auto newArrChild          = QExplicitlySharedDataPointer<QJsArrayData>(new QJsArrayData());
-			newArrChild->m_strKeyName = strCurrKey;
-			QJsonArray newJsonArr     = currValue.toArray();
-			newArrChild->fromJsonArray(newJsonArr);
-			if (!newArrChild->setParentNode(this))
-			{
-				qDebug() << "[ERROR] loading child array failed in QJsNodeData::fromJsonObject";
-			}
+			this->recursivellyLoadChildArray(currValue, strCurrKey);
 		}
 		else if (currValue.isObject())
 		{
 			// recursivelly load child object
-			auto newObjChild          = QExplicitlySharedDataPointer<QJsObjectData>(new QJsObjectData());
-			newObjChild->m_strKeyName = strCurrKey;
-			QJsonObject newJsonObj    = currValue.toObject();
-			newObjChild->fromJsonObject(newJsonObj);
-			if (!newObjChild->setParentNode(this))
-			{
-				qDebug() << "[ERROR] loading child object failed in QJsNodeData::fromJsonObject";
-			}
+			this->recursivellyLoadChildObject(currValue, strCurrKey);
 		}
 		else
 		{
-			// copy atributte
-			QExplicitlySharedDataPointer<QJsObjectData>(static_cast<QJsObjectData*>(this))->setAttribute(strCurrKey, currValue.toVariant());
+			// consider the case when attribute is text representing another json object/array
+			if (currValue.isString())
+			{
+				QJsonParseError error;
+				QJsonDocument doc = QJsonDocument::fromJson(currValue.toString().toUtf8(), &error);
+				if (error.error == QJsonParseError::NoError)
+				{
+					if (doc.isObject())
+					{
+						// recursivelly load child object
+						this->recursivellyLoadChildObject(QJsonValue(doc.object()), strCurrKey);
+					}
+					else if (doc.isArray())
+					{
+						// recursivelly load child array
+						this->recursivellyLoadChildArray(QJsonValue(doc.array()), strCurrKey);
+					}
+					else
+					{
+						// copy atributte
+						QExplicitlySharedDataPointer<QJsObjectData>(static_cast<QJsObjectData*>(this))->setAttribute(strCurrKey, currValue.toVariant());
+					}
+				}
+				else
+				{
+					// copy atributte
+					QExplicitlySharedDataPointer<QJsObjectData>(static_cast<QJsObjectData*>(this))->setAttribute(strCurrKey, currValue.toVariant());
+				}
+			}
+			else
+			{
+				// copy atributte
+				QExplicitlySharedDataPointer<QJsObjectData>(static_cast<QJsObjectData*>(this))->setAttribute(strCurrKey, currValue.toVariant());
+			}
 		}
 	}
 #if defined(QT_DEBUG) && defined(Q_OS_WIN)
@@ -842,31 +860,49 @@ void QJsNodeData::fromJsonArray(QJsonArray &jsonArray)
 		else if (currValue.isArray())
 		{
 			// recursivelly load child array
-			auto newArrChild          = QExplicitlySharedDataPointer<QJsArrayData>(new QJsArrayData());
-			newArrChild->m_strKeyName = strCurrKey;
-			QJsonArray newJsonArr     = currValue.toArray();
-			newArrChild->fromJsonArray(newJsonArr);
-			if (!newArrChild->setParentNode(this))
-			{
-				qDebug() << "[ERROR] loading child array failed in QJsNodeData::fromJsonArray";
-			}
+			this->recursivellyLoadChildArray(currValue, strCurrKey);
 		}
 		else if (currValue.isObject())
 		{
 			// recursivelly load child object
-			auto newObjChild          = QExplicitlySharedDataPointer<QJsObjectData>(new QJsObjectData());
-			newObjChild->m_strKeyName = strCurrKey;
-			QJsonObject newJsonObj    = currValue.toObject();
-			newObjChild->fromJsonObject(newJsonObj);
-			if (!newObjChild->setParentNode(this))
-			{
-				qDebug() << "[ERROR] loading child object failed in QJsNodeData::fromJsonArray";
-			}
+			this->recursivellyLoadChildObject(currValue, strCurrKey);
 		}
 		else
 		{
-			// copy value
-			QExplicitlySharedDataPointer<QJsArrayData>(static_cast<QJsArrayData*>(this))->appendValue(currValue.toVariant());
+			// consider the case when attribute is text representing another json object/array
+			if (currValue.isString())
+			{
+				QJsonParseError error;
+				QJsonDocument doc = QJsonDocument::fromJson(currValue.toString().toUtf8(), &error);
+				if (error.error == QJsonParseError::NoError)
+				{
+					if (doc.isObject())
+					{
+						// recursivelly load child object
+						this->recursivellyLoadChildObject(QJsonValue(doc.object()), strCurrKey);
+					} 
+					else if (doc.isArray())
+					{
+						// recursivelly load child array
+						this->recursivellyLoadChildArray(QJsonValue(doc.array()), strCurrKey);
+					}
+					else
+					{
+						// copy value
+						QExplicitlySharedDataPointer<QJsArrayData>(static_cast<QJsArrayData*>(this))->appendValue(currValue.toVariant());
+					}
+				}
+				else
+				{
+					// copy value
+					QExplicitlySharedDataPointer<QJsArrayData>(static_cast<QJsArrayData*>(this))->appendValue(currValue.toVariant());
+				}
+			}
+			else
+			{
+				// copy value
+				QExplicitlySharedDataPointer<QJsArrayData>(static_cast<QJsArrayData*>(this))->appendValue(currValue.toVariant());
+			}
 		}
 	}
 #if defined(QT_DEBUG) && defined(Q_OS_WIN)
@@ -874,7 +910,32 @@ void QJsNodeData::fromJsonArray(QJsonArray &jsonArray)
 #endif
 }
 
+void QJsNodeData::recursivellyLoadChildArray(QJsonValue &currValue, QString &strCurrKey)
+{
+	auto newArrChild          = QExplicitlySharedDataPointer<QJsArrayData>(new QJsArrayData());
+	newArrChild->m_strKeyName = strCurrKey;
+	QJsonArray newJsonArr     = currValue.toArray();
+	newArrChild->fromJsonArray(newJsonArr);
+	if (!newArrChild->setParentNode(this))
+	{
+		qDebug() << "[ERROR] loading child array failed in QJsNodeData::fromJsonArray";
+	}
+}
+
+void QJsNodeData::recursivellyLoadChildObject(QJsonValue &currValue, QString &strCurrKey)
+{
+	auto newObjChild          = QExplicitlySharedDataPointer<QJsObjectData>(new QJsObjectData());
+	newObjChild->m_strKeyName = strCurrKey;
+	QJsonObject newJsonObj    = currValue.toObject();
+	newObjChild->fromJsonObject(newJsonObj);
+	if (!newObjChild->setParentNode(this))
+	{
+		qDebug() << "[ERROR] loading child object failed in QJsNodeData::fromJsonArray";
+	}
+}
+
 #if defined(QT_DEBUG) && defined(Q_OS_WIN)
+
 void QJsNodeData::recalcDebugVars()
 {
 	// key name
