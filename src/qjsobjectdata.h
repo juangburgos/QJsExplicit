@@ -39,7 +39,7 @@ public:
 
 	void        removeAttribute(const QString &strName);
 
-#if defined(QT_DEBUG) && defined(Q_OS_WIN)
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
 protected:
 	// call on every edition
 	void recalcDebugVars() Q_DECL_OVERRIDE;
@@ -57,7 +57,7 @@ void QJsObjectData::setAttributeInternal(const QString &strName, T tValue)
 	QJsonObject tmpObject = m_jsonValue.toObject();
 	tmpObject[strName]    = tValue;
 	m_jsonValue           = tmpObject;
-#if defined(QT_DEBUG) && defined(Q_OS_WIN)
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
 	this->recalcDebugVars();
 #endif
 }

@@ -11,6 +11,9 @@
 QJsObject::QJsObject()
 {
 	data = QExplicitlySharedDataPointer<QJsObjectData>(new QJsObjectData());
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+	data->recalcDebugVars();
+#endif
 }
 
 QJsObject::QJsObject(const QJsObject &rhs)
@@ -107,46 +110,73 @@ bool QJsObject::isString(QString strName) const
 void QJsObject::setAttribute(const QString &strName, bool boolValue)
 {
 	data->toObject()->setAttribute(strName, boolValue);
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+	data->recalcDebugVars();
+#endif
 }
 
 void QJsObject::setAttribute(const QString &strName, int intValue)
 {
 	data->toObject()->setAttribute(strName, intValue);
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+	data->recalcDebugVars();
+#endif
 }
 
 void QJsObject::setAttribute(const QString &strName, double doubleValue)
 {
 	data->toObject()->setAttribute(strName, doubleValue);
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+	data->recalcDebugVars();
+#endif
 }
 
 void QJsObject::setAttribute(const QString &strName, QString strValue)
 {
 	data->toObject()->setAttribute(strName, strValue);
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+	data->recalcDebugVars();
+#endif
 }
 
 void QJsObject::setAttribute(const QString &strName, const char *str)
 {
 	data->toObject()->setAttribute(strName, QString::fromUtf8(str));
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+	data->recalcDebugVars();
+#endif
 }
 
 void QJsObject::setAttribute(const QString &strName, qint64 int64Value)
 {
 	data->toObject()->setAttribute(strName, int64Value);
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+	data->recalcDebugVars();
+#endif
 }
 
 void QJsObject::setAttribute(const QString &strName, quint32 uint32Value)
 {
 	data->toObject()->setAttribute(strName, uint32Value);
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+	data->recalcDebugVars();
+#endif
 }
 
 void QJsObject::setAttribute(const QString &strName, QVariant varValue)
 {
 	data->toObject()->setAttribute(strName, varValue);
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+	data->recalcDebugVars();
+#endif
 }
 
 void QJsObject::removeAttribute(const QString &strName)
 {
 	data->toObject()->removeAttribute(strName);
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+	data->recalcDebugVars();
+#endif
 }
 
 QJsObject QJsObject::clone() const

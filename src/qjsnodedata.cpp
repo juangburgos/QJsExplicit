@@ -11,9 +11,6 @@ QJsNodeData::QJsNodeData()
 	m_jsonValue  = QJsonValue();
 	// null instance
     m_parent     = nullptr;
-#if defined(QT_DEBUG) && defined(Q_OS_WIN)
-	this->recalcDebugVars();
-#endif
 }
 
 QJsNodeData::QJsNodeData(const QJsNodeData &other) : QSharedData(other),
@@ -99,9 +96,6 @@ bool QJsNodeData::setKeyName(const QString &strKeyName)
 		// if null or invalid parent then just copy keyname
 		m_strKeyName = strKeyName;
 	}
-#if defined(QT_DEBUG) && defined(Q_OS_WIN)
-	this->recalcDebugVars();
-#endif
 	return true;
 }
 
@@ -195,9 +189,6 @@ bool QJsNodeData::setParentNode(QJsNodeData * newParent)
 		// insert to map
 		newParent->m_mapChildren.insert(m_strKeyName, QExplicitlySharedDataPointer<QJsNodeData>(this));
 	}
-#if defined(QT_DEBUG) && defined(Q_OS_WIN)
-	this->recalcDebugVars();
-#endif
 	return true;
 }
 
@@ -297,23 +288,14 @@ QExplicitlySharedDataPointer<QJsObjectData> QJsNodeData::createObject(const QStr
 	{
 		if (strKeyName.isEmpty())
 		{
-#if defined(QT_DEBUG) && defined(Q_OS_WIN)
-			this->recalcDebugVars();
-#endif
 			return QExplicitlySharedDataPointer<QJsObjectData>(new QJsObjectData);
 		}
 		auto newObjChild          = QExplicitlySharedDataPointer<QJsObjectData>(new QJsObjectData());
 		newObjChild->m_strKeyName = strKeyName;
 		if (newObjChild->setParentNode(this))
 		{
-#if defined(QT_DEBUG) && defined(Q_OS_WIN)
-			this->recalcDebugVars();
-#endif
 			return newObjChild;
 		}
-#if defined(QT_DEBUG) && defined(Q_OS_WIN)
-		this->recalcDebugVars();
-#endif
 		return QExplicitlySharedDataPointer<QJsObjectData>(new QJsObjectData);
 	} 
 	else if (this->isArray())
@@ -321,14 +303,8 @@ QExplicitlySharedDataPointer<QJsObjectData> QJsNodeData::createObject(const QStr
 		auto newObjChild = QExplicitlySharedDataPointer<QJsObjectData>(new QJsObjectData());
 		// QJsArrayData::appendObject ends up calling QJsNodeData::appendChild
 		QExplicitlySharedDataPointer<QJsArrayData>(static_cast<QJsArrayData*>(this))->appendObject(newObjChild);
-#if defined(QT_DEBUG) && defined(Q_OS_WIN)
-		this->recalcDebugVars();
-#endif
 		return newObjChild;
 	}
-#if defined(QT_DEBUG) && defined(Q_OS_WIN)
-	this->recalcDebugVars();
-#endif
 	return QExplicitlySharedDataPointer<QJsObjectData>(new QJsObjectData);
 }
 
@@ -339,45 +315,27 @@ QExplicitlySharedDataPointer<QJsArrayData> QJsNodeData::createArray(const QStrin
 	{
 		if (strKeyName.isEmpty())
 		{
-#if defined(QT_DEBUG) && defined(Q_OS_WIN)
-			this->recalcDebugVars();
-#endif
 			return QExplicitlySharedDataPointer<QJsArrayData>(new QJsArrayData);
 		}
 		auto newArrChild = QExplicitlySharedDataPointer<QJsArrayData>(new QJsArrayData());
 		newArrChild->m_strKeyName = strKeyName;
 		if (newArrChild->setParentNode(this))
 		{
-#if defined(QT_DEBUG) && defined(Q_OS_WIN)
-			this->recalcDebugVars();
-#endif
 			return newArrChild;
 		}
-#if defined(QT_DEBUG) && defined(Q_OS_WIN)
-		this->recalcDebugVars();
-#endif
 		return QExplicitlySharedDataPointer<QJsArrayData>(new QJsArrayData);
 	}
 	else if (this->isArray())
 	{
 		if (!strKeyName.isEmpty())
 		{
-#if defined(QT_DEBUG) && defined(Q_OS_WIN)
-			this->recalcDebugVars();
-#endif
 			return QExplicitlySharedDataPointer<QJsArrayData>(new QJsArrayData);
 		}
 		auto newArrChild = QExplicitlySharedDataPointer<QJsArrayData>(new QJsArrayData());
 		// QJsArrayData::appendArray ends up calling QJsNodeData::appendChild
 		QExplicitlySharedDataPointer<QJsArrayData>(static_cast<QJsArrayData*>(this))->appendArray(newArrChild);
-#if defined(QT_DEBUG) && defined(Q_OS_WIN)
-		this->recalcDebugVars();
-#endif
 		return newArrChild;
 	}
-#if defined(QT_DEBUG) && defined(Q_OS_WIN)
-	this->recalcDebugVars();
-#endif
 	return QExplicitlySharedDataPointer<QJsArrayData>(new QJsArrayData);
 }
 
@@ -406,9 +364,6 @@ void QJsNodeData::removeChildren()
 			i = this->m_mapChildren.constBegin();
 		}
 	}
-#if defined(QT_DEBUG) && defined(Q_OS_WIN)
-	this->recalcDebugVars();
-#endif
 }
 
 QExplicitlySharedDataPointer<QJsNodeData> QJsNodeData::appendChild(const QExplicitlySharedDataPointer<QJsNodeData> &nodeData)
@@ -422,16 +377,10 @@ QExplicitlySharedDataPointer<QJsNodeData> QJsNodeData::appendChild(const QExplic
 	// append 
 	if (this->hasChildByKey(nodeData->getKeyName()))
 	{
-#if defined(QT_DEBUG) && defined(Q_OS_WIN)
-		this->recalcDebugVars();
-#endif
 		return replaceChild(nodeData->getKeyName(), nodeData); 
 	}
 	else if (nodeData->setParentNode(this))
 	{
-#if defined(QT_DEBUG) && defined(Q_OS_WIN)
-		this->recalcDebugVars();
-#endif
 		// NOTE: setParentNode actually does the linking
 		return nodeData;
 	}
@@ -485,9 +434,6 @@ bool QJsNodeData::removeChild(const QString &strKeyName)
 	childToRemove->removeChildren();
 	childToRemove->setParentNode(nullptr);
 	childToRemove.reset();
-#if defined(QT_DEBUG) && defined(Q_OS_WIN)
-	this->recalcDebugVars();
-#endif
 	return true;
 }
 
@@ -496,9 +442,6 @@ QExplicitlySharedDataPointer<QJsNodeData> QJsNodeData::replaceChild(const QStrin
 	removeChild(strKeyName);
 	nodeData->m_strKeyName = strKeyName;
 	appendChild(nodeData);
-#if defined(QT_DEBUG) && defined(Q_OS_WIN)
-	this->recalcDebugVars();
-#endif
 	return nodeData;
 }
 
@@ -611,13 +554,16 @@ QExplicitlySharedDataPointer<QJsNodeData> QJsNodeData::clone()
 	}
 	newNode->m_strKeyName = m_strKeyName;
 	newNode->m_jsonValue  = m_jsonValue;
-
-	cloneDeep(newNode);
-
-#if defined(QT_DEBUG) && defined(Q_OS_WIN)
-	newNode->recalcDebugVars();
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+	newNode->d_strKeyName       = d_strKeyName;
+	newNode->d_strJsonFull      = d_strJsonFull;
+	newNode->d_strParentKeyName = d_strParentKeyName;
+	newNode->d_strAttributes    = d_strAttributes;
+	newNode->d_strCount         = d_strCount;
 #endif
-
+	// Actually clone
+	cloneDeep(newNode);
+	// finished
 	return newNode;
 }
 
@@ -832,9 +778,6 @@ void QJsNodeData::fromJsonObject(QJsonObject &jsonObject)
 			}
 		}
 	}
-#if defined(QT_DEBUG) && defined(Q_OS_WIN)
-	this->recalcDebugVars();
-#endif
 }
 
 void QJsNodeData::fromJsonArray(QJsonArray &jsonArray)
@@ -905,9 +848,6 @@ void QJsNodeData::fromJsonArray(QJsonArray &jsonArray)
 			}
 		}
 	}
-#if defined(QT_DEBUG) && defined(Q_OS_WIN)
-	this->recalcDebugVars();
-#endif
 }
 
 void QJsNodeData::recursivellyLoadChildArray(QJsonValue &currValue, QString &strCurrKey)
@@ -934,7 +874,7 @@ void QJsNodeData::recursivellyLoadChildObject(QJsonValue &currValue, QString &st
 	}
 }
 
-#if defined(QT_DEBUG) && defined(Q_OS_WIN)
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
 
 void QJsNodeData::recalcDebugVars()
 {

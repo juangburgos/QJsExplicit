@@ -48,6 +48,9 @@ bool QJsNode::operator!=(const QJsNode& other)
 void QJsNode::setKeyName(const QString &strKeyName)
 {
 	data->setKeyName(strKeyName);
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+	data->recalcDebugVars();
+#endif
 }
 
 QString QJsNode::getKeyName() const
@@ -102,6 +105,9 @@ QJsObject QJsNode::createObject(const QString &strKeyName /*= ""*/) const
 {
 	QJsObject obj;
 	obj.data = data->createObject(strKeyName);
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+	obj.data->recalcDebugVars();
+#endif
 	return obj;
 }
 
@@ -109,6 +115,9 @@ QJsArray QJsNode::createArray(const QString &strKeyName /*= ""*/) const
 {
 	QJsArray arr;
 	arr.data = data->createArray(strKeyName);
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+	arr.data->recalcDebugVars();
+#endif
 	return arr;
 }
 
@@ -121,6 +130,9 @@ QJsNode QJsNode::appendChild(const QJsNode &nodeData)
 	}
 	QJsNode node;
 	node.data = res;
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+	node.data->recalcDebugVars();
+#endif
 	return node;
 }
 
@@ -130,6 +142,9 @@ void QJsNode::removeChild(const QString &strKeyName)
 	{
 		data->removeChild(strKeyName);
 	}
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+	data->recalcDebugVars();
+#endif
 }
 
 QJsNode QJsNode::replaceChild(const QString &strKeyName, QJsNode &nodeData)
@@ -141,6 +156,9 @@ QJsNode QJsNode::replaceChild(const QString &strKeyName, QJsNode &nodeData)
 	}
 	QJsNode node;
 	node.data = res;
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+	res->recalcDebugVars();
+#endif
 	return node;
 }
 

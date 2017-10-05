@@ -90,6 +90,10 @@ public:
 	void fromJsonObject(QJsonObject &jsonObject);
 	void fromJsonArray(QJsonArray  &jsonArray);
 
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+	// call on every edition
+	virtual void recalcDebugVars();
+#endif
 
 protected:
     QString                                                  m_strKeyName;
@@ -109,9 +113,7 @@ protected:
 	//             method multiple times to perform temporary operations.
     //QExplicitlySharedDataPointer<QJsNodeData>                m_parent; 
 
-#if defined(QT_DEBUG) && defined(Q_OS_WIN)
-	// call on every edition
-	virtual void recalcDebugVars();
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
 	// debug variables (QJsNodeData)
 	std::string d_strKeyName;
 	std::string d_strJsonFull;
@@ -120,7 +122,6 @@ protected:
 	std::string d_strAttributes;
 	// debug variables (QJsArrayData)
 	std::string d_strCount;
-
 #endif
 
 };

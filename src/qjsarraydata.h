@@ -53,7 +53,7 @@ public:
 	int         removeValue  (int     intValue);
 	QString     removeValue  (QString strValue);
 
-#if defined(QT_DEBUG) && defined(Q_OS_WIN)
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
 protected:
 	// call on every edition
 	void recalcDebugVars() Q_DECL_OVERRIDE;
