@@ -48,6 +48,10 @@ public:
 	void        removeAttribute(const QString &strName);
 
 	QJsObject   clone() const;
+
+	void        removeAllAttributes(); // helper
+
+	void        mergeAttributesFrom(QJsObject jsObjSource);
 };
 
 #endif // QJSOBJECT_H

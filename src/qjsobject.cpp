@@ -183,3 +183,19 @@ QJsObject QJsObject::clone() const
 {
 	return QJsNode::clone().toObject();
 }
+
+void QJsObject::removeAllAttributes()
+{
+	foreach(QString strAttribute, attributeNames())
+	{
+		removeAttribute(strAttribute);
+	}
+}
+
+void QJsObject::mergeAttributesFrom(QJsObject jsObjSource)
+{
+	foreach(QString strAttribute, jsObjSource.attributeNames())
+	{
+		setAttribute(strAttribute, jsObjSource.attributeValue(strAttribute));
+	}
+}
