@@ -599,8 +599,8 @@ QByteArray QJsNodeData::toJson(QJsonDocument::JsonFormat format/* = QJsonDocumen
 	if (this->isArray())
 	{
 		QJsonArray    jsonTempArr = m_jsonValue.toArray();
-		// recursivelly build json tree
-		toJsonArray(jsonTempArr);
+		// recursivelly build qt json tree
+		this->toJsonArray(jsonTempArr);
 		// convert to json string
 		QJsonDocument jsonTempDoc;
 		jsonTempDoc.setArray(jsonTempArr);
@@ -609,8 +609,8 @@ QByteArray QJsNodeData::toJson(QJsonDocument::JsonFormat format/* = QJsonDocumen
 	else if (this->isValid())
 	{
 		QJsonObject   jsonTempObj = m_jsonValue.toObject();
-		// recursivelly build json tree
-		toJsonObject(jsonTempObj);
+		// recursivelly build qt json tree
+		this->toJsonObject(jsonTempObj); // 25% this, 75% other lines TODO : improve performance, own implementation?
 		// convert to json string
 		QJsonDocument jsonTempDoc;
 		jsonTempDoc.setObject(jsonTempObj);
@@ -626,7 +626,7 @@ QByteArray QJsNodeData::toBinaryData()
 	{
 		QJsonArray    jsonTempArr = m_jsonValue.toArray();
 		// recursivelly build json tree
-		toJsonArray(jsonTempArr);
+		this->toJsonArray(jsonTempArr);
 		// convert to json string
 		QJsonDocument jsonTempDoc;
 		jsonTempDoc.setArray(jsonTempArr);
@@ -636,7 +636,7 @@ QByteArray QJsNodeData::toBinaryData()
 	{
 		QJsonObject   jsonTempObj = m_jsonValue.toObject();
 		// recursivelly build json tree
-		toJsonObject(jsonTempObj);
+		this->toJsonObject(jsonTempObj);
 		// convert to json string
 		QJsonDocument jsonTempDoc;
 		jsonTempDoc.setObject(jsonTempObj);
@@ -656,15 +656,23 @@ void QJsNodeData::toJsonObject(QJsonObject &jsonObject)
 		// append child
 		if (currNode->isArray())
 		{
+//#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+//			jsonObject[currNodeKey] = currNode->d_cacheJsonArr;
+//#else
 			QJsonArray tmpArray;
 			currNode->toJsonArray(tmpArray);
 			jsonObject[currNodeKey] = tmpArray;
+//#endif
 		}
 		else if (currNode->isObject() || currNode->isDocument())
 		{
+//#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+//			jsonObject[currNodeKey] = currNode->d_cacheJsonObj;
+//#else
 			QJsonObject tmpObject = currNode->m_jsonValue.toObject();
 			currNode->toJsonObject(tmpObject);
 			jsonObject[currNodeKey] = tmpObject;
+//#endif
 		}
 		else
 		{
@@ -672,6 +680,9 @@ void QJsNodeData::toJsonObject(QJsonObject &jsonObject)
 			jsonObject[currNodeKey] = currNode->m_jsonValue;
 		}
 	}
+//#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+//	d_cacheJsonObj = jsonObject;
+//#endif
 }
 
 void QJsNodeData::toJsonArray(QJsonArray &jsonArray)
@@ -680,35 +691,44 @@ void QJsNodeData::toJsonArray(QJsonArray &jsonArray)
 	{
 
 		auto currNodeKey = m_vectorChildren.at(i)->m_strKeyName;
-		// TODO : remove check if all good
+		// check if all good
 		if (m_vectorChildren.at(i)->getKeyName().compare(QString::number(i), Qt::CaseInsensitive) != 0)
 		{
-			qDebug() << "[ERROR] non matching key names for array in QJsNodeData::toJsonArray";
+			Q_ASSERT_X(false, "QJsNodeData::toJsonArray", "Non matching key names for array in QJsNodeData::toJsonArray");
+			qWarning() << "[WARN] non matching key names for array in QJsNodeData::toJsonArray";
 			m_vectorChildren.at(i)->m_strKeyName = QString::number(i);
 		}
 		// append child
 		auto currNode    = m_vectorChildren.at(i);
 		if (currNode->isArray())
 		{
+//#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+//			jsonArray.append(currNode->d_cacheJsonArr);
+//#else
 			QJsonArray tmpArray;
 			currNode->toJsonArray(tmpArray);
-			//jsonArray.insert(i, tmpArray);
 			jsonArray.append(tmpArray);
+//#endif
 		}
 		else if (currNode->isObject() || currNode->isDocument())
 		{
+//#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+//			jsonArray.append(currNode->d_cacheJsonObj);
+//#else
 			QJsonObject tmpObject = currNode->m_jsonValue.toObject();
 			currNode->toJsonObject(tmpObject);
-			//jsonArray.insert(i, tmpObject);
 			jsonArray.append(tmpObject);
+//#endif
 		}
 		else
 		{
 			// copy raw value
-			//jsonArray.insert(i, currNode->m_jsonValue);
 			jsonArray.append(currNode->m_jsonValue);
 		}
 	}
+//#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+//	d_cacheJsonArr = jsonArray;
+//#endif
 }
 
 void QJsNodeData::fromJsonObject(QJsonObject &jsonObject)
@@ -894,4 +914,5 @@ void QJsNodeData::recalcDebugVars()
 		d_strParentKeyName = "";
 	}
 }
+
 #endif

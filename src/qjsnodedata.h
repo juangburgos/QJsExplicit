@@ -122,6 +122,9 @@ protected:
 	std::string d_strAttributes;
 	// debug variables (QJsArrayData)
 	std::string d_strCount;
+	//// cache variable to improve 'toJson' performance during 'recalcDebugVars' call
+	//QJsonObject d_cacheJsonObj;
+	//QJsonArray  d_cacheJsonArr;
 #endif
 
 };

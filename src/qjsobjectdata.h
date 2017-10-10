@@ -57,9 +57,6 @@ void QJsObjectData::setAttributeInternal(const QString &strName, T tValue)
 	QJsonObject tmpObject = m_jsonValue.toObject();
 	tmpObject[strName]    = tValue;
 	m_jsonValue           = tmpObject;
-#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
-	this->recalcDebugVars();
-#endif
 }
 
 #endif // QJSOBJECTDATA_H

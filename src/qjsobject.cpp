@@ -196,6 +196,10 @@ void QJsObject::mergeAttributesFrom(QJsObject jsObjSource)
 {
 	foreach(QString strAttribute, jsObjSource.attributeNames())
 	{
-		setAttribute(strAttribute, jsObjSource.attributeValue(strAttribute));
+		//setAttribute(strAttribute, jsObjSource.attributeValue(strAttribute));
+		data->toObject()->setAttribute(strAttribute, jsObjSource.attributeValue(strAttribute));
 	}
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+	data->recalcDebugVars();
+#endif
 }
