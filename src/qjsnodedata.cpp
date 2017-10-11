@@ -596,6 +596,7 @@ void QJsNodeData::cloneDeep(QExplicitlySharedDataPointer<QJsNodeData> parent)
 
 QByteArray QJsNodeData::toJson(QJsonDocument::JsonFormat format/* = QJsonDocument::Indented*/)
 {
+	// TODO : improve performance, own implementation?
 	if (this->isArray())
 	{
 		QJsonArray    jsonTempArr = m_jsonValue.toArray();
@@ -610,7 +611,7 @@ QByteArray QJsNodeData::toJson(QJsonDocument::JsonFormat format/* = QJsonDocumen
 	{
 		QJsonObject   jsonTempObj = m_jsonValue.toObject();
 		// recursivelly build qt json tree
-		this->toJsonObject(jsonTempObj); // 25% this, 75% other lines TODO : improve performance, own implementation?
+		this->toJsonObject(jsonTempObj); // 25% this, 75% other lines
 		// convert to json string
 		QJsonDocument jsonTempDoc;
 		jsonTempDoc.setObject(jsonTempObj);
@@ -622,6 +623,7 @@ QByteArray QJsNodeData::toJson(QJsonDocument::JsonFormat format/* = QJsonDocumen
 
 QByteArray QJsNodeData::toBinaryData()
 {
+	// TODO : improve performance, own implementation?
 	if (this->isArray())
 	{
 		QJsonArray    jsonTempArr = m_jsonValue.toArray();
@@ -656,23 +658,39 @@ void QJsNodeData::toJsonObject(QJsonObject &jsonObject)
 		// append child
 		if (currNode->isArray())
 		{
-//#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
-//			jsonObject[currNodeKey] = currNode->d_cacheJsonArr;
-//#else
-			QJsonArray tmpArray;
-			currNode->toJsonArray(tmpArray);
-			jsonObject[currNodeKey] = tmpArray;
-//#endif
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+			// use cache in debug mode to improve performance
+			if (!currNode->d_cacheJsonArr.isEmpty())
+			{
+				jsonObject[currNodeKey] = currNode->d_cacheJsonArr;
+			}
+			else
+			{
+#endif
+				QJsonArray tmpArray;
+				currNode->toJsonArray(tmpArray);
+				jsonObject[currNodeKey] = tmpArray;
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+			}
+#endif
 		}
 		else if (currNode->isObject() || currNode->isDocument())
 		{
-//#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
-//			jsonObject[currNodeKey] = currNode->d_cacheJsonObj;
-//#else
-			QJsonObject tmpObject = currNode->m_jsonValue.toObject();
-			currNode->toJsonObject(tmpObject);
-			jsonObject[currNodeKey] = tmpObject;
-//#endif
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+			// use cache in debug mode to improve performance
+			if (!currNode->d_cacheJsonObj.isEmpty())
+			{
+				jsonObject[currNodeKey] = currNode->d_cacheJsonObj;
+			}
+			else
+			{
+#endif
+				QJsonObject tmpObject = currNode->m_jsonValue.toObject();
+				currNode->toJsonObject(tmpObject);
+				jsonObject[currNodeKey] = tmpObject;
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+			}
+#endif
 		}
 		else
 		{
@@ -680,9 +698,9 @@ void QJsNodeData::toJsonObject(QJsonObject &jsonObject)
 			jsonObject[currNodeKey] = currNode->m_jsonValue;
 		}
 	}
-//#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
-//	d_cacheJsonObj = jsonObject;
-//#endif
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+	d_cacheJsonObj = jsonObject;
+#endif
 }
 
 void QJsNodeData::toJsonArray(QJsonArray &jsonArray)
@@ -702,23 +720,39 @@ void QJsNodeData::toJsonArray(QJsonArray &jsonArray)
 		auto currNode    = m_vectorChildren.at(i);
 		if (currNode->isArray())
 		{
-//#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
-//			jsonArray.append(currNode->d_cacheJsonArr);
-//#else
-			QJsonArray tmpArray;
-			currNode->toJsonArray(tmpArray);
-			jsonArray.append(tmpArray);
-//#endif
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+			// use cache in debug mode to improve performance
+			if (!currNode->d_cacheJsonArr.isEmpty())
+			{
+				jsonArray.append(currNode->d_cacheJsonArr);
+			}
+			else
+			{
+#endif
+				QJsonArray tmpArray;
+				currNode->toJsonArray(tmpArray);
+				jsonArray.append(tmpArray);
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+			}
+#endif
 		}
 		else if (currNode->isObject() || currNode->isDocument())
 		{
-//#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
-//			jsonArray.append(currNode->d_cacheJsonObj);
-//#else
-			QJsonObject tmpObject = currNode->m_jsonValue.toObject();
-			currNode->toJsonObject(tmpObject);
-			jsonArray.append(tmpObject);
-//#endif
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+			// use cache in debug mode to improve performance
+			if (!currNode->d_cacheJsonObj.isEmpty())
+			{
+				jsonArray.append(currNode->d_cacheJsonObj);
+			}
+			else
+			{
+#endif
+				QJsonObject tmpObject = currNode->m_jsonValue.toObject();
+				currNode->toJsonObject(tmpObject);
+				jsonArray.append(tmpObject);
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+			}
+#endif
 		}
 		else
 		{
@@ -726,9 +760,9 @@ void QJsNodeData::toJsonArray(QJsonArray &jsonArray)
 			jsonArray.append(currNode->m_jsonValue);
 		}
 	}
-//#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
-//	d_cacheJsonArr = jsonArray;
-//#endif
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+	d_cacheJsonArr = jsonArray;
+#endif
 }
 
 void QJsNodeData::fromJsonObject(QJsonObject &jsonObject)
