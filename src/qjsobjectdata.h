@@ -42,7 +42,7 @@ public:
 #if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
 protected:
 	// call on every edition
-	void recalcDebugVars() Q_DECL_OVERRIDE;
+	void recalcDebugVars(bool bForce = true) Q_DECL_OVERRIDE;
 #endif
 
 private:

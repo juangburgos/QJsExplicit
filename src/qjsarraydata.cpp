@@ -381,10 +381,12 @@ QString QJsArrayData::removeValue(QString strValue)
 }
 
 #if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
-void QJsArrayData::recalcDebugVars()
+
+void QJsArrayData::recalcDebugVars(bool bForce/* = true*/)
 {
 	d_strCount = QString::number(this->count()).toStdString();
 	// call base class method
-	QJsNodeData::recalcDebugVars();
+	QJsNodeData::recalcDebugVars(bForce);
 }
+
 #endif

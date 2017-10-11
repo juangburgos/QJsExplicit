@@ -157,17 +157,12 @@ void QJsObjectData::removeAttribute(const QString &strName)
 }
 
 #if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
-void QJsObjectData::recalcDebugVars()
+
+void QJsObjectData::recalcDebugVars(bool bForce/* = true*/)
 {
-	// create attributes string
-	QString strAttributes;
-	auto listAttrs = this->attributeNames();
-	for (int i = 0; i < listAttrs.count(); i++)
-	{
-		strAttributes += listAttrs.at(i) + " : " + this->attributeValue(listAttrs.at(i)).toString() + "\n";
-	}
-	d_strAttributes = strAttributes.toStdString();
+	// NOTE : creating attributes moved to QJsNodeData::jsObjToJson for efficiency
 	// call base class method
-	QJsNodeData::recalcDebugVars();
+	QJsNodeData::recalcDebugVars(bForce);
 }
+
 #endif

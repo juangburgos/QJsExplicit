@@ -596,7 +596,9 @@ void QJsNodeData::cloneDeep(QExplicitlySharedDataPointer<QJsNodeData> parent)
 
 QByteArray QJsNodeData::toJson(QJsonDocument::JsonFormat format/* = QJsonDocument::Indented*/)
 {
+	QByteArray byteRet;
 	// TODO : improve performance, own implementation?
+	Q_ASSERT(this->isArray() || this->isValid());
 	if (this->isArray())
 	{
 		QJsonArray    jsonTempArr = m_jsonValue.toArray();
@@ -605,7 +607,7 @@ QByteArray QJsNodeData::toJson(QJsonDocument::JsonFormat format/* = QJsonDocumen
 		// convert to json string
 		QJsonDocument jsonTempDoc;
 		jsonTempDoc.setArray(jsonTempArr);
-		return jsonTempDoc.toJson(format);
+		byteRet = jsonTempDoc.toJson(format);
 	}
 	else if (this->isValid())
 	{
@@ -615,15 +617,16 @@ QByteArray QJsNodeData::toJson(QJsonDocument::JsonFormat format/* = QJsonDocumen
 		// convert to json string
 		QJsonDocument jsonTempDoc;
 		jsonTempDoc.setObject(jsonTempObj);
-		return jsonTempDoc.toJson(format);
+		byteRet = jsonTempDoc.toJson(format);
 	}
-
-	return QByteArray();
+	// return
+	return byteRet;
 }
 
 QByteArray QJsNodeData::toBinaryData()
 {
 	// TODO : improve performance, own implementation?
+	Q_ASSERT(this->isArray() || this->isValid());
 	if (this->isArray())
 	{
 		QJsonArray    jsonTempArr = m_jsonValue.toArray();
@@ -644,7 +647,7 @@ QByteArray QJsNodeData::toBinaryData()
 		jsonTempDoc.setObject(jsonTempObj);
 		return jsonTempDoc.toBinaryData();
 	}
-
+	// return
 	return QByteArray();
 }
 
@@ -658,39 +661,15 @@ void QJsNodeData::toJsonObject(QJsonObject &jsonObject)
 		// append child
 		if (currNode->isArray())
 		{
-#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
-			// use cache in debug mode to improve performance
-			if (!currNode->d_cacheJsonArr.isEmpty())
-			{
-				jsonObject[currNodeKey] = currNode->d_cacheJsonArr;
-			}
-			else
-			{
-#endif
-				QJsonArray tmpArray;
-				currNode->toJsonArray(tmpArray);
-				jsonObject[currNodeKey] = tmpArray;
-#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
-			}
-#endif
+			QJsonArray tmpArray;
+			currNode->toJsonArray(tmpArray);
+			jsonObject[currNodeKey] = tmpArray;
 		}
 		else if (currNode->isObject() || currNode->isDocument())
 		{
-#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
-			// use cache in debug mode to improve performance
-			if (!currNode->d_cacheJsonObj.isEmpty())
-			{
-				jsonObject[currNodeKey] = currNode->d_cacheJsonObj;
-			}
-			else
-			{
-#endif
-				QJsonObject tmpObject = currNode->m_jsonValue.toObject();
-				currNode->toJsonObject(tmpObject);
-				jsonObject[currNodeKey] = tmpObject;
-#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
-			}
-#endif
+			QJsonObject tmpObject = currNode->m_jsonValue.toObject();
+			currNode->toJsonObject(tmpObject);
+			jsonObject[currNodeKey] = tmpObject;
 		}
 		else
 		{
@@ -698,9 +677,6 @@ void QJsNodeData::toJsonObject(QJsonObject &jsonObject)
 			jsonObject[currNodeKey] = currNode->m_jsonValue;
 		}
 	}
-#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
-	d_cacheJsonObj = jsonObject;
-#endif
 }
 
 void QJsNodeData::toJsonArray(QJsonArray &jsonArray)
@@ -720,39 +696,15 @@ void QJsNodeData::toJsonArray(QJsonArray &jsonArray)
 		auto currNode    = m_vectorChildren.at(i);
 		if (currNode->isArray())
 		{
-#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
-			// use cache in debug mode to improve performance
-			if (!currNode->d_cacheJsonArr.isEmpty())
-			{
-				jsonArray.append(currNode->d_cacheJsonArr);
-			}
-			else
-			{
-#endif
-				QJsonArray tmpArray;
-				currNode->toJsonArray(tmpArray);
-				jsonArray.append(tmpArray);
-#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
-			}
-#endif
+			QJsonArray tmpArray;
+			currNode->toJsonArray(tmpArray);
+			jsonArray.append(tmpArray);
 		}
 		else if (currNode->isObject() || currNode->isDocument())
 		{
-#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
-			// use cache in debug mode to improve performance
-			if (!currNode->d_cacheJsonObj.isEmpty())
-			{
-				jsonArray.append(currNode->d_cacheJsonObj);
-			}
-			else
-			{
-#endif
-				QJsonObject tmpObject = currNode->m_jsonValue.toObject();
-				currNode->toJsonObject(tmpObject);
-				jsonArray.append(tmpObject);
-#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
-			}
-#endif
+			QJsonObject tmpObject = currNode->m_jsonValue.toObject();
+			currNode->toJsonObject(tmpObject);
+			jsonArray.append(tmpObject);
 		}
 		else
 		{
@@ -760,9 +712,6 @@ void QJsNodeData::toJsonArray(QJsonArray &jsonArray)
 			jsonArray.append(currNode->m_jsonValue);
 		}
 	}
-#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
-	d_cacheJsonArr = jsonArray;
-#endif
 }
 
 void QJsNodeData::fromJsonObject(QJsonObject &jsonObject)
@@ -930,18 +879,149 @@ void QJsNodeData::recursivellyLoadChildObject(QJsonValue &currValue, QString &st
 
 #if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
 
-void QJsNodeData::recalcDebugVars()
+void QJsNodeData::jsArrToJson(const QExplicitlySharedDataPointer<QJsArrayData> &jsArr, QByteArray & byteParent, bool bForce)
+{
+	// start with [
+	byteParent += "[";
+	// iterate all elems
+	for (int i = 0; i < jsArr->count(); i++)
+	{
+		// append children accordingly
+		if (jsArr->isArray(i))
+		{
+			if (bForce || jsArr->getNodeAt(i)->toArray()->d_strJsonFull.empty())
+			{
+				jsArrToJson(jsArr->getNodeAt(i)->toArray(), byteParent, bForce);
+			} 
+			else
+			{
+				byteParent += QByteArray::fromStdString(jsArr->getNodeAt(i)->toArray()->d_strJsonFull);
+			}
+		}
+		else if (jsArr->isObject(i))
+		{
+			if (bForce || jsArr->getNodeAt(i)->toObject()->d_strJsonFull.empty())
+			{
+				jsObjToJson(jsArr->getNodeAt(i)->toObject(), byteParent, bForce);
+			} 
+			else
+			{
+				byteParent += QByteArray::fromStdString(jsArr->getNodeAt(i)->toObject()->d_strJsonFull);
+			}
+		}
+		else
+		{
+			QVariant varValue = jsArr->getValueAt(i);
+			byteParent += (varValue.type() == QVariant::String ? ('"' + varValue.toString() + '"') : varValue.toString());
+		}
+		// append ,
+		if (i < jsArr->count() - 1)
+		{
+			byteParent += ",";
+		}
+	}
+	// end with [
+	byteParent += "]";
+}
+// Definition
+void QJsNodeData::jsObjToJson(const QExplicitlySharedDataPointer<QJsObjectData> &jsObj, QByteArray & byteParent, bool bForce)
+{
+	// start with {
+	byteParent += "{";
+	// iterate all attributes
+	QStringList &listKeys = jsObj->childrenKeys();
+	if (bForce)
+	{
+		QStringList &listAttributes = jsObj->attributeNames();
+		QByteArray byteAttrs;
+		for each (QString strAttr in listAttributes)
+		{
+			// add attribute
+			QVariant varValue = jsObj->attributeValue(strAttr);
+			QString  strValue = (varValue.type() == QVariant::String ? ('"' + varValue.toString() + '"') : varValue.toString());
+			byteAttrs += '"' + strAttr + "\":" + (strValue.isEmpty() ? "\"\"" : strValue);
+			// append ,
+			if (strAttr != listAttributes.last() || !listKeys.isEmpty())
+			{
+				byteAttrs += ",";
+			}
+		}
+		jsObj->d_strAttributes = ("{" + byteAttrs + "}").toStdString();
+		byteParent += byteAttrs;
+	}
+	else
+	{
+		byteParent += QByteArray::fromStdString(jsObj->d_strAttributes);
+	}
+	// iterate all keys
+	for each (QString strKey in listKeys)
+	{
+		auto &currVal = jsObj->getChildByKey(strKey);
+		// add keyname :
+		byteParent += '"' + strKey + "\":";
+		// append children accordingly
+		Q_ASSERT(currVal->isArray() || currVal->isObject());
+		if (currVal->isArray())
+		{
+			if (bForce || currVal->toArray()->d_strJsonFull.empty())
+			{
+				jsArrToJson(currVal->toArray(), byteParent, bForce);
+			}
+			else
+			{
+				byteParent += QByteArray::fromStdString(currVal->toArray()->d_strJsonFull);
+			}
+		}
+		else if (currVal->isObject())
+		{
+			if (bForce || currVal->toObject()->d_strJsonFull.empty())
+			{
+				jsObjToJson(currVal->toObject(), byteParent, bForce);
+			}
+			else
+			{
+				byteParent += QByteArray::fromStdString(currVal->toObject()->d_strJsonFull);
+			}
+		}
+		// append ,
+		if (strKey != listKeys.last())
+		{
+			byteParent += ",";
+		}
+	}
+	// end with }
+	byteParent += "}";
+}
+
+QByteArray QJsNodeData::toJsonInternal(QExplicitlySharedDataPointer<QJsNodeData> jsNode, bool bForce)
+{
+	QByteArray byteRet;
+	// Create accordingly
+	Q_ASSERT(jsNode->isArray() || jsNode->isValid());
+	if (jsNode->isArray())
+	{
+		QJsNodeData::jsArrToJson(jsNode->toArray(), byteRet, bForce);
+	}
+	else if (jsNode->isValid())
+	{
+		QJsNodeData::jsObjToJson(jsNode->toObject(), byteRet, bForce);
+	}
+	// return
+	return byteRet;
+}
+
+void QJsNodeData::recalcDebugVars(bool bForce/* = true*/)
 {
 	// key name
 	d_strKeyName  = m_strKeyName.toStdString();
 	// full json data
-	d_strJsonFull = this->toJson(QJsonDocument::Compact).toStdString();
+	d_strJsonFull = QJsNodeData::toJsonInternal(QExplicitlySharedDataPointer<QJsNodeData>(this), bForce).toStdString();
 	// parent key name and recursive call
 	auto parent = parentNode();
 	if (parent)
 	{
 		d_strParentKeyName = parent->m_strKeyName.toStdString();
-		parent->recalcDebugVars();
+		parent->recalcDebugVars(false); // NOTE : false, do not recurse down 'xxxToJson' children when recalculating parent
 	}
 	else
 	{

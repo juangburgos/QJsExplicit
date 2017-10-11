@@ -92,7 +92,7 @@ public:
 
 #if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
 	// call on every edition
-	virtual void recalcDebugVars();
+	virtual void recalcDebugVars(bool bForce = true);
 #endif
 
 protected:
@@ -122,9 +122,10 @@ protected:
 	std::string d_strAttributes;
 	// debug variables (QJsArrayData)
 	std::string d_strCount;
-	// cache variable to improve 'toJson' performance during 'recalcDebugVars' call
-	QJsonObject d_cacheJsonObj;
-	QJsonArray  d_cacheJsonArr;
+	// custom toJson implementation with caching for debugging purposes only (better debug performance)
+	static void jsArrToJson(const QExplicitlySharedDataPointer<QJsArrayData> &jsArr, QByteArray & byteParent, bool bForce);
+	static void jsObjToJson(const QExplicitlySharedDataPointer<QJsObjectData> &jsObj, QByteArray & byteParent, bool bForce);
+	static QByteArray toJsonInternal(QExplicitlySharedDataPointer<QJsNodeData> jsNode, bool bForce);
 #endif
 
 };
