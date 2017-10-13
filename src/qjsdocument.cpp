@@ -37,6 +37,9 @@ QJsDocument QJsDocument::fromJson(const QByteArray &json, QString &error)
 {
 	QJsDocument doc;
 	error = doc.data->toDocument()->fromJson(json);
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+	doc.data->recalcDebugVars();
+#endif
 	return doc;
 }
 
@@ -44,6 +47,9 @@ QJsDocument QJsDocument::fromBinaryData(const QByteArray &bindata, QString &erro
 {
 	QJsDocument doc;
 	error = doc.data->toDocument()->fromBinaryData(bindata);
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+	doc.data->recalcDebugVars();
+#endif
 	return doc;
 }
 
