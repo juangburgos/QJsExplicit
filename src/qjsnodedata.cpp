@@ -755,12 +755,14 @@ void QJsNodeData::fromJsonObject(QJsonObject &jsonObject)
 					if (doc.isObject())
 					{
 						// recursivelly load child object
-						this->recursivellyLoadChildObject(QJsonValue(doc.object()), strCurrKey);
+                        auto tmpVal = QJsonValue(doc.object());
+                        this->recursivellyLoadChildObject(tmpVal, strCurrKey);
 					}
 					else if (doc.isArray())
 					{
 						// recursivelly load child array
-						this->recursivellyLoadChildArray(QJsonValue(doc.array()), strCurrKey);
+                        auto tmpVal = QJsonValue(doc.array());
+                        this->recursivellyLoadChildArray(tmpVal, strCurrKey);
 					}
 					else
 					{
@@ -825,12 +827,14 @@ void QJsNodeData::fromJsonArray(QJsonArray &jsonArray)
 					if (doc.isObject())
 					{
 						// recursivelly load child object
-						this->recursivellyLoadChildObject(QJsonValue(doc.object()), strCurrKey);
+                        auto tmpVal = QJsonValue(doc.object());
+                        this->recursivellyLoadChildObject(tmpVal, strCurrKey);
 					} 
 					else if (doc.isArray())
 					{
 						// recursivelly load child array
-						this->recursivellyLoadChildArray(QJsonValue(doc.array()), strCurrKey);
+                        auto tmpVal = QJsonValue(doc.array());
+                        this->recursivellyLoadChildArray(tmpVal, strCurrKey);
 					}
 					else
 					{

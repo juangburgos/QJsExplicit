@@ -197,7 +197,7 @@ void QJsArray::appendArray(QJsArray arrValue)
 
 QVariant QJsArray::removeValueAt(int idx)
 {
-	QVariant & retVal = data->toArray()->removeValueAt(idx);
+    QVariant retVal = data->toArray()->removeValueAt(idx);
 #if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
 	data->recalcDebugVars();
 #endif
@@ -215,7 +215,7 @@ int QJsArray::removeValue(int intValue)
 
 QString QJsArray::removeValue(QString strValue)
 {
-	QString & retVal = data->toArray()->removeValue(strValue);
+    QString retVal = data->toArray()->removeValue(strValue);
 #if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
 	data->recalcDebugVars();
 #endif
