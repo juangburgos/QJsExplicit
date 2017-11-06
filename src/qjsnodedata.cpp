@@ -937,7 +937,7 @@ void QJsNodeData::jsObjToJson(const QExplicitlySharedDataPointer<QJsObjectData> 
 	if (bForce)
 	{
 		QStringList &listAttributes = jsObj->attributeNames();
-		if (listAttributes.count() < 0)
+		if (listAttributes.count() > 0)
 		{
 			QByteArray byteAttrs;
 			for each (QString strAttr in listAttributes)
