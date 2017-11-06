@@ -937,21 +937,28 @@ void QJsNodeData::jsObjToJson(const QExplicitlySharedDataPointer<QJsObjectData> 
 	if (bForce)
 	{
 		QStringList &listAttributes = jsObj->attributeNames();
-		QByteArray byteAttrs;
-		for each (QString strAttr in listAttributes)
+		if (listAttributes.count() < 0)
 		{
-			// add attribute
-			QVariant varValue = jsObj->attributeValue(strAttr);
-			QString  strValue = (varValue.type() == QVariant::String ? ('"' + varValue.toString() + '"') : varValue.toString());
-			byteAttrs += '"' + strAttr + "\":" + (strValue.isEmpty() ? "\"\"" : strValue);
-			// append ,
-			if (strAttr != listAttributes.last() || !listKeys.isEmpty())
+			QByteArray byteAttrs;
+			for each (QString strAttr in listAttributes)
 			{
-				byteAttrs += ",";
+				// add attribute
+				QVariant varValue = jsObj->attributeValue(strAttr);
+				QString  strValue = (varValue.type() == QVariant::String ? ('"' + varValue.toString() + '"') : varValue.toString());
+				byteAttrs += '"' + strAttr + "\":" + (strValue.isEmpty() ? "\"\"" : strValue);
+				// append ,
+				if (strAttr != listAttributes.last() || !listKeys.isEmpty())
+				{
+					byteAttrs += ",";
+				}
 			}
+			jsObj->d_strAttributes = ("{" + byteAttrs + "}").toStdString();
+			byteParent += byteAttrs;
 		}
-		jsObj->d_strAttributes = ("{" + byteAttrs + "}").toStdString();
-		byteParent += byteAttrs;
+		else
+		{
+			jsObj->d_strAttributes = "";
+		}
 	}
 	else
 	{
