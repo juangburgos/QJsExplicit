@@ -952,7 +952,7 @@ void QJsNodeData::jsObjToJson(const QExplicitlySharedDataPointer<QJsObjectData> 
 					byteAttrs += ",";
 				}
 			}
-			jsObj->d_strAttributes = ("{" + byteAttrs + "}").toStdString();
+			jsObj->d_strAttributes = byteAttrs.toStdString();
 			byteParent += byteAttrs;
 		}
 		else
