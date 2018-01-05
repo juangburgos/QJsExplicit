@@ -37,6 +37,8 @@ public:
 
 	void	    setAttribute(const QString &strName, qint64  int64Value);
 
+	void	    setAttribute(const QString &strName, float   floatValue);
+
 	void	    setAttribute(const QString &strName, double  doubleValue);
 
 	void	    setAttribute(const QString &strName, QString strValue);

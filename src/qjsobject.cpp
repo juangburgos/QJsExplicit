@@ -123,6 +123,14 @@ void QJsObject::setAttribute(const QString &strName, int intValue)
 #endif
 }
 
+void QJsObject::setAttribute(const QString &strName, float floatValue)
+{
+	data->toObject()->setAttribute(strName, floatValue);
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+	data->recalcDebugVars();
+#endif
+}
+
 void QJsObject::setAttribute(const QString &strName, double doubleValue)
 {
 	data->toObject()->setAttribute(strName, doubleValue);

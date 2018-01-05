@@ -33,6 +33,7 @@ public:
 	void	    setAttribute(const QString &strName, quint32    uint32Value);
 	void	    setAttribute(const QString &strName, qint64     int64Value);
 	void	    setAttribute(const QString &strName, qulonglong intULLValue);
+	void	    setAttribute(const QString &strName, float      floatValue);
 	void	    setAttribute(const QString &strName, double     doubleValue);
 	void	    setAttribute(const QString &strName, QString    strValue);
 	void	    setAttribute(const QString &strName, QVariant   varValue);

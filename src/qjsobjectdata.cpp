@@ -96,6 +96,11 @@ void QJsObjectData::setAttribute(const QString &strName, qulonglong intULLValue)
 	setAttributeInternal(strName, (qint64)intULLValue);
 }
 
+void QJsObjectData::setAttribute(const QString &strName, float floatValue)
+{
+	setAttributeInternal(strName, floatValue);
+}
+
 void QJsObjectData::setAttribute(const QString &strName, double doubleValue)
 {
 	setAttributeInternal(strName, doubleValue);
@@ -128,6 +133,9 @@ void QJsObjectData::setAttribute(const QString &strName, QVariant varValue)
 		break;
 	case QMetaType::UInt:
 		setAttribute(strName, varValue.toUInt());
+		break;
+	case QMetaType::Float:
+		setAttribute(strName, varValue.toFloat());
 		break;
 	case QMetaType::Double:
 		setAttribute(strName, varValue.toDouble());
