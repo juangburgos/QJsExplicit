@@ -7,6 +7,7 @@ class QJsDocumentData;
 
 class QJsObjectData : public QJsNodeData
 {
+	friend class QJsNodeData;
 	friend class QJsDocumentData;
 public:
     QJsObjectData();

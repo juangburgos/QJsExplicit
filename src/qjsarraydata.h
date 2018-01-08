@@ -5,6 +5,7 @@
 
 class QJsArrayData : public QJsNodeData
 {
+	friend class QJsNodeData;
 public:
     QJsArrayData();
 	~QJsArrayData();

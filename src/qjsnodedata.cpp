@@ -783,6 +783,10 @@ void QJsNodeData::fromJsonObject(QJsonObject &jsonObject)
 			}
 		}
 	}
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+	// create debug vars when loading QJsDocumentData::fromJson
+	this->recalcDebugVars();
+#endif
 }
 
 void QJsNodeData::fromJsonArray(QJsonArray &jsonArray)
@@ -794,8 +798,6 @@ void QJsNodeData::fromJsonArray(QJsonArray &jsonArray)
 		return;
 	}
 	// loop though array values
-
-
 	for (int i = 0; i < jsonArray.count(); i++)
 	{
 		QString strCurrKey   = QString::number(i);
@@ -855,6 +857,10 @@ void QJsNodeData::fromJsonArray(QJsonArray &jsonArray)
 			}
 		}
 	}
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+	// create debug vars when loading QJsDocumentData::fromJson
+	this->recalcDebugVars();
+#endif
 }
 
 void QJsNodeData::recursivellyLoadChildArray(QJsonValue &currValue, QString &strCurrKey)
