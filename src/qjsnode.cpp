@@ -45,12 +45,15 @@ bool QJsNode::operator!=(const QJsNode& other)
 	return !(data->toBinaryData() == other.data->toBinaryData());
 }
 
-void QJsNode::setKeyName(const QString &strKeyName)
+QJsNode QJsNode::setKeyName(const QString &strKeyName)
 {
 	data->setKeyName(strKeyName);
 #if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
 	data->recalcDebugVars();
 #endif
+	QJsNode node;
+	node.data = data;
+	return node;
 }
 
 QString QJsNode::getKeyName() const

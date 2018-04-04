@@ -11,6 +11,9 @@ public:
     QJsArray &operator=(const QJsArray &);
     ~QJsArray();
 
+	// return this QJsArray to allow chain
+	QJsArray setKeyName(const QString &strKeyName);
+
 	int      count() const;
 
 	QVariant getValueAt(int idx) const;
@@ -29,33 +32,33 @@ public:
 
 	bool     isArray(int idx) const;
 
-	void	 setValueAt(int idx, bool    boolValue);
+	QJsArray  setValueAt(int idx, bool    boolValue);
 
-	void	 setValueAt(int idx, int     intValue);
+	QJsArray  setValueAt(int idx, int     intValue);
 
-	void	 setValueAt(int idx, double  doubleValue);
+	QJsArray  setValueAt(int idx, double  doubleValue);
 
-	void	 setValueAt(int idx, QString strValue);
+	QJsArray  setValueAt(int idx, QString strValue);
 
-	void	 setValueAt(int idx, const char *str);
+	QJsArray  setValueAt(int idx, const char *str);
 
-	void     setNodeAt(int idx, QJsNode  nodeValue);
+	QJsArray  setNodeAt(int idx, QJsNode  nodeValue);
 
-	void	 setObjectAt(int idx, QJsObject objValue);
+	QJsArray  setObjectAt(int idx, QJsObject objValue);
 
-	void	 setArrayAt(int idx, QJsArray arrValue);
+	QJsArray  setArrayAt(int idx, QJsArray arrValue);
 
-	void	 appendValue(bool    boolValue);
+	QJsArray  appendValue(bool    boolValue);
 
-	void	 appendValue(int     intValue);
+	QJsArray  appendValue(int     intValue);
 
-	void	 appendValue(double  doubleValue);
+	QJsArray  appendValue(double  doubleValue);
 
-	void	 appendValue(QString strValue);
+	QJsArray  appendValue(QString strValue);
 
-	void	 appendObject(QJsObject objValue);
+	QJsArray  appendObject(QJsObject objValue);
 
-	void	 appendArray(QJsArray arrValue);
+	QJsArray  appendArray(QJsArray arrValue);
 
 	QVariant removeValueAt(int   idx);
 

@@ -37,7 +37,8 @@ public:
 		Compact
 	};
 
-	void           setKeyName(const QString &strKeyName);
+	// return this QJsNode to allow chain
+	QJsNode        setKeyName(const QString &strKeyName);
 
 	QString        getKeyName() const;
 

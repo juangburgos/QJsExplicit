@@ -156,12 +156,14 @@ void QJsObjectData::setAttribute(const QString &strName, QVariant varValue)
 	}
 }
 
-void QJsObjectData::removeAttribute(const QString &strName)
+QVariant QJsObjectData::removeAttribute(const QString &strName)
 {
 	// implicit shared object upodating
 	QJsonObject tmpObject = m_jsonValue.toObject();
+	QVariant    varOldVal = tmpObject.value(strName);
 	tmpObject.remove(strName);
 	m_jsonValue = tmpObject;
+	return varOldVal;
 }
 
 #if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)

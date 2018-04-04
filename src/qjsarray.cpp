@@ -36,6 +36,16 @@ QJsArray::~QJsArray()
 	data.reset();
 }
 
+QJsArray QJsArray::setKeyName(const QString &strKeyName)
+{
+	// call original base class method
+	QJsNode::setKeyName(strKeyName);
+	// return this to allow chain
+	QJsArray arrThis;
+	arrThis.data = data;
+	return arrThis;
+}
+
 int QJsArray::count() const
 {
 	return data->toArray()->count();
@@ -83,116 +93,172 @@ bool QJsArray::isArray(int idx) const
 	return data->toArray()->isArray(idx);
 }
 
-void QJsArray::setValueAt(int idx, bool boolValue)
+QJsArray QJsArray::setValueAt(int idx, bool boolValue)
 {
 	data->toArray()->setValueAt(idx, boolValue);
 #if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
 	data->recalcDebugVars();
 #endif
+	// return this to allow chain
+	QJsArray arrThis;
+	arrThis.data = data;
+	return arrThis;
 }
 
-void QJsArray::setValueAt(int idx, int intValue)
+QJsArray QJsArray::setValueAt(int idx, int intValue)
 {
 	data->toArray()->setValueAt(idx, intValue);
 #if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
 	data->recalcDebugVars();
 #endif
+	// return this to allow chain
+	QJsArray arrThis;
+	arrThis.data = data;
+	return arrThis;
 }
 
-void QJsArray::setValueAt(int idx, double doubleValue)
+QJsArray QJsArray::setValueAt(int idx, double doubleValue)
 {
 	data->toArray()->setValueAt(idx, doubleValue);
 #if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
 	data->recalcDebugVars();
 #endif
+	// return this to allow chain
+	QJsArray arrThis;
+	arrThis.data = data;
+	return arrThis;
 }
 
-void QJsArray::setValueAt(int idx, QString strValue)
+QJsArray QJsArray::setValueAt(int idx, QString strValue)
 {
 	data->toArray()->setValueAt(idx, strValue);
 #if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
 	data->recalcDebugVars();
 #endif
+	// return this to allow chain
+	QJsArray arrThis;
+	arrThis.data = data;
+	return arrThis;
 }
 
-void QJsArray::setValueAt(int idx, const char *str)
+QJsArray QJsArray::setValueAt(int idx, const char *str)
 {
 	data->toArray()->setValueAt(idx, QString::fromUtf8(str));
 #if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
 	data->recalcDebugVars();
 #endif
+	// return this to allow chain
+	QJsArray arrThis;
+	arrThis.data = data;
+	return arrThis;
 }
 
-void QJsArray::setNodeAt(int idx, QJsNode nodeValue)
+QJsArray QJsArray::setNodeAt(int idx, QJsNode nodeValue)
 {
 	data->toArray()->setNodeAt(idx, nodeValue.data);
 #if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
 	nodeValue.data->recalcDebugVars();
 #endif
+	// return this to allow chain
+	QJsArray arrThis;
+	arrThis.data = data;
+	return arrThis;
 }
 
-void QJsArray::setObjectAt(int idx, QJsObject objValue)
+QJsArray QJsArray::setObjectAt(int idx, QJsObject objValue)
 {
 	data->toArray()->setObjectAt(idx, objValue.data->toObject());
 #if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
 	objValue.data->recalcDebugVars();
 #endif
+	// return this to allow chain
+	QJsArray arrThis;
+	arrThis.data = data;
+	return arrThis;
 }
 
-void QJsArray::setArrayAt(int idx, QJsArray arrValue)
+QJsArray QJsArray::setArrayAt(int idx, QJsArray arrValue)
 {
 	data->toArray()->setArrayAt(idx, arrValue.data->toArray());
 #if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
 	arrValue.data->recalcDebugVars();
 #endif
+	// return this to allow chain
+	QJsArray arrThis;
+	arrThis.data = data;
+	return arrThis;
 }
 
-void QJsArray::appendValue(bool boolValue)
+QJsArray QJsArray::appendValue(bool boolValue)
 {
 	data->toArray()->appendValue(boolValue);
 #if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
 	data->recalcDebugVars();
 #endif
+	// return this to allow chain
+	QJsArray arrThis;
+	arrThis.data = data;
+	return arrThis;
 }
 
-void QJsArray::appendValue(int intValue)
+QJsArray QJsArray::appendValue(int intValue)
 {
 	data->toArray()->appendValue(intValue);
 #if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
 	data->recalcDebugVars();
 #endif
+	// return this to allow chain
+	QJsArray arrThis;
+	arrThis.data = data;
+	return arrThis;
 }
 
-void QJsArray::appendValue(double doubleValue)
+QJsArray QJsArray::appendValue(double doubleValue)
 {
 	data->toArray()->appendValue(doubleValue);
 #if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
 	data->recalcDebugVars();
 #endif
+	// return this to allow chain
+	QJsArray arrThis;
+	arrThis.data = data;
+	return arrThis;
 }
 
-void QJsArray::appendValue(QString strValue)
+QJsArray QJsArray::appendValue(QString strValue)
 {
 	data->toArray()->appendValue(strValue);
 #if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
 	data->recalcDebugVars();
 #endif
+	// return this to allow chain
+	QJsArray arrThis;
+	arrThis.data = data;
+	return arrThis;
 }
 
-void QJsArray::appendObject(QJsObject objValue)
+QJsArray QJsArray::appendObject(QJsObject objValue)
 {
 	data->toArray()->appendObject(objValue.data->toObject());
 #if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
 	objValue.data->recalcDebugVars();
 #endif
+	// return this to allow chain
+	QJsArray arrThis;
+	arrThis.data = data;
+	return arrThis;
 }
 
-void QJsArray::appendArray(QJsArray arrValue)
+QJsArray QJsArray::appendArray(QJsArray arrValue)
 {
 	data->toArray()->appendArray(arrValue.data->toArray());
 #if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
 	arrValue.data->recalcDebugVars();
 #endif
+	// return this to allow chain
+	QJsArray arrThis;
+	arrThis.data = data;
+	return arrThis;
 }
 
 QVariant QJsArray::removeValueAt(int idx)

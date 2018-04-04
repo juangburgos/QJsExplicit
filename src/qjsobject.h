@@ -12,6 +12,9 @@ public:
     QJsObject &operator=(const QJsObject &);
     ~QJsObject();
 
+	// return this QJsObject to allow chain
+	QJsObject   setKeyName(const QString &strKeyName);
+
 	QStringList attributeNames() const;
 
 	bool        hasAttribute(const QString &strName) const;
@@ -29,31 +32,33 @@ public:
 
 	bool        isString(QString strName) const;
 
-	void	    setAttribute(const QString &strName, bool    boolValue);
+	// return this QJsObject to allow chain
+	QJsObject   setAttribute(const QString &strName, bool    boolValue);
+	// return this QJsObject to allow chain
+	QJsObject   setAttribute(const QString &strName, int     intValue);
+	// return this QJsObject to allow chain
+	QJsObject   setAttribute(const QString &strName, quint32 uint32Value);
+	// return this QJsObject to allow chain
+	QJsObject   setAttribute(const QString &strName, qint64  int64Value);
+	// return this QJsObject to allow chain
+	QJsObject   setAttribute(const QString &strName, float   floatValue);
+	// return this QJsObject to allow chain
+	QJsObject   setAttribute(const QString &strName, double  doubleValue);
+	// return this QJsObject to allow chain
+	QJsObject   setAttribute(const QString &strName, QString strValue);
+	// return this QJsObject to allow chain
+	QJsObject   setAttribute(const QString &strName, const char *str);
+	// return this QJsObject to allow chain
+	QJsObject   setAttribute(const QString &strName, QVariant varValue);
 
-	void	    setAttribute(const QString &strName, int     intValue);
-
-	void	    setAttribute(const QString &strName, quint32 uint32Value);
-
-	void	    setAttribute(const QString &strName, qint64  int64Value);
-
-	void	    setAttribute(const QString &strName, float   floatValue);
-
-	void	    setAttribute(const QString &strName, double  doubleValue);
-
-	void	    setAttribute(const QString &strName, QString strValue);
-
-	void	    setAttribute(const QString &strName, const char *str); // helper
-
-	void	    setAttribute(const QString &strName, QVariant varValue);
-
-	void        removeAttribute(const QString &strName);
+	QVariant    removeAttribute(const QString &strName);
 
 	QJsObject   clone() const;
 
-	void        removeAllAttributes(); // helper
-
-	void        mergeAttributesFrom(QJsObject jsObjSource);
+	// return this QJsObject to allow chain
+	QJsObject   removeAllAttributes();
+	// return this QJsObject to allow chain
+	QJsObject   mergeAttributesFrom(QJsObject jsObjSource);
 };
 
 #endif // QJSOBJECT_H

@@ -36,6 +36,16 @@ QJsObject::~QJsObject()
 	data.reset();
 }
 
+QJsObject QJsObject::setKeyName(const QString &strKeyName)
+{
+	// call original base class method
+	QJsNode::setKeyName(strKeyName);
+	// return this to allow chain
+	QJsObject objThis;
+	objThis.data = data;
+	return objThis;
+}
+
 QStringList QJsObject::attributeNames() const
 {
 	return data->toObject()->attributeNames();
@@ -107,84 +117,121 @@ bool QJsObject::isString(QString strName) const
 	return data->toObject()->isString(strName);
 }
 
-void QJsObject::setAttribute(const QString &strName, bool boolValue)
+QJsObject QJsObject::setAttribute(const QString &strName, bool boolValue)
 {
 	data->toObject()->setAttribute(strName, boolValue);
 #if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
 	data->recalcDebugVars();
 #endif
+	// return this to allow chain
+	QJsObject objThis;
+	objThis.data = data;
+	return objThis;
 }
 
-void QJsObject::setAttribute(const QString &strName, int intValue)
+QJsObject QJsObject::setAttribute(const QString &strName, int intValue)
 {
 	data->toObject()->setAttribute(strName, intValue);
 #if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
 	data->recalcDebugVars();
 #endif
+	// return this to allow chain
+	QJsObject objThis;
+	objThis.data = data;
+	return objThis;
 }
 
-void QJsObject::setAttribute(const QString &strName, float floatValue)
+QJsObject QJsObject::setAttribute(const QString &strName, float floatValue)
 {
 	data->toObject()->setAttribute(strName, floatValue);
 #if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
 	data->recalcDebugVars();
 #endif
+	// return this to allow chain
+	QJsObject objThis;
+	objThis.data = data;
+	return objThis;
 }
 
-void QJsObject::setAttribute(const QString &strName, double doubleValue)
+QJsObject QJsObject::setAttribute(const QString &strName, double doubleValue)
 {
 	data->toObject()->setAttribute(strName, doubleValue);
 #if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
 	data->recalcDebugVars();
 #endif
+	// return this to allow chain
+	QJsObject objThis;
+	objThis.data = data;
+	return objThis;
 }
 
-void QJsObject::setAttribute(const QString &strName, QString strValue)
+QJsObject QJsObject::setAttribute(const QString &strName, QString strValue)
 {
 	data->toObject()->setAttribute(strName, strValue);
 #if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
 	data->recalcDebugVars();
 #endif
+	// return this to allow chain
+	QJsObject objThis;
+	objThis.data = data;
+	return objThis;
 }
 
-void QJsObject::setAttribute(const QString &strName, const char *str)
+QJsObject QJsObject::setAttribute(const QString &strName, const char *str)
 {
 	data->toObject()->setAttribute(strName, QString::fromUtf8(str));
 #if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
 	data->recalcDebugVars();
 #endif
+	// return this to allow chain
+	QJsObject objThis;
+	objThis.data = data;
+	return objThis;
 }
 
-void QJsObject::setAttribute(const QString &strName, qint64 int64Value)
+QJsObject QJsObject::setAttribute(const QString &strName, qint64 int64Value)
 {
 	data->toObject()->setAttribute(strName, int64Value);
 #if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
 	data->recalcDebugVars();
 #endif
+	// return this to allow chain
+	QJsObject objThis;
+	objThis.data = data;
+	return objThis;
 }
 
-void QJsObject::setAttribute(const QString &strName, quint32 uint32Value)
+QJsObject QJsObject::setAttribute(const QString &strName, quint32 uint32Value)
 {
 	data->toObject()->setAttribute(strName, uint32Value);
 #if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
 	data->recalcDebugVars();
 #endif
+	// return this to allow chain
+	QJsObject objThis;
+	objThis.data = data;
+	return objThis;
 }
 
-void QJsObject::setAttribute(const QString &strName, QVariant varValue)
+QJsObject QJsObject::setAttribute(const QString &strName, QVariant varValue)
 {
 	data->toObject()->setAttribute(strName, varValue);
 #if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
 	data->recalcDebugVars();
 #endif
+	// return this to allow chain
+	QJsObject objThis;
+	objThis.data = data;
+	return objThis;
 }
 
-void QJsObject::removeAttribute(const QString &strName)
+QVariant QJsObject::removeAttribute(const QString &strName)
 {
-	data->toObject()->removeAttribute(strName);
+	QVariant varOldVal = data->toObject()->removeAttribute(strName);
 #if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
 	data->recalcDebugVars();
 #endif
+	return varOldVal;
 }
 
 QJsObject QJsObject::clone() const
@@ -192,22 +239,29 @@ QJsObject QJsObject::clone() const
 	return QJsNode::clone().toObject();
 }
 
-void QJsObject::removeAllAttributes()
+QJsObject QJsObject::removeAllAttributes()
 {
 	foreach(QString strAttribute, attributeNames())
 	{
 		removeAttribute(strAttribute);
 	}
+	// return this to allow chain
+	QJsObject objThis;
+	objThis.data = data;
+	return objThis;
 }
 
-void QJsObject::mergeAttributesFrom(QJsObject jsObjSource)
+QJsObject QJsObject::mergeAttributesFrom(QJsObject jsObjSource)
 {
 	foreach(QString strAttribute, jsObjSource.attributeNames())
 	{
-		//setAttribute(strAttribute, jsObjSource.attributeValue(strAttribute));
 		data->toObject()->setAttribute(strAttribute, jsObjSource.attributeValue(strAttribute));
 	}
 #if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
 	data->recalcDebugVars();
 #endif
+	// return this to allow chain
+	QJsObject objThis;
+	objThis.data = data;
+	return objThis;
 }

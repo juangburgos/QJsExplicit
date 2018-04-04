@@ -969,6 +969,11 @@ void QJsNodeData::jsObjToJson(const QExplicitlySharedDataPointer<QJsObjectData> 
 	else
 	{
 		byteParent += QByteArray::fromStdString(jsObj->d_strAttributes);
+		// append ,
+		if (!bForce && !listKeys.isEmpty() && byteParent[byteParent.length()-1] != ',')
+		{
+			byteParent += ",";
+		}
 	}
 	// iterate all keys
 	for each (QString strKey in listKeys)

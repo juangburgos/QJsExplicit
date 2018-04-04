@@ -39,7 +39,7 @@ public:
 	void	    setAttribute(const QString &strName, QString    strValue);
 	void	    setAttribute(const QString &strName, QVariant   varValue);
 
-	void        removeAttribute(const QString &strName);
+	QVariant    removeAttribute(const QString &strName);
 
 #if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
 protected:
