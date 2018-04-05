@@ -41,15 +41,17 @@ public:
 	// return this QJsObject to allow chain
 	QJsObject   setAttribute(const QString &strName, qint64  int64Value);
 	// return this QJsObject to allow chain
+	QJsObject   setAttribute(const QString &strName, qulonglong intULLValue);
+	// return this QJsObject to allow chain
 	QJsObject   setAttribute(const QString &strName, float   floatValue);
 	// return this QJsObject to allow chain
 	QJsObject   setAttribute(const QString &strName, double  doubleValue);
 	// return this QJsObject to allow chain
 	QJsObject   setAttribute(const QString &strName, QString strValue);
 	// return this QJsObject to allow chain
-	QJsObject   setAttribute(const QString &strName, const char *str);
-	// return this QJsObject to allow chain
 	QJsObject   setAttribute(const QString &strName, QVariant varValue);
+	// return this QJsObject to allow chain
+	QJsObject   setAttribute(const QString &strName, const char *str);
 
 	QVariant    removeAttribute(const QString &strName);
 

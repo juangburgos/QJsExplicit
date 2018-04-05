@@ -189,6 +189,18 @@ QJsObject QJsObject::setAttribute(const QString &strName, const char *str)
 	return objThis;
 }
 
+QJsObject QJsObject::setAttribute(const QString &strName, quint32 uint32Value)
+{
+	data->toObject()->setAttribute(strName, uint32Value);
+#if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
+	data->recalcDebugVars();
+#endif
+	// return this to allow chain
+	QJsObject objThis;
+	objThis.data = data;
+	return objThis;
+}
+
 QJsObject QJsObject::setAttribute(const QString &strName, qint64 int64Value)
 {
 	data->toObject()->setAttribute(strName, int64Value);
@@ -201,9 +213,9 @@ QJsObject QJsObject::setAttribute(const QString &strName, qint64 int64Value)
 	return objThis;
 }
 
-QJsObject QJsObject::setAttribute(const QString &strName, quint32 uint32Value)
+QJsObject QJsObject::setAttribute(const QString &strName, qulonglong intULLValue)
 {
-	data->toObject()->setAttribute(strName, uint32Value);
+	data->toObject()->setAttribute(strName, intULLValue);
 #if defined(QT_DEBUG) && defined(Q_OS_WIN) && defined(JS_DEBUG)
 	data->recalcDebugVars();
 #endif
